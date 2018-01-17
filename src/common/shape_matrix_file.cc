@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void shape_matrix_read(const char* filename, vector<ShapeMatrix*>* list) {
+void shape_matrix_read(const char* filename, vector<ShapeMatrix*>* const list) {
   ifstream input_file(filename);
   
   while(!input_file.eof()) {
@@ -21,6 +21,6 @@ void shape_matrix_read(const char* filename, vector<ShapeMatrix*>* list) {
       input_file >> d;
       shape->set(i, d == 1);
     }
-    list.push_back(shape);
+    list->push_back(shape);
   }
 }

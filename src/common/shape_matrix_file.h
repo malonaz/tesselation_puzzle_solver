@@ -4,6 +4,8 @@
 #include <vector>
 #include "ShapeMatrix.h"
 
-void shape_matrix_read(const char* filename, ShapeMatrix** list);
+using namespace std;
+
+void shape_matrix_read(const char* filename, vector<ShapeMatrix*>* const list);
 
 #endif
