@@ -1,4 +1,4 @@
-#include "ShapeMatrix.h"
+#include "shape_matrix.h"
 
 ShapeMatrix::ShapeMatrix(int width, int height) {
   this->width = width;
