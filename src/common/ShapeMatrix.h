@@ -8,24 +8,13 @@ private:
   bool* shape;
   
 public:
-  ShapeMatrix(int width, int height) {
-    this->width = width;
-    this->height = height;
-    int area = width * height;
-    this->shape = new bool[area];
-  }
+  ShapeMatrix(int width, int height);
   
-  void set(int row, int col, bool value) {
-    this->shape[row * this->width + col] = value;
-  }
+  void set(int row, int col, bool value);
   
-  bool get(int row, int col) {
-    return this->shape[row * this->width + col];
-  }
+  bool get(int row, int col);
   
-  virtual ~ShapeMatrix() {
-    delete[] this->shape;
-  }
+  virtual ~ShapeMatrix();
 };
 
 #endif
