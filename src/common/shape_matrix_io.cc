@@ -2,14 +2,14 @@
 #include <iostream>
 #include <vector>
 
-#include "shape_matrix_file.h"
-#include "ShapeMatrix.h"
+#include "shape_matrix_io.h"
+#include "shape_matrix.h"
 
 using namespace std;
 
 void shape_matrix_read(const char* filename, vector<ShapeMatrix*>* const list) {
   ifstream input_file(filename);
-  
+
   while(!input_file.eof()) {
     int width, height, area;
     input_file >> width;

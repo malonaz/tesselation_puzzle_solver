@@ -2,7 +2,7 @@
 #define APS_COMMON_SHAPE_MATRIX_FILE_H_
 
 #include <vector>
-#include "ShapeMatrix.h"
+#include "shape_matrix.h"
 
 using namespace std;
 
