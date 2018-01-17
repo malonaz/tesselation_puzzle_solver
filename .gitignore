@@ -98,5 +98,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+bin/*
+obj/*
 
 # End of https://www.gitignore.io/api/c++,linux,macos,cmake,windows
