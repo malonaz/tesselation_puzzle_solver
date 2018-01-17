@@ -5,8 +5,8 @@ SRCDIR = src
 BINDIR = bin
 TARGET = aps
 MAIN_OBJECT = $(SRCDIR)/main.o
-COMMON_OBJECTS = $(SRCDIR)/common/shape_matrix_file.o \
-		$(SRCDIR)/common/ShapeMatrix.o
+COMMON_OBJECTS = $(SRCDIR)/common/shape_matrix_io.o \
+		$(SRCDIR)/common/shape_matrix.o
 
 PUZZLE_OBJECTS = $(SRCDIR)/solver/imageProcessor.o \
 		$(SRCDIR)/solver/solver.o \
@@ -27,4 +27,4 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 .PHONY: clean
 
 clean:
-	rm -rf $(BINDIR) $(OBJECTS) $(OBJECTS:.o=.d)
+	rm -rf $(BINDIR) $(OBJECTS) $(OBJECTS:.o=.d) *.o *.d
