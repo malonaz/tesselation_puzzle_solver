@@ -6,7 +6,8 @@ BINDIR = bin
 TARGET = aps
 MAIN_OBJECT = $(SRCDIR)/main.o
 COMMON_OBJECTS = $(SRCDIR)/common/shape_matrix_io.o \
-		$(SRCDIR)/common/shape_matrix.o
+		$(SRCDIR)/common/shape_matrix.o \
+		$(SRCDIR)/discretizer/shape_translate.o
 
 PUZZLE_OBJECTS = $(SRCDIR)/solver/imageProcessor.o \
 		$(SRCDIR)/solver/solver.o \
