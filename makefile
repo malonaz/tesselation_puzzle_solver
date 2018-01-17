@@ -5,7 +5,8 @@ SRCDIR = src
 BINDIR = bin
 TARGET = aps
 OBJECTS = $(SRCDIR)/solver/main.o \
-		$(SRCDIR)/common/shape_matrix_file.o
+		$(SRCDIR)/common/shape_matrix_file.o \
+		$(SRCDIR)/common/ShapeMatrix.o
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	@mkdir -p bin
