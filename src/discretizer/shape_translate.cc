@@ -4,23 +4,24 @@
 
 using namespace std;
 
-void shape_get_size(vector<vector<int>*>* const shape, int& width, int& height) {
+void shape_get_size(vector<int[2]>* const shape, int& width, int& height) {
   width = 0;
   height = 0;
-  int num_points = shape.size();
+  vector<int[2]>::const_iterator iterator;
+
   
-  for (int i = 0; i < num_points; ++i) {
-    vector<int>* coordinate = shape[i];
-    if (coordinate[0] > max_width) {
-      max_width = coordinate[0];
+  for (iterator = shape->begin(); iterator != shape->end(); iterator++) {
+    int* coordinate = (int*)*iterator;
+    if (coordinate[0] > width) {
+      width = coordinate[0];
     }
-    if (coordinate[1] > max_height) {
-      max_height = coordinate[1];
+    if (coordinate[1] > height) {
+      height = coordinate[1];
     }
   }
 }
 
-void shape_translate(vector<vector<int>*>* const shape, ShapeMatrix* matrix) {
+void shape_translate(vector<int[2]>* const shape, ShapeMatrix* matrix) {
   int width = 0;
   int height = 0;
   shape_get_size(shape, width, height);
