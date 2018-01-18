@@ -1,5 +1,5 @@
-#ifndef APS_COMMON_SHAPEMATRIX_H_
-#define APS_COMMON_SHAPEMATRIX_H_
+#ifndef APS_COMMON_SHAPE_MATRIX_H_
+#define APS_COMMON_SHAPE_MATRIX_H_
 
 class ShapeMatrix {
 private:
