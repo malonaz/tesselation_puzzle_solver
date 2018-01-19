@@ -78,9 +78,11 @@ int ShapeMatrix::getMatrixArea() {
 ShapeMatrix* ShapeMatrix::rotate() {
   ShapeMatrix* rotated = new ShapeMatrix(this->height, this->width);
   rotated->shapeArea = this->shapeArea;
+
   for(int i = 0;  i < rotated->height; i++){
-    for(int j = 0; j < rotated-> width; j++){
-      rotated->shape[i][j] = this->shape[this->height - j - 1][i];
+    for(int j = 0; j < rotated->width; j++){
+      rotated->shape[i * rotated->width + j] =
+        this->shape[(this->height - j - 1) * this->width + i];
     }
   }
   return rotated;
