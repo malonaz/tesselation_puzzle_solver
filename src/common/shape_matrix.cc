@@ -1,9 +1,13 @@
+#include <cassert>
 #include "shape_matrix.h"
 
 ShapeMatrix::ShapeMatrix(int width, int height) {
+  assert(width > 0);
+  assert(height > 0);
   this->width = width;
   this->height = height;
   this->shapeArea = 0;
+
   int area = width * height;
   this->shape = new bool[area];
   for (int i = 0; i < area; ++i) {
@@ -12,6 +16,7 @@ ShapeMatrix::ShapeMatrix(int width, int height) {
 }
 
 void ShapeMatrix::set(int index, bool value) {
+  assert(index >= 0 && index < (this->width * this->height));
   if (this->shape[index] == value) {
     return;
   }
@@ -24,14 +29,19 @@ void ShapeMatrix::set(int index, bool value) {
 }
 
 void ShapeMatrix::set(int row, int col, bool value) {
+  assert(row >= 0 && row < this->height);
+  assert(col >= 0 && col < this->width);
   this->set(row * this->width + col, value);
 }
 
 bool ShapeMatrix::get(int index) {
+  assert(index >= 0 && index < (this->width * this->height));
   return this->shape[index];
 }
 
 bool ShapeMatrix::get(int row, int col) {
+  assert(row >= 0 && row < this->height);
+  assert(col >= 0 && col < this->width);
   return this->shape[row * this->width + col];
 }
 
