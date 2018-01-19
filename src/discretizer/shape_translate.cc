@@ -64,7 +64,7 @@ void process_row_filter(map<int, vector<int*>*> &horizontal_edges, int row, bool
     int min_x = min(x1, x2);
     int max_x = max(x1, x2);
 
-    for(int col = min_x; col <= max_x; ++col) {
+    for(int col = min_x; col < max_x; ++col) {
       row_filter[col] = !row_filter[col];
     }
   }
