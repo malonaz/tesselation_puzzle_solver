@@ -113,7 +113,12 @@ void shape_translate(vector<int*>* const shape, ShapeMatrix* &matrix) {
 
   map<int, vector<int*>*>::iterator map_it;
   for (map_it = horizontal_edges.begin(); map_it != horizontal_edges.end(); ++map_it) {
-    delete  map_it->second;
+    vector<int*>* edges = map_it->second;
+    vector<int*>::iterator list_iterator;
+    for (list_iterator = edges->begin(); list_iterator != edges->end(); ++list_iterator) {
+      delete[] *list_iterator;
+    }
+    delete map_it->second;
   }
 }
 
