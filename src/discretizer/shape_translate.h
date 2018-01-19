@@ -6,6 +6,10 @@
 
 using namespace std;
 
-void shape_translate(vector<int*>* const shape, ShapeMatrix* &matrix);
+typedef vector<int*> ListOfPoints;
+typedef vector<int*> ListOfEdges;
+typedef vector<ListOfPoints*> ListOfShapes;
+
+void shape_translate(ListOfPoints* const shape, ShapeMatrix* &matrix);
 
 #endif
