@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cstddef>
 #include "shape_matrix.h"
 
 ShapeMatrix::ShapeMatrix(int width, int height) {
@@ -15,7 +16,7 @@ ShapeMatrix::ShapeMatrix(int width, int height) {
   }
 }
 
-ShapeMatrix::ShapeMatrix(ShapeMatrix& const copy) {
+ShapeMatrix::ShapeMatrix(ShapeMatrix* const copy) {
   this->width = copy->width;
   this->height = copy->height;
   this->shapeArea = copy->shapeArea;
