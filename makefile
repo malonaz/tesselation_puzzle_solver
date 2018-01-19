@@ -6,15 +6,16 @@ BINDIR = bin
 TARGET = aps
 MAIN_OBJECT = $(SRCDIR)/main.o
 COMMON_OBJECTS = $(SRCDIR)/common/shape_matrix_io.o \
-		$(SRCDIR)/common/puzzle_board.o \
-		$(SRCDIR)/common/shape_matrix.o \
-		$(SRCDIR)/discretizer/shape_translate.o
+	$(SRCDIR)/common/puzzle_board.o \
+	$(SRCDIR)/common/shape_matrix.o
+
+DISCRETIZER_OBJECTS = $(SRCDIR)/discretizer/shape_translate.o
 
 PUZZLE_OBJECTS = $(SRCDIR)/solver/imageProcessor.o \
-		$(SRCDIR)/solver/solver.o \
-		$(SRCDIR)/solver/solutionProcessor.o
+	$(SRCDIR)/solver/solver.o \
+	$(SRCDIR)/solver/solutionProcessor.o
 
-OBJECTS = $(MAIN_OBJECT) $(COMMON_OBJECTS) $(PUZZLE_OBJECTS)
+OBJECTS = $(MAIN_OBJECT) $(COMMON_OBJECTS) $(DISCRETIZER_OBJECTS) $(PUZZLE_OBJECTS)
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	@mkdir -p bin
