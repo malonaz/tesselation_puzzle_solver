@@ -6,7 +6,6 @@
 #include <map>
 #include <vector>
 
-
 #include "shape_translate.h"
 #include "../common/shape_matrix.h"
 

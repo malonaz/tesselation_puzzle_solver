@@ -3,16 +3,28 @@
 ShapeMatrix::ShapeMatrix(int width, int height) {
   this->width = width;
   this->height = height;
+  this->shapeArea = 0;
   int area = width * height;
   this->shape = new bool[area];
+  for (int i = 0; i < area; ++i) {
+    this->shape[i] = false;
+  }
 }
 
 void ShapeMatrix::set(int index, bool value) {
+  if (this->shape[index] == value) {
+    return;
+  }
+  if (value) {
+    ++this->shapeArea;
+  } else {
+    --this->shapeArea;
+  }
   this->shape[index] = value;
 }
 
 void ShapeMatrix::set(int row, int col, bool value) {
-  this->shape[row * this->width + col] = value;
+  this->set(row * this->width + col, value);
 }
 
 bool ShapeMatrix::get(int index) {
@@ -32,14 +44,7 @@ int ShapeMatrix::getHeight() {
 }
 
 int ShapeMatrix::getShapeArea() {
-  int c = 0;
-  int area = this->width * this->height;
-  for (int i = 0; i < area; ++i) {
-    if (this->shape[i]) {
-      ++c;
-    }
-  }
-  return c;
+  return this->shapeArea;
 }
 
 int ShapeMatrix::getMatrixArea() {
