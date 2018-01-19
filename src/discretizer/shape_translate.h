@@ -6,6 +6,6 @@
 
 using namespace std;
 
-void shape_translate(vector<vector<int>*>* const shape, ShapeMatrix* matrix);
+void shape_translate(vector<int*>* const shape, ShapeMatrix* &matrix);
 
 #endif
