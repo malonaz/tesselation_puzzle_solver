@@ -23,7 +23,7 @@ private:
 public:
   ShapeMatrix(int width, int height);
 
-  ShapeMatrix(ShapeMatrix* const copy);
+  ShapeMatrix(const ShapeMatrix &copy);
 
   void set(int index, bool value);
 
@@ -44,6 +44,8 @@ public:
   ShapeMatrix* rotate();
 
   ShapeMatrix* rotate(int n);
+
+  ShapeMatrix& operator=(const ShapeMatrix& shape);
 
   virtual ~ShapeMatrix();
 };

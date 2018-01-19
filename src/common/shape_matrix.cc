@@ -2,12 +2,10 @@
 #include <cstddef>
 #include "shape_matrix.h"
 
-ShapeMatrix::ShapeMatrix(int width, int height) {
+ShapeMatrix::ShapeMatrix(int width, int height):
+    width(width), height(height), shapeArea(0), shape(NULL) {
   assert(width > 0);
   assert(height > 0);
-  this->width = width;
-  this->height = height;
-  this->shapeArea = 0;
 
   int area = width * height;
   this->shape = new bool[area];
@@ -16,16 +14,13 @@ ShapeMatrix::ShapeMatrix(int width, int height) {
   }
 }
 
-ShapeMatrix::ShapeMatrix(ShapeMatrix* const copy) {
-  this->width = copy->width;
-  this->height = copy->height;
-  this->shapeArea = copy->shapeArea;
-
+ShapeMatrix::ShapeMatrix(const ShapeMatrix &copy):
+    width(copy.width), height(copy.height),
+    shapeArea(copy.shapeArea), shape(NULL) {
   int area = this->width * this->height;
   this->shape = new bool[area];
-  this->shape = new bool[area];
   for (int i = 0; i < area; ++i) {
-    this->shape[i] = copy->shape[i];
+    this->shape[i] = copy.shape[i];
   }
 }
 
@@ -95,7 +90,7 @@ ShapeMatrix* ShapeMatrix::rotate(int n) {
   n = n % 4; // 4 rotations will go back to itself
   if (n == 0) {
     // no rotation, but create a copy
-    return new ShapeMatrix(this);
+    return new ShapeMatrix(*this);
   }
   if (n == 1) {
     return this->rotate();
@@ -105,6 +100,26 @@ ShapeMatrix* ShapeMatrix::rotate(int n) {
   ShapeMatrix* result = tempMatrix->rotate(n - 1);
   delete tempMatrix;
   return result;
+}
+
+
+ShapeMatrix& ShapeMatrix::operator=(const ShapeMatrix& rhs) {
+  if (this == &rhs) {
+    return *this;
+  }
+  delete[] this->shape;
+
+  this->width = rhs.width;
+  this->height = rhs.height;
+  this->shapeArea = rhs.shapeArea;
+
+  int area = this->width * this->height;
+  this->shape = new bool[area];
+  for (int i = 0; i < area; ++i) {
+    this->shape[i] = rhs.shape[i];
+  }
+
+  return *this;
 }
 
 ShapeMatrix::~ShapeMatrix() {
