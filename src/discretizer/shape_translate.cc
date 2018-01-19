@@ -71,27 +71,50 @@ void process_row_filter(map<int, vector<int*>*> horizontal_edges, int row, bool 
 void shape_translate(vector<int[2]>* const shape, ShapeMatrix* matrix) {
   int width = 0;
   int height = 0;
-  bool is_even_num_points = shape->size() % 2 == 0;
-  
+
   // find width and height of the shape
   shape_get_size(shape, width, height);
-  
+
   // create the row filter
   bool row_filter[width];
   for (int i = 0; i < width; ++i) {
     row_filter[i] = false;
   }
-  
-  vector<int*> horizontal_edges;
-  
+
+  // the map of edges organized by their row-value
+  map<int, vector<int*>*> horizontal_edges;
   vector<int[2]>::const_iterator iterator;
-  for (iterator = shape->begin(); iterator != shape->end(); iterator++) {
-    int* coord1 = (int*)*iterator;
-    
+
+  iterator = shape->begin();
+  int* first_point = (int*) *iterator;
+  int* last_processed_point  = (int*) *iterator;
+
+  // skip processing the first point
+  for (++iterator; iterator != shape->end(); ++iterator) {
+    int* current_coord = (int*) *iterator;
+    shape_process_edge(horizontal_edges, last_processed_point, current_coord);
+    last_processed_point = current_coord;
   }
-  
+  // process the edge of last processed point to the first point
+  shape_process_edge(horizontal_edges, last_processed_point, first_point);
+
+  // clean up handled by caller of this method
+  matrix = new ShapeMatrix(width, height);
+
+  // process the matrix row-wise
+  for (int row = 0; row < height; ++row) {
+    process_row_filter(horizontal_edges, row, row_filter);
+    for (int col = 0; col < width; ++col) {
+      matrix->set(row, col, row_filter[col]);
+    }
+  }
+
+  map<int, vector<int*>*>::iterator map_it;
+  for (map_it = horizontal_edges.begin(); map_it != horizontal_edges.end(); ++map_it) {
+    delete  map_it->second;
+  }
 }
 
 void shape_translate_all_shapes(vector<vector<int[2]>*>* const shapes, vector<ShapeMatrix*>* const matrices) {
-  
+
 }
