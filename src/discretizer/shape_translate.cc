@@ -43,7 +43,8 @@ void shape_process_edge(map<int, vector<int*>*> &horizontal_edges, int coord1[2]
     horizontal_edges[y_coord] = new vector<int*>();
   }
 
-  int edge[] = { coord1[0], coord1[1], coord2[0], coord2[1] };
+  // array must be created on heap so that other methods can access it later.
+  int* edge = new int[4]{ coord1[0], coord1[1], coord2[0], coord2[1] };
   horizontal_edges[y_coord]->push_back(edge);
 }
 
@@ -96,7 +97,7 @@ void shape_translate(vector<int*>* const shape, ShapeMatrix* &matrix) {
     shape_process_edge(horizontal_edges, last_processed_point, current_coord);
     last_processed_point = current_coord;
   }
-  // process the edge of last processed point to the first point
+  // process the edge of last point to the first point
   shape_process_edge(horizontal_edges, last_processed_point, first_point);
 
   // clean up handled by caller of this method
