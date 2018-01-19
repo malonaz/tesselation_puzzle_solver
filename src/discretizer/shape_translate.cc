@@ -174,6 +174,15 @@ int find_unit_length(ListOfShapes* const shapes) {
   return unit_length;
 }
 
+void shape_reduce(ListOfPoints* const shape, int unit_length) {
+  ListOfPoints::const_iterator iterator;
+  for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
+    int* current_coord = (int*) *iterator;
+    current_coord[0] = current_coord[0] / unit_length;
+    current_coord[1] = current_coord[1] / unit_length;
+  }
+}
+
 bool shape_translate_all_shapes(ListOfShapes* const shapes, vector<ShapeMatrix*>* const matrices) {
 
 }
