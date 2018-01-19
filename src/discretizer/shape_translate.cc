@@ -47,7 +47,7 @@ void shape_process_edge(map<int, vector<int*>*> &horizontal_edges, int coord1[2]
   horizontal_edges[y_coord]->push_back(edge);
 }
 
-void process_row_filter(map<int, vector<int*>*> horizontal_edges, int row, bool row_filter[]) {
+void process_row_filter(map<int, vector<int*>*> &horizontal_edges, int row, bool row_filter[]) {
   if (horizontal_edges.find(row) == horizontal_edges.end()) {
     return;
   }
