@@ -8,9 +8,16 @@
 */
 class ShapeMatrix {
 private:
+  /* width: The width of the matrix */
   int width;
+
+  /* height: The height of the matrix */
   int height;
+
+  /* shapeArea: The area that the shape occupies out of the matrix */
   int shapeArea;
+
+  /* The logical matrix that represent */
   bool* shape;
 
 public:
