@@ -61,6 +61,26 @@ int ShapeMatrix::getMatrixArea() {
   return this->width * this->height;
 }
 
+ShapeMatrix* ShapeMatrix::rotate() {
+  // TODO
+
+  return NULL;
+}
+
+ShapeMatrix* ShapeMatrix::rotate(int n) {
+  if (n <= 0) {
+    return NULL;
+  }
+  if (n == 1) {
+    return this->rotate();
+  }
+
+  ShapeMatrix* tempMatrix = this->rotate();
+  ShapeMatrix* result = tempMatrix->rotate(n - 1);
+  delete tempMatrix;
+  return result;
+}
+
 ShapeMatrix::~ShapeMatrix() {
   delete[] this->shape;
 }

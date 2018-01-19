@@ -39,6 +39,10 @@ public:
 
   int getMatrixArea();
 
+  ShapeMatrix* rotate();
+
+  ShapeMatrix* rotate(int n);
+
   virtual ~ShapeMatrix();
 };
 
