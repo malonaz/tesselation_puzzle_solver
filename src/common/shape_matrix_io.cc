@@ -7,6 +7,17 @@
 
 using namespace std;
 
+void shape_matrix_print(ShapeMatrix* const shape) {
+  int width = shape->getWidth();
+  int height = shape->getHeight();
+  for (int r = 0; r < height; ++r) {
+    for (int c = 0; c < width; ++c) {
+      cout << (shape->get(r, c) ? '1' : '0') << '\t';
+    }
+    cout << endl;
+  }
+}
+
 void shape_matrix_read(const char* filename, vector<ShapeMatrix*>* const list) {
   ifstream input_file(filename);
 
