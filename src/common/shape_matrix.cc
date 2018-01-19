@@ -81,8 +81,13 @@ ShapeMatrix* ShapeMatrix::rotate() {
 }
 
 ShapeMatrix* ShapeMatrix::rotate(int n) {
-  if (n <= 0) {
+  if (n < 0) {
     return NULL;
+  }
+  n = n % 4; // 4 rotations will go back to itself
+  if (n == 0) {
+    // no rotation, but create a copy
+    return new ShapeMatrix(this);
   }
   if (n == 1) {
     return this->rotate();
