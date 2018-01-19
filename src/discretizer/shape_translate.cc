@@ -29,7 +29,7 @@ void shape_get_size(vector<int[2]>* const shape, int& width, int& height) {
   }
 }
 
-void shape_translate(vector<int[2]>* const shape, int unit_size, ShapeMatrix* matrix) {
+void shape_translate(vector<int[2]>* const shape, ShapeMatrix* matrix) {
   int width = 0;
   int height = 0;
   bool is_even_num_points = shape->size() % 2 == 0;
