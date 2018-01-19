@@ -15,6 +15,19 @@ ShapeMatrix::ShapeMatrix(int width, int height) {
   }
 }
 
+ShapeMatrix::ShapeMatrix(ShapeMatrix& const copy) {
+  this->width = copy->width;
+  this->height = copy->height;
+  this->shapeArea = copy->shapeArea;
+
+  int area = this->width * this->height;
+  this->shape = new bool[area];
+  this->shape = new bool[area];
+  for (int i = 0; i < area; ++i) {
+    this->shape[i] = copy->shape[i];
+  }
+}
+
 void ShapeMatrix::set(int index, bool value) {
   assert(index >= 0 && index < (this->width * this->height));
   if (this->shape[index] == value) {

@@ -23,6 +23,8 @@ private:
 public:
   ShapeMatrix(int width, int height);
 
+  ShapeMatrix(ShapeMatrix& const copy);
+
   void set(int index, bool value);
 
   bool get(int index);
