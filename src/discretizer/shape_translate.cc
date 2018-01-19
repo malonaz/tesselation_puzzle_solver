@@ -184,5 +184,20 @@ void shape_reduce(ListOfPoints* const shape, int unit_length) {
 }
 
 bool shape_translate_all_shapes(ListOfShapes* const shapes, vector<ShapeMatrix*>* const matrices) {
+  int unit_length = find_unit_length(shapes);
+  if (unit_length == -1) {
+    return false;
+  }
 
+  ListOfShapes::iterator shapes_iterator;
+
+  for(shapes_iterator = shapes->begin(); shapes_iterator != shapes->end(); ++shapes_iterator) {
+    ListOfPoints* shape = *shapes_iterator;
+    shape_reduce(shape, unit_length);
+    ShapeMatrix* matrix;
+    shape_translate(shape, matrix);
+    matrices->push_back(matrix);
+  }
+
+  return true;
 }

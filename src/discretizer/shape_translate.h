@@ -11,5 +11,6 @@ typedef vector<int*> ListOfEdges;
 typedef vector<ListOfPoints*> ListOfShapes;
 
 void shape_translate(ListOfPoints* const shape, ShapeMatrix* &matrix);
+bool shape_translate_all_shapes(ListOfShapes* const shapes, vector<ShapeMatrix*>* const matrices);
 
 #endif
