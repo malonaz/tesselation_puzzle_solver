@@ -48,30 +48,30 @@ void ShapeMatrix::set(int row, int col, bool value) {
   this->set(row * this->width + col, value);
 }
 
-bool ShapeMatrix::get(int index) {
+bool ShapeMatrix::get(int index) const {
   assert(index >= 0 && index < (this->width * this->height));
   return this->shape[index];
 }
 
-bool ShapeMatrix::get(int row, int col) {
+bool ShapeMatrix::get(int row, int col) const {
   assert(row >= 0 && row < this->height);
   assert(col >= 0 && col < this->width);
   return this->shape[row * this->width + col];
 }
 
-int ShapeMatrix::getWidth() {
+int ShapeMatrix::getWidth() const {
   return this->width;
 }
 
-int ShapeMatrix::getHeight() {
+int ShapeMatrix::getHeight() const {
   return this->width;
 }
 
-int ShapeMatrix::getShapeArea() {
+int ShapeMatrix::getShapeArea() const {
   return this->shapeArea;
 }
 
-int ShapeMatrix::getMatrixArea() {
+int ShapeMatrix::getMatrixArea() const {
   return this->width * this->height;
 }
 

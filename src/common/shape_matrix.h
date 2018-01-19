@@ -27,19 +27,19 @@ public:
 
   void set(int index, bool value);
 
-  bool get(int index);
+  bool get(int index) const;
 
   void set(int row, int col, bool value);
 
-  bool get(int row, int col);
+  bool get(int row, int col) const;
 
-  int getWidth();
+  int getWidth() const;
 
-  int getHeight();
+  int getHeight() const;
 
-  int getShapeArea();
+  int getShapeArea() const;
 
-  int getMatrixArea();
+  int getMatrixArea() const;
 
   ShapeMatrix* rotate();
 
