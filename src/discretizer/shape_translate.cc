@@ -29,7 +29,7 @@ void shape_get_size(vector<int*>* const shape, int& width, int& height) {
   }
 }
 
-void shape_process_edge(map<int, vector<int*>*> horizontal_edges, int coord1[2], int coord2[2]) {
+void shape_process_edge(map<int, vector<int*>*> &horizontal_edges, int coord1[2], int coord2[2]) {
   if (coord1[1] != coord2[1]) {
     return;
   }
