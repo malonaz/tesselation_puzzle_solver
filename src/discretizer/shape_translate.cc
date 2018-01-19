@@ -126,6 +126,39 @@ void shape_translate(ListOfPoints* const shape, ShapeMatrix* &matrix) {
   }
 }
 
+int find_shortest_edge_in_shape(ListOfPoints* const shape) {
+  int shortest_edge_length = -1;
+  vector<int*>::const_iterator iterator;
+  int* first_point = (int*) *iterator;
+  int* last_processed_point  = (int*) *iterator;
+
+  // skip processing the first point
+  for (++iterator; iterator != shape->end(); ++iterator) {
+    int* current_coord = (int*) *iterator;
+
+    int length = abs(current_coord[0] - last_processed_point[0]);
+    if (length == 0) {
+      length = abs(current_coord[1] - last_processed_point[1]);
+    }
+    if (length < shortest_edge_length || shortest_edge_length == -1) {
+      shortest_edge_length = length;
+    }
+
+    last_processed_point = current_coord;
+  }
+
+  // process the edge of last point to the first point
+  int length = abs(first_point[0] - last_processed_point[0]);
+  if (length == 0) {
+    length = abs(first_point[1] - last_processed_point[1]);
+  }
+  if (length < shortest_edge_length || shortest_edge_length == -1) {
+    shortest_edge_length = length;
+  }
+
+  return shortest_edge_length;
+}
+
 bool shape_translate_all_shapes(ListOfShapes* const shapes, vector<ShapeMatrix*>* const matrices) {
 
 }
