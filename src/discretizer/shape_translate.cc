@@ -46,6 +46,28 @@ void shape_process_edge(map<int, vector<int*>*> horizontal_edges, int coord1[2],
   horizontal_edges[y_coord]->push_back(edge);
 }
 
+void process_row_filter(map<int, vector<int*>*> horizontal_edges, int row, bool row_filter[]) {
+  if (horizontal_edges.find(row) == horizontal_edges.end()) {
+    return;
+  }
+  // has the entry for this row. so let's loop through and perform the flips
+  vector<int*>* edges = horizontal_edges[row];
+
+  vector<int*>::const_iterator edges_iterator;
+  for (edges_iterator = edges->begin(); edges_iterator != edges->end(); ++edges_iterator) {
+    int* current_edge = (int*) *edges_iterator;
+    int x1 = current_edge[0];
+    int x2 = current_edge[2];
+
+    int min_x = min(x1, x2);
+    int max_x = max(x1, x2);
+
+    for(int col = min_x; col <= max_x; ++col) {
+      row_filter[col] = !row_filter[col];
+    }
+  }
+}
+
 void shape_translate(vector<int[2]>* const shape, ShapeMatrix* matrix) {
   int width = 0;
   int height = 0;
