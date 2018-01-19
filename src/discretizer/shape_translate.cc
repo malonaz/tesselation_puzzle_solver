@@ -1,15 +1,24 @@
 #include <vector>
+#include <map>
+#include <algorithm>
 #include "shape_translate.h"
 #include "../common/shape_matrix.h"
 
 using namespace std;
 
+/*
+
+Steps:
+1) Normalize all points in the shape with the unit length
+2) translate the points into horizontal edges only
+*/
+
 void shape_get_size(vector<int[2]>* const shape, int& width, int& height) {
   width = 0;
   height = 0;
   vector<int[2]>::const_iterator iterator;
-  
-  for (iterator = shape->begin(); iterator != shape->end(); iterator++) {
+
+  for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
     int* coordinate = (int*)*iterator;
     if (coordinate[0] > width) {
       width = coordinate[0];
