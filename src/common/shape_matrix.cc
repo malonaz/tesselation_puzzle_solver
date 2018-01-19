@@ -63,7 +63,7 @@ int ShapeMatrix::getWidth() const {
   return this->width;
 }
 
-int ShapeMatrix::getHeight() {
+int ShapeMatrix::getHeight() const {
   return this->height;
 }
 
