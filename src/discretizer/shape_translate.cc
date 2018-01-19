@@ -29,6 +29,23 @@ void shape_get_size(vector<int[2]>* const shape, int& width, int& height) {
   }
 }
 
+void shape_process_edge(map<int, vector<int*>*> horizontal_edges, int coord1[2], int coord2[2]) {
+  if (coord1[1] != coord2[1]) {
+    return;
+  }
+
+  // edge has same y coordinates
+  int y_coord = coord1[1];
+
+  if (horizontal_edges.find(y_coord) == horizontal_edges.end()) {
+    // there's no entry of this y coordinate in the map
+    horizontal_edges[y_coord] = new vector<int*>();
+  }
+
+  int edge[] = { coord1[0], coord1[1], coord2[0], coord2[1] };
+  horizontal_edges[y_coord]->push_back(edge);
+}
+
 void shape_translate(vector<int[2]>* const shape, ShapeMatrix* matrix) {
   int width = 0;
   int height = 0;
