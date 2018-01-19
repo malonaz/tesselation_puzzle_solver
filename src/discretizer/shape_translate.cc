@@ -159,6 +159,21 @@ int find_shortest_edge_in_shape(ListOfPoints* const shape) {
   return shortest_edge_length;
 }
 
+int find_unit_length(ListOfShapes* const shapes) {
+  int unit_length = -1;
+
+  ListOfShapes::iterator shapes_iterator;
+
+  for(shapes_iterator = shapes->begin(); shapes_iterator != shapes->end(); ++shapes_iterator) {
+    int shortest_edge_in_shape = find_shortest_edge_in_shape(*shapes_iterator);
+    if (shortest_edge_in_shape < unit_length || unit_length == -1) {
+      unit_length = shortest_edge_in_shape;
+    }
+  }
+
+  return unit_length;
+}
+
 bool shape_translate_all_shapes(ListOfShapes* const shapes, vector<ShapeMatrix*>* const matrices) {
 
 }
