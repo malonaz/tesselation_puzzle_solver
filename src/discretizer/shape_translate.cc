@@ -18,7 +18,7 @@ Steps:
 2) translate the points into horizontal edges only
 */
 
-void shape_get_size(vector<int*>* const shape, int& width, int& height) {
+void shape_get_size(ListOfPoints* const shape, int& width, int& height) {
   width = 0;
   height = 0;
   vector<int*>::const_iterator iterator;
@@ -34,7 +34,7 @@ void shape_get_size(vector<int*>* const shape, int& width, int& height) {
   }
 }
 
-void shape_process_edge(map<int, vector<int*>*> &horizontal_edges, int coord1[2], int coord2[2]) {
+void shape_process_edge(map<int, ListOfEdges*> &horizontal_edges, int coord1[2], int coord2[2]) {
   if (coord1[1] != coord2[1]) {
     return;
   }
@@ -52,14 +52,14 @@ void shape_process_edge(map<int, vector<int*>*> &horizontal_edges, int coord1[2]
   horizontal_edges[y_coord]->push_back(edge);
 }
 
-void process_row_filter(map<int, vector<int*>*> &horizontal_edges, int row, bool row_filter[]) {
+void process_row_filter(map<int, ListOfEdges*> &horizontal_edges, int row, bool row_filter[]) {
   if (horizontal_edges.find(row) == horizontal_edges.end()) {
     return;
   }
   // has the entry for this row. so let's loop through and perform the flips
-  vector<int*>* edges = horizontal_edges[row];
+  ListOfEdges* edges = horizontal_edges[row];
 
-  vector<int*>::const_iterator edges_iterator;
+  ListOfEdges::const_iterator edges_iterator;
   for (edges_iterator = edges->begin(); edges_iterator != edges->end(); ++edges_iterator) {
     int* current_edge = (int*) *edges_iterator;
     int x1 = current_edge[0];
@@ -74,7 +74,7 @@ void process_row_filter(map<int, vector<int*>*> &horizontal_edges, int row, bool
   }
 }
 
-void shape_translate(vector<int*>* const shape, ShapeMatrix* &matrix) {
+void shape_translate(ListOfPoints* const shape, ShapeMatrix* &matrix) {
   int width = 0;
   int height = 0;
 
@@ -88,8 +88,8 @@ void shape_translate(vector<int*>* const shape, ShapeMatrix* &matrix) {
   }
 
   // the map of edges organized by their row-value
-  map<int, vector<int*>*> horizontal_edges;
-  vector<int*>::const_iterator iterator;
+  map<int, ListOfEdges*> horizontal_edges;
+  ListOfPoints::const_iterator iterator;
 
   iterator = shape->begin();
   int* first_point = (int*) *iterator;
@@ -115,10 +115,10 @@ void shape_translate(vector<int*>* const shape, ShapeMatrix* &matrix) {
     }
   }
 
-  map<int, vector<int*>*>::iterator map_it;
+  map<int, ListOfEdges*>::iterator map_it;
   for (map_it = horizontal_edges.begin(); map_it != horizontal_edges.end(); ++map_it) {
-    vector<int*>* edges = map_it->second;
-    vector<int*>::iterator list_iterator;
+    ListOfEdges* edges = map_it->second;
+    ListOfEdges::iterator list_iterator;
     for (list_iterator = edges->begin(); list_iterator != edges->end(); ++list_iterator) {
       delete[] *list_iterator;
     }
@@ -126,6 +126,6 @@ void shape_translate(vector<int*>* const shape, ShapeMatrix* &matrix) {
   }
 }
 
-void shape_translate_all_shapes(vector<vector<int[2]>*>* const shapes, vector<ShapeMatrix*>* const matrices) {
+bool shape_translate_all_shapes(ListOfShapes* const shapes, vector<ShapeMatrix*>* const matrices) {
 
 }
