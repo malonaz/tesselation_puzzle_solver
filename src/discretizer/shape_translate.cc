@@ -1,7 +1,11 @@
-#include <vector>
-#include <map>
-#include <iostream>
+
 #include <algorithm>
+#include <cstdlib>
+#include <iostream>
+#include <map>
+#include <vector>
+
+
 #include "shape_translate.h"
 #include "../common/shape_matrix.h"
 
