@@ -1,5 +1,6 @@
+.PHONY: clean check
 CXX = g++
-CXXFLAGS = -Wall -g -MMD -std=c++11
+CXXFLAGS = -Weffc++ -g -MMD -std=c++11
 OBJDIR = obj
 SRCDIR = src
 BINDIR = bin
@@ -27,7 +28,8 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 
 -include $(OBJECTS:.o=.d)
 
-.PHONY: clean
+check:
+	cppcheck --enable=all src
 
 clean:
 	rm -rf $(BINDIR) $(OBJECTS) $(OBJECTS:.o=.d) *.o *.d
