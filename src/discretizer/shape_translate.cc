@@ -1,5 +1,6 @@
 
 #include <algorithm>
+#include <cstddef>
 #include <cstdlib>
 #include <iostream>
 #include <map>
@@ -77,9 +78,19 @@ void process_row_filter(map<int, ListOfEdges*> &horizontal_edges, int row, bool 
 void shape_translate(ListOfPoints* const shape, ShapeMatrix* &matrix) {
   int width = 0;
   int height = 0;
+  matrix = NULL;
 
   // find width and height of the shape
   shape_get_size(shape, width, height);
+
+  if (width == 0 || height == 0) {
+    return;
+  }
+
+  // minimum 4 points
+  if (shape->size() < 4) {
+    return;
+  }
 
   // create the row filter
   bool row_filter[width];
@@ -194,8 +205,11 @@ bool shape_translate_all_shapes(ListOfShapes* const shapes, vector<ShapeMatrix*>
   for(shapes_iterator = shapes->begin(); shapes_iterator != shapes->end(); ++shapes_iterator) {
     ListOfPoints* shape = *shapes_iterator;
     shape_reduce(shape, unit_length);
-    ShapeMatrix* matrix;
+    ShapeMatrix* matrix = NULL;
     shape_translate(shape, matrix);
+    if (matrix == NULL) {
+      continue;
+    }
     matrices->push_back(matrix);
   }
 
