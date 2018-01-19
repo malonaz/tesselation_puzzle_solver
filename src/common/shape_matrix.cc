@@ -64,7 +64,7 @@ int ShapeMatrix::getWidth() {
 }
 
 int ShapeMatrix::getHeight() {
-  return this->width;
+  return this->height;
 }
 
 int ShapeMatrix::getShapeArea() {
