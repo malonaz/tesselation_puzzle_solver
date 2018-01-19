@@ -18,7 +18,22 @@ void shape_matrix_print(ShapeMatrix* const shape) {
   }
 }
 
-void shape_matrix_read(const char* filename, vector<ShapeMatrix*>* const list) {
+void shape_matrix_write(const char* filename, ListOfShapes* const list) {
+  ofstream output_file(filename);
+  ListOfShapes::iterator iterator;
+
+  for (iterator = list->begin(); iterator != list->end(); ++iterator) {
+    ShapeMatrix* shape = *iterator;
+    output_file << shape->getWidth() << ' ' << shape->getHeight() << ' ';
+    int area = shape->getMatrixArea();
+    for (int i = 0; i < area; ++i) {
+      output_file << shape->get(i) ? '1' : '0' << ' ';
+    }
+    output_file << endl;
+  }
+}
+
+void shape_matrix_read(const char* filename, ListOfShapes* const list) {
   ifstream input_file(filename);
 
   while(!input_file.eof()) {

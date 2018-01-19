@@ -9,6 +9,7 @@ using namespace std;
 typedef vector<ShapeMatrix*> ListOfShapes;
 
 void shape_matrix_print(ShapeMatrix* const shape);
+void shape_matrix_write(const char* filename, ListOfShapes* const list);
 void shape_matrix_read(const char* filename, ListOfShapes* const list);
 
 #endif
