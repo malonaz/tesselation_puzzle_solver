@@ -13,10 +13,10 @@ Steps:
 2) translate the points into horizontal edges only
 */
 
-void shape_get_size(vector<int[2]>* const shape, int& width, int& height) {
+void shape_get_size(vector<int*>* const shape, int& width, int& height) {
   width = 0;
   height = 0;
-  vector<int[2]>::const_iterator iterator;
+  vector<int*>::const_iterator iterator;
 
   for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
     int* coordinate = (int*)*iterator;
@@ -68,7 +68,7 @@ void process_row_filter(map<int, vector<int*>*> horizontal_edges, int row, bool 
   }
 }
 
-void shape_translate(vector<int[2]>* const shape, ShapeMatrix* matrix) {
+void shape_translate(vector<int*>* const shape, ShapeMatrix* &matrix) {
   int width = 0;
   int height = 0;
 
@@ -83,7 +83,7 @@ void shape_translate(vector<int[2]>* const shape, ShapeMatrix* matrix) {
 
   // the map of edges organized by their row-value
   map<int, vector<int*>*> horizontal_edges;
-  vector<int[2]>::const_iterator iterator;
+  vector<int*>::const_iterator iterator;
 
   iterator = shape->begin();
   int* first_point = (int*) *iterator;
