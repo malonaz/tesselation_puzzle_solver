@@ -12,7 +12,14 @@ PuzzleBoard::PuzzleBoard(ShapeMatrix* shape){
         current_board[i][j] = 0;
     }
   }
+}
 
+int PuzzleBoard::getHeight() {
+  return this->container->getHeight();
+}
+
+int PuzzleBoard::getWidth() {
+  return this->container->getWidth();
 }
 
 bool PuzzleBoard::placePiece(int x, int y, int idx, ShapeMatrix* piece){

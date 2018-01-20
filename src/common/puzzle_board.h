@@ -11,6 +11,10 @@ private:
 public:
   PuzzleBoard(ShapeMatrix* shape);
 
+  int getHeight();
+
+  int getWidth();
+
   bool placePiece(int x, int y, int idx, ShapeMatrix* piece);
 
   int** getCurrentBoard();
