@@ -1,10 +1,12 @@
-.PHONY: clean check coverage
+.PHONY: clean check coverage deps test
 CXX = g++
 CXXFLAGS = -Weffc++ -g -MMD -std=c++11 --coverage
 OBJDIR = obj
 SRCDIR = src
 BINDIR = bin
 TARGET = aps
+TESTTARGET = test
+TESTDIR = test
 COVDIR = coverage
 MAIN_OBJECT = $(SRCDIR)/main.o
 COMMON_OBJECTS = $(SRCDIR)/common/shape_matrix_io.o \
@@ -25,11 +27,16 @@ $(BINDIR)/$(TARGET): $(OBJECTS)
 
 -include $(OBJECTS:.o=.d)
 
+include $(TESTDIR)/makefile
+
+deps:
+	cd dep/googletest/make && make
+
 check:
 	cppcheck --enable=all --check-config --suppress=missingIncludeSystem src
-	
+
 # TODO: Set up tests and ensure tests are run for code coverage
-	
+
 coverage: $(BINDIR)/$(TARGET)
 	@mkdir -p $(COVDIR)
 	@find $(SRCDIR) -name '*.cc' -exec cp {} $(COVDIR) \;
@@ -38,7 +45,7 @@ coverage: $(BINDIR)/$(TARGET)
 	@cd $(COVDIR) && find . -name '*.cc' -exec gcov -bf {} \;
 	@rm $(COVDIR)/*.cc
 	lcov -t "result" -o $(COVDIR)/.info -c -d .
-	genhtml -o coverage/html $(COVDIR)/.info  
+	genhtml -o coverage/html $(COVDIR)/.info
 
 clean:
 	rm -rf $(BINDIR) $(OBJECTS) $(OBJECTS:.o=.d) $(COVDIR) *.o *.d
