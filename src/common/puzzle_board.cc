@@ -34,16 +34,22 @@ bool PuzzleBoard::placePiece(int x, int y, int idx, ShapeMatrix* piece){
     return false;
   }
   if (y < 0 || y >= container_height){
+//cout<<"idx is: "<<idx<<". fail here 1"<<endl;
     return false;
   }
   if (x < 0 || x >= container_width){
+//cout<<"idx is: "<<idx<<". fail here 2"<<endl;
     return false;
   }
-  if (y+piece_height >= container_height){
+  if (y+piece_height > container_height){
+//cout<<"idx is: "<<idx<<". fail here 3"<<endl;
     return false;
   }
-  if (x+piece_width >= container_width){
+  if (x+piece_width > container_width){
+//cout<<"idx is: "<<idx<<". fail here 4"<<endl;
     return false;
+    //cout<<"Trying piece number: "<<(currentIndex+1)<<"at coordinates "<<r <<", "<<c<<endl;
+
   }
 
   for (int i = 0; i < piece_height; i++){
@@ -55,6 +61,7 @@ bool PuzzleBoard::placePiece(int x, int y, int idx, ShapeMatrix* piece){
       }
       if(!this->container->get(board_y, board_x)
           || this->current_board[board_y][board_x] > 0){
+//            cout<<"idx is: "<<idx<<". fail here 5"<<endl;
         return false;
       }
 
@@ -64,7 +71,23 @@ bool PuzzleBoard::placePiece(int x, int y, int idx, ShapeMatrix* piece){
     for (int j = 0; j < piece_width; j++){
       int board_y = y + i;
       int board_x = x + j;
-      this->current_board[board_y][board_x] = idx;
+      if (piece->get(i, j)) {
+        this->current_board[board_y][board_x] = idx;
+      }
+    }
+  }
+  return true;
+}
+
+bool PuzzleBoard::removePiece(int x, int y, int indexToRemove){
+  int container_height = this->container->getHeight();
+  int container_width = this->container->getWidth();
+
+  for (int i = 0; i < container_height; i++){
+    for (int j = 0; j < container_width; j++){
+      if(this->current_board[i][j] == indexToRemove) {
+        this->current_board[i][j] = 0;
+      }
     }
   }
   return true;
