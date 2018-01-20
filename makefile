@@ -1,6 +1,6 @@
 .PHONY: clean check coverage
 CXX = g++
-CXXFLAGS = -Weffc++ -g -MMD -std=c++11 -fprofile-arcs -ftest-coverage
+CXXFLAGS = -Weffc++ -g -MMD -std=c++11 --coverage
 OBJDIR = obj
 SRCDIR = src
 BINDIR = bin
