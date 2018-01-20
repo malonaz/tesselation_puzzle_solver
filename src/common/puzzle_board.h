@@ -21,6 +21,8 @@ public:
 
   int getRemainingArea();
 
+  void printBoard();
+
   virtual ~PuzzleBoard();
 };
 

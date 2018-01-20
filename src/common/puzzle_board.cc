@@ -1,5 +1,8 @@
 #include "puzzle_board.h"
 #include "shape_matrix.h"
+#include <iostream>
+
+using namespace std;
 
 PuzzleBoard::PuzzleBoard(ShapeMatrix* shape){
   this->container = shape;
@@ -84,6 +87,15 @@ int PuzzleBoard::getRemainingArea(){
     }
   }
   return area;
+}
+
+void PuzzleBoard::printBoard(){
+for (int i = 0; i < this->container->getHeight(); i++){
+  for (int j = 0; j < this->container->getWidth(); j++){
+    cout << current_board[i][j];
+    }
+    cout << endl;
+  }
 }
 
 PuzzleBoard::~PuzzleBoard(){

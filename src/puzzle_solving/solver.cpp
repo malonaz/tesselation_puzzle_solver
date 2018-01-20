@@ -1,24 +1,18 @@
 #include "solver.h"
-#include "../common/puzzle_board.h"
+#include <vector>
 #include "../common/shape_matrix.h"
+#include "../common/puzzle_board.h"
+#include "../common/shape_matrix_io.h"
+#include <iostream>
 
-/*
-1) Have a double-for loop that cycles through the coordinates of the current puzzleboard
-2) Try PuzzleBoard::placePiece(int x, int y, int idx, ShapeMatrix* piece),
-if false, rotate (up to 3 times) and try again,
-if all 4 orientations return false, go to the next coordinate on the board and try again
-
-3) if placePiece is successful,
-
-
-*/
+using namespace std;
 
 PuzzleBoard* createBoard(vector<ShapeMatrix*>* const matrices, vector<ShapeMatrix*>* const pieces) {
-  int maxArea = matrices[0]->getShapeArea();
+  int maxArea = (*matrices)[0]->getShapeArea();
   int maxAreaIdx = 0;
 
   for (int i = 1; i < matrices->size(); i++ ) {
-    int tempArea = matrices[i]->getShapeArea();
+    int tempArea = (*matrices)[i]->getShapeArea();
     int pushIdx = i;
     if (tempArea > maxArea) {
       //places the previous largest piece into the puzzle pieces vector
@@ -26,15 +20,14 @@ PuzzleBoard* createBoard(vector<ShapeMatrix*>* const matrices, vector<ShapeMatri
       maxArea = tempArea;
       maxAreaIdx = i;
     }
-    pieces->push_back(matrices[pushIdx]);
+    pieces->push_back((*matrices)[pushIdx]);
   }
 
-  PuzzleBoard* board = new PuzzleBoard(matrices[maxAreaIdx]);
-
+  PuzzleBoard* board = new PuzzleBoard((*matrices)[maxAreaIdx]);
   return board;
 }
 
-bool recursiveSolver (PuzzleBoard* board, vector<ShapeMatrix*>* const pieces, int currentIndex, int x, int y) {
+bool recursiveSolver (PuzzleBoard* board, vector<ShapeMatrix*>* const pieces, int currentIndex) {
   if (board->getRemainingArea() == 0 && currentIndex == pieces->size()) {
     //the board is complete, and no more remaining pieces
     return true;
@@ -48,22 +41,38 @@ bool recursiveSolver (PuzzleBoard* board, vector<ShapeMatrix*>* const pieces, in
     return false;
   }
 
-  for (int r = 0; r < board->height ; r){
-
-    for () {
+  for (int r = 0; r < board->getHeight(); r++) {
+    for (int c = 0; c < board->getWidth(); c++) {
+      ShapeMatrix* temp = (*pieces)[currentIndex];
+      for (int rotation = 0; rotation < 4; rotation ++){
+        ShapeMatrix* r_temp;
+        r_temp = temp->rotate(rotation);
+        if (board->placePiece(c,r,(currentIndex+1),r_temp)) {
+          if(recursiveSolver(board,pieces, currentIndex+1)) {
+            return true;
+          }
+        board->placePiece(c, r, 0, r_temp); //reversing
+        }
+      }
     }
   }
-
 
 
   return false;
 }
 
 bool puzzleSolver(vector<ShapeMatrix*>* const matrices) {
+  ListOfShapes shapes;
+  ListOfShapes* pieces = &shapes;
 
-  vector<ShapeMatrix*>* pieces;
   PuzzleBoard* board = createBoard(matrices, pieces);
-  bool success = recursiveSolver(board, pieces, 0,0);
+      board->printBoard();
+  bool success = recursiveSolver(board, pieces, 0);
 
+  if (success){
+    board->printBoard();
+  }
+      board->printBoard();
+  cout<<success<<"  test 5....."<<endl;
   return success;
 }
