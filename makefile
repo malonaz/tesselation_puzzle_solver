@@ -59,4 +59,4 @@ coverage: $(BINDIR)/$(TARGET)
 	genhtml -o coverage/html $(COVDIR)/.info
 
 clean: test-clean
-	rm -rf $(BINDIR) $(OBJECTS) $(OBJECTS:.o=.d) $(COVDIR) *.o *.d *.gcno *.gcda
+	rm -rf $(BINDIR) $(OBJDIR) $(COVDIR) *.o *.d *.gcno *.gcda
