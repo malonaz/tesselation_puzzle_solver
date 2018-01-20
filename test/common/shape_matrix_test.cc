@@ -41,9 +41,9 @@ TEST(ShapeMatrixTest, RotateOnce) {
   ShapeMatrix* rotatedMatrix = NULL;
 
   matrix->set(0, 0, true);
-  matrix->set(0, 1, true);
-  matrix->set(0, 2, true);
-  matrix->set(1, 2, true);
+  matrix->set(1, 0, true);
+  matrix->set(2, 0, true);
+  matrix->set(2, 1, true);
   // an L shape
 
   rotatedMatrix = matrix->rotate();
