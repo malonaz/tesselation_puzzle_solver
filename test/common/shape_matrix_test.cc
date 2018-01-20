@@ -152,4 +152,28 @@ TEST(ShapeMatrixTest, NoRotate) {
   delete matrix;
 }
 
+TEST(ShapeMatrixTest, RotateTwice) {
+  int width = 2;
+  int height = 3;
+  ShapeMatrix* matrix = new ShapeMatrix(width, height);
+  ShapeMatrix* rotatedMatrix = NULL;
+
+  matrix->set(0, 0, true);
+  matrix->set(1, 0, true);
+  matrix->set(2, 0, true);
+  matrix->set(2, 1, true);
+  // an L shape
+
+  rotatedMatrix = matrix->rotate(2);
+  EXPECT_EQ(width, rotatedMatrix->getWidth());
+  EXPECT_EQ(height, rotatedMatrix->getHeight());
+  EXPECT_TRUE(rotatedMatrix->get(0, 0));
+  EXPECT_TRUE(rotatedMatrix->get(0, 1));
+  EXPECT_TRUE(rotatedMatrix->get(1, 1));
+  EXPECT_TRUE(rotatedMatrix->get(2, 1));
+  delete rotatedMatrix;
+
+  delete matrix;
+}
+
 } // namespace
