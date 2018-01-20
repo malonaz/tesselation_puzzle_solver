@@ -14,15 +14,12 @@
 
 # Points to the root of Google Test, relative to where this file is.
 # Remember to tweak this if you move this file.
-GTEST_DIR = ./dep/googletest
-
-# Where to find user code.
-USER_DIR = ../samples
+GTEST_DIR = dep/googletest
 
 # Flags passed to the preprocessor.
 # Set Google Test's header directory as a system directory, such that
 # the compiler doesn't generate warnings in Google Test headers.
-TESTFLAGS = -Wall -g
+TESTFLAGS = -Wall -Wextra -g
 TESTINCLUDES = -isystem $(GTEST_DIR)/include -I$(GTEST_DIR)
 
 # All Google Test headers.  Usually you shouldn't change this
@@ -58,7 +55,3 @@ gtest.a : gtest-all.o
 
 gtest_main.a : gtest-all.o gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
-
-# Builds a sample test.  A test should link with either gtest.a or
-# gtest_main.a, depending on whether it defines its own main()
-# function.

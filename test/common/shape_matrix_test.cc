@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "common/shape_matrix.h"
 
+namespace {
 TEST(ShapeMatrixTest, DataStructure) {
   int width = 10;
   int height = 5;
@@ -13,3 +14,22 @@ TEST(ShapeMatrixTest, DataStructure) {
 
   delete matrix;
 }
+
+TEST(ShapeMatrixTest, SetGet) {
+  int width = 10;
+  int height = 5;
+  ShapeMatrix* matrix = new ShapeMatrix(width, height);
+
+  EXPECT_EQ(0, matrix->getShapeArea());
+  matrix->set(0, 0, true);
+  EXPECT_EQ(1, matrix->getShapeArea());
+  EXPECT_TRUE(matrix->get(0, 0));
+
+  matrix->set(0, 0, false);
+  EXPECT_EQ(0, matrix->getShapeArea());
+  EXPECT_FALSE(matrix->get(0, 0));
+
+  delete matrix;
+}
+
+} // namespace

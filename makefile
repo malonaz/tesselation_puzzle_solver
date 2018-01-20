@@ -1,6 +1,4 @@
-.PHONY: clean check coverage deps test
-CXX = g++
-CXXFLAGS = -Weffc++ -g -MMD -std=c++11 --coverage
+.PHONY: clean check coverage test
 OBJDIR = obj
 SRCDIR = src
 BINDIR = bin
@@ -20,18 +18,21 @@ PUZZLE_SOLVING_OBJECTS = $(SRCDIR)/puzzle_solving/solver.o
 PUZZLE_OBJECTS = $(SRCDIR)/solver/imageProcessor.o \
 	$(SRCDIR)/solver/solutionProcessor.o
 
-OBJECTS = $(COMMON_OBJECTS) $(DISCRETIZER_OBJECTS) $(PUZZLE_OBJECTS) $(PUZZLE_SOLVING_OBJECTS)
+OBJECTS = $(COMMON_OBJECTS)\
+	$(DISCRETIZER_OBJECTS)\
+	$(PUZZLE_OBJECTS)\
+	$(PUZZLE_SOLVING_OBJECTS)
+
+CXX = g++
+CXXFLAGS = -Weffc++ -g -MMD -std=c++11 --coverage -I$(SRCDIR)/
 
 $(BINDIR)/$(TARGET): $(MAIN_OBJECT) $(OBJECTS)
-	@mkdir -p bin
+	@mkdir -p bin obj
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 -include $(OBJECTS:.o=.d)
 
 include $(TESTDIR)/makefile
-
-deps:
-	cd dep/googletest/make && make
 
 check:
 	cppcheck --enable=all --check-config --suppress=missingIncludeSystem src
@@ -48,5 +49,5 @@ coverage: $(BINDIR)/$(TARGET)
 	lcov -t "result" -o $(COVDIR)/.info -c -d .
 	genhtml -o coverage/html $(COVDIR)/.info
 
-clean:
-	rm -rf $(BINDIR) $(OBJECTS) $(OBJECTS:.o=.d) $(COVDIR) *.o *.d
+clean: test-clean
+	rm -rf $(BINDIR) $(OBJECTS) $(OBJECTS:.o=.d) $(COVDIR) *.o *.d *.gcno *.gcda
