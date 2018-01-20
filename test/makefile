@@ -12,7 +12,7 @@ $(TESTS) : %.o: %.cc
 $(BINDIR)/$(TESTTARGET): $(TESTS) gtest_main.a
 	$(CXX) $(CPPFLAGS)\
 		$(TESTINCLUDES)\
-		$(CXXFLAGS) $(OBJECTS) $^ -o $@ -lpthread -lgcov
+		$(CXXFLAGS) -fprofile-arcs $(OBJECTS) $^ -o $@ -lpthread
 
 coverage: test
 	./bin/test
