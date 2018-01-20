@@ -51,12 +51,12 @@ bool recursiveSolver (PuzzleBoard* board, vector<ShapeMatrix*>* const pieces, un
           if(recursiveSolver(board,pieces, currentIndex+1)) {
             return true;
           }
-        board->placePiece(c, r, 0, r_temp); //reversing
+          board->removePiece(c, r, currentIndex+1); //reversing
         }
+        delete r_temp;
       }
     }
   }
-
 
   return false;
 }
@@ -64,15 +64,10 @@ bool recursiveSolver (PuzzleBoard* board, vector<ShapeMatrix*>* const pieces, un
 bool puzzleSolver(vector<ShapeMatrix*>* const matrices) {
   ListOfShapes shapes;
   ListOfShapes* pieces = &shapes;
-
   PuzzleBoard* board = createBoard(matrices, pieces);
-      board->printBoard();
   bool success = recursiveSolver(board, pieces, 0);
-
-  if (success){
+  if (success) {
     board->printBoard();
   }
-      board->printBoard();
-  cout<<success<<"  test 5....."<<endl;
   return success;
 }
