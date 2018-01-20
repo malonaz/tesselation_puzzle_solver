@@ -15,11 +15,12 @@ COMMON_OBJECTS = $(SRCDIR)/common/shape_matrix_io.o \
 
 DISCRETIZER_OBJECTS = $(SRCDIR)/discretizer/shape_translate.o
 
+PUZZLE_SOLVING_OBJECTS = $(SRCDIR)/puzzle_solving/solver.o
+
 PUZZLE_OBJECTS = $(SRCDIR)/solver/imageProcessor.o \
-	$(SRCDIR)/solver/solver.o \
 	$(SRCDIR)/solver/solutionProcessor.o
 
-OBJECTS = $(COMMON_OBJECTS) $(DISCRETIZER_OBJECTS) $(PUZZLE_OBJECTS)
+OBJECTS = $(COMMON_OBJECTS) $(DISCRETIZER_OBJECTS) $(PUZZLE_OBJECTS) $(PUZZLE_SOLVING_OBJECTS)
 
 $(BINDIR)/$(TARGET): $(MAIN_OBJECT) $(OBJECTS)
 	@mkdir -p bin
