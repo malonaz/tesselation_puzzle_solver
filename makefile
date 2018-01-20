@@ -28,6 +28,8 @@ $(BINDIR)/$(TARGET): $(OBJECTS)
 check:
 	cppcheck --enable=all --check-config --suppress=missingIncludeSystem src
 	
+# TODO: Set up tests and ensure tests are run for code coverage
+	
 coverage: $(BINDIR)/$(TARGET)
 	@mkdir -p $(COVDIR)
 	@find $(SRCDIR) -name '*.cc' -exec cp {} $(COVDIR) \;
@@ -35,6 +37,8 @@ coverage: $(BINDIR)/$(TARGET)
 	@find $(SRCDIR) -name '*.gcda' -exec cp {} $(COVDIR) \;
 	@cd $(COVDIR) && find . -name '*.cc' -exec gcov -bf {} \;
 	@rm $(COVDIR)/*.cc
+	lcov -t "result" -o $(COVDIR)/.info -c -d .
+	genhtml -o coverage/html $(COVDIR)/.info  
 
 clean:
 	rm -rf $(BINDIR) $(OBJECTS) $(OBJECTS:.o=.d) $(COVDIR) *.o *.d
