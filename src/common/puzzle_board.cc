@@ -32,11 +32,11 @@ PuzzleBoard::PuzzleBoard(const PuzzleBoard &copy):
   }
 }
 
-int PuzzleBoard::getHeight() {
+int PuzzleBoard::getHeight() const {
   return this->container->getHeight();
 }
 
-int PuzzleBoard::getWidth() {
+int PuzzleBoard::getWidth() const {
   return this->container->getWidth();
 }
 
@@ -102,11 +102,11 @@ bool PuzzleBoard::removePiece(int x, int y, int indexToRemove){
   return true;
 }
 
-int** PuzzleBoard::getCurrentBoard(){
+int** PuzzleBoard::getCurrentBoard() const {
   return this->current_board;
 }
 
-int PuzzleBoard::getRemainingArea(){
+int PuzzleBoard::getRemainingArea() const {
   int area =0;
   int container_height = this->container->getHeight();
   int container_width = this->container->getWidth();
@@ -121,7 +121,7 @@ int PuzzleBoard::getRemainingArea(){
   return area;
 }
 
-void PuzzleBoard::printBoard(){
+void PuzzleBoard::printBoard() const {
 for (int i = 0; i < this->container->getHeight(); i++){
   for (int j = 0; j < this->container->getWidth(); j++){
     cout << current_board[i][j];
@@ -130,11 +130,33 @@ for (int i = 0; i < this->container->getHeight(); i++){
   }
 }
 
-// // PuzzleBoard& PuzzleBoard::operator=(const PuzzleBoard& rhs) {
-// //
-// //
-// //   return *this;
-// }
+PuzzleBoard& PuzzleBoard::operator=(const PuzzleBoard& rhs) {
+  if (this == &rhs) {
+    return *this;
+  }
+
+  int container_height = this->container->getHeight();
+  delete container;
+  for(int i = 0; i < container_height; i++){
+    delete[] current_board[i];
+  }
+  delete[] current_board;
+
+  this->container = new ShapeMatrix(*rhs.container);
+
+  int width = rhs.container->getWidth();
+  int height = rhs.container->getHeight();
+  this->current_board = new int*[height];
+  for(int i = 0; i < height; i++){
+    current_board[i] = new int[width];
+    for(int j= 0; j < width; j++){
+        current_board[i][j] = rhs.current_board[i][j];
+    }
+  }
+
+
+  return *this;
+}
 
 PuzzleBoard::~PuzzleBoard(){
   int container_height = this->container->getHeight();
