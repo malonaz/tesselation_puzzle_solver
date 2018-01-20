@@ -176,4 +176,55 @@ TEST(ShapeMatrixTest, RotateTwice) {
   delete matrix;
 }
 
+TEST(ShapeMatrixTest, RotateThrice) {
+  int width = 2;
+  int height = 3;
+  ShapeMatrix* matrix = new ShapeMatrix(width, height);
+  ShapeMatrix* rotatedMatrix = NULL;
+
+  matrix->set(0, 0, true);
+  matrix->set(1, 0, true);
+  matrix->set(2, 0, true);
+  matrix->set(2, 1, true);
+  // an L shape
+
+  rotatedMatrix = matrix->rotate(3);
+  EXPECT_EQ(height, rotatedMatrix->getWidth());
+  EXPECT_EQ(width, rotatedMatrix->getHeight());
+  EXPECT_TRUE(rotatedMatrix->get(1, 0));
+  EXPECT_TRUE(rotatedMatrix->get(1, 1));
+  EXPECT_TRUE(rotatedMatrix->get(1, 2));
+  EXPECT_TRUE(rotatedMatrix->get(0, 2));
+  delete rotatedMatrix;
+
+  delete matrix;
+}
+
+TEST(ShapeMatrixTest, RotateFourTimes) {
+  int width = 2;
+  int height = 3;
+  ShapeMatrix* matrix = new ShapeMatrix(width, height);
+  ShapeMatrix* rotatedMatrix = NULL;
+
+  matrix->set(0, 0, true);
+  matrix->set(1, 0, true);
+  matrix->set(2, 0, true);
+  matrix->set(2, 1, true);
+  // an L shape
+
+  rotatedMatrix = matrix->rotate(4);
+  EXPECT_NE(nullptr, rotatedMatrix);
+  EXPECT_NE(matrix, rotatedMatrix);
+  EXPECT_EQ(width, rotatedMatrix->getWidth());
+  EXPECT_EQ(height, rotatedMatrix->getHeight());
+
+  int area = width * height;
+  for (int i = 0; i < area; ++i) {
+    EXPECT_EQ(matrix->get(i), rotatedMatrix->get(i));
+  }
+
+  delete rotatedMatrix;
+  delete matrix;
+}
+
 } // namespace
