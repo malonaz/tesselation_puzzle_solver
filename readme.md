@@ -14,6 +14,6 @@ To run tests:
 
 To run tests and generate code coverage report:
 
-  $ make coverage
+    $ make coverage
 
 The code coverage reports can be found in `coverage/html` folder.
