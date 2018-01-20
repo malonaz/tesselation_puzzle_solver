@@ -1,11 +1,12 @@
+#include <cstddef>
+#include <iostream>
 #include "puzzle_board.h"
 #include "shape_matrix.h"
-#include <iostream>
 
 using namespace std;
 
-PuzzleBoard::PuzzleBoard(ShapeMatrix* shape){
-  this->container = shape;
+PuzzleBoard::PuzzleBoard(ShapeMatrix* shape):
+    container(shape), current_board(NULL) {
   int width = shape->getWidth();
   int height = shape->getHeight();
   this->current_board = new int*[height];
@@ -13,6 +14,20 @@ PuzzleBoard::PuzzleBoard(ShapeMatrix* shape){
     current_board[i] = new int[width];
     for(int j= 0; j < width; j++){
         current_board[i][j] = 0;
+    }
+  }
+}
+
+PuzzleBoard::PuzzleBoard(const PuzzleBoard &copy):
+    container(new ShapeMatrix(*copy.container)),
+    current_board(NULL) {
+  int width = copy.container->getWidth();
+  int height = copy.container->getHeight();
+  this->current_board = new int*[height];
+  for(int i = 0; i < height; i++){
+    current_board[i] = new int[width];
+    for(int j= 0; j < width; j++){
+        current_board[i][j] = copy.current_board[i][j];
     }
   }
 }
@@ -114,6 +129,12 @@ for (int i = 0; i < this->container->getHeight(); i++){
     cout << endl;
   }
 }
+
+// // PuzzleBoard& PuzzleBoard::operator=(const PuzzleBoard& rhs) {
+// //
+// //
+// //   return *this;
+// }
 
 PuzzleBoard::~PuzzleBoard(){
   int container_height = this->container->getHeight();
