@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "common/shape_matrix.h"
 
+namespace {
 TEST(ShapeMatrixTest, DataStructure) {
   int width = 10;
   int height = 5;
@@ -30,3 +31,5 @@ TEST(ShapeMatrixTest, SetGet) {
 
   delete matrix;
 }
+
+} // namespace
