@@ -6,17 +6,17 @@ TARGET = aps
 TESTTARGET = test
 TESTDIR = test
 COVDIR = coverage
-MAIN_OBJECT = $(SRCDIR)/main.o
-COMMON_OBJECTS = $(SRCDIR)/common/shape_matrix_io.o \
-	$(SRCDIR)/common/puzzle_board.o \
-	$(SRCDIR)/common/shape_matrix.o
 
-DISCRETIZER_OBJECTS = $(SRCDIR)/discretizer/shape_translate.o
+MAIN_OBJECT = $(OBJDIR)/main.o
 
-PUZZLE_SOLVING_OBJECTS = $(SRCDIR)/puzzle_solving/solver.o
+COMMON_OBJECTS = $(OBJDIR)/common/shape_matrix_io.o \
+	$(OBJDIR)/common/puzzle_board.o \
+	$(OBJDIR)/common/shape_matrix.o
 
-PUZZLE_OBJECTS = $(SRCDIR)/solver/imageProcessor.o \
-	$(SRCDIR)/solver/solutionProcessor.o
+DISCRETIZER_OBJECTS = $(OBJDIR)/discretizer/shape_translate.o
+
+PUZZLE_OBJECTS = $(OBJDIR)/solver/imageProcessor.o \
+	$(OBJDIR)/solver/solutionProcessor.o
 
 OBJECTS = $(COMMON_OBJECTS)\
 	$(DISCRETIZER_OBJECTS)\
@@ -24,11 +24,18 @@ OBJECTS = $(COMMON_OBJECTS)\
 	$(PUZZLE_SOLVING_OBJECTS)
 
 CXX = g++
-CXXFLAGS = -Weffc++ -g -MMD -std=c++11 --coverage -I$(SRCDIR)/
+CXXFLAGS = -Wall -g -MMD -std=c++11 -I$(SRCDIR)/
 
 $(BINDIR)/$(TARGET): $(MAIN_OBJECT) $(OBJECTS)
 	@mkdir -p bin obj
 	$(CXX) $(CXXFLAGS) $^ -o $@
+
+$(MAIN_OBJECT): $(OBJDIR)/%.o: $(SRCDIR)/%.cc
+	$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@
+
+$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
+	@mkdir -p `dirname $@`
+	$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@
 
 -include $(OBJECTS:.o=.d)
 
