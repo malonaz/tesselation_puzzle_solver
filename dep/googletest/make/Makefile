@@ -16,9 +16,6 @@
 # Remember to tweak this if you move this file.
 GTEST_DIR = ./dep/googletest
 
-# Where to find user code.
-USER_DIR = ../samples
-
 # Flags passed to the preprocessor.
 # Set Google Test's header directory as a system directory, such that
 # the compiler doesn't generate warnings in Google Test headers.

@@ -47,5 +47,5 @@ coverage: $(BINDIR)/$(TARGET)
 	lcov -t "result" -o $(COVDIR)/.info -c -d .
 	genhtml -o coverage/html $(COVDIR)/.info
 
-clean:
-	rm -rf $(BINDIR) $(OBJECTS) $(OBJECTS:.o=.d) $(COVDIR) *.o *.d
+clean: test-clean
+	rm -rf $(BINDIR) $(OBJECTS) $(OBJECTS:.o=.d) $(COVDIR) *.o *.d *.gcno *.gcda
