@@ -4,5 +4,12 @@ TESTS = $(TESTDIR)/common/shape_matrix_test.o
 
 test: $(BINDIR)/$(TARGET) $(BINDIR)/$(TESTTARGET)
 
+$(TESTS) : %.o: %.cc
+	$(CXX) $(CPPFLAGS)\
+		$(TESTINCLUDES)\
+		$(CXXFLAGS) -c $< -o $@
+
 $(BINDIR)/$(TESTTARGET): $(TESTS) gtest_main.a
-	$(CXX) -isystem $(GTEST_DIR)/include -I$(SRCDIR)/ $(CXXFLAGS) $(OBJECTS) $^ -o $@ -lpthread
+	$(CXX) $(CPPFLAGS)\
+		$(TESTINCLUDES)\
+		$(CXXFLAGS) $(OBJECTS) $^ -o $@ -lpthread
