@@ -1,6 +1,4 @@
 .PHONY: clean check coverage deps test
-CXX = g++
-CXXFLAGS = -Weffc++ -g -MMD -std=c++11 --coverage
 OBJDIR = obj
 SRCDIR = src
 BINDIR = bin
@@ -16,10 +14,12 @@ COMMON_OBJECTS = $(SRCDIR)/common/shape_matrix_io.o \
 DISCRETIZER_OBJECTS = $(SRCDIR)/discretizer/shape_translate.o
 
 PUZZLE_OBJECTS = $(SRCDIR)/solver/imageProcessor.o \
-	$(SRCDIR)/solver/solver.o \
 	$(SRCDIR)/solver/solutionProcessor.o
 
 OBJECTS = $(COMMON_OBJECTS) $(DISCRETIZER_OBJECTS) $(PUZZLE_OBJECTS)
+
+CXX = g++
+CXXFLAGS = -Weffc++ -g -MMD -std=c++11 --coverage -I$(SRCDIR)/
 
 $(BINDIR)/$(TARGET): $(MAIN_OBJECT) $(OBJECTS)
 	@mkdir -p bin
