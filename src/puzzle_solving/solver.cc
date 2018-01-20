@@ -10,8 +10,9 @@ using namespace std;
 PuzzleBoard* createBoard(vector<ShapeMatrix*>* const matrices, vector<ShapeMatrix*>* const pieces) {
   int maxArea = (*matrices)[0]->getShapeArea();
   int maxAreaIdx = 0;
+  int matricesSize = (int)matrices->size();
 
-  for (int i = 1; i < matrices->size(); i++ ) {
+  for (int i = 1; i < matricesSize; i++ ) {
     int tempArea = (*matrices)[i]->getShapeArea();
     int pushIdx = i;
     if (tempArea > maxArea) {
