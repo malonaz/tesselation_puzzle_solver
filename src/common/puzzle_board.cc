@@ -34,21 +34,16 @@ bool PuzzleBoard::placePiece(int x, int y, int idx, ShapeMatrix* piece){
     return false;
   }
   if (y < 0 || y >= container_height){
-//cout<<"idx is: "<<idx<<". fail here 1"<<endl;
     return false;
   }
   if (x < 0 || x >= container_width){
-//cout<<"idx is: "<<idx<<". fail here 2"<<endl;
     return false;
   }
   if (y+piece_height > container_height){
-//cout<<"idx is: "<<idx<<". fail here 3"<<endl;
     return false;
   }
   if (x+piece_width > container_width){
-//cout<<"idx is: "<<idx<<". fail here 4"<<endl;
     return false;
-    //cout<<"Trying piece number: "<<(currentIndex+1)<<"at coordinates "<<r <<", "<<c<<endl;
 
   }
 
@@ -61,7 +56,6 @@ bool PuzzleBoard::placePiece(int x, int y, int idx, ShapeMatrix* piece){
       }
       if(!this->container->get(board_y, board_x)
           || this->current_board[board_y][board_x] > 0){
-//            cout<<"idx is: "<<idx<<". fail here 5"<<endl;
         return false;
       }
 
