@@ -4,6 +4,7 @@
 #include "common/shape_matrix.h"
 
 namespace {
+
 TEST(ShapeMatrixTest, DataStructure) {
   int width = 10;
   int height = 5;
@@ -17,12 +18,31 @@ TEST(ShapeMatrixTest, DataStructure) {
   delete matrix;
 }
 
+TEST(ShapeMatrixTest, CopyConstructor) {
+  int width = 10;
+  int height = 5;
+  ShapeMatrix* matrix1 = new ShapeMatrix(width, height);
+  ShapeMatrix* matrix2 = new ShapeMatrix(*matrix1);
+
+  EXPECT_NE(matrix1, matrix2);
+
+  delete matrix1;
+  delete matrix2;
+}
+
 TEST(ShapeMatrixTest, SetGet) {
   int width = 10;
   int height = 5;
   ShapeMatrix* matrix = new ShapeMatrix(width, height);
 
   EXPECT_EQ(0, matrix->getShapeArea());
+
+  // set a previously false location true
+  matrix->set(0, 0, true);
+  EXPECT_EQ(1, matrix->getShapeArea());
+  EXPECT_TRUE(matrix->get(0, 0));
+
+  // set a previously true location true
   matrix->set(0, 0, true);
   EXPECT_EQ(1, matrix->getShapeArea());
   EXPECT_TRUE(matrix->get(0, 0));
@@ -30,6 +50,11 @@ TEST(ShapeMatrixTest, SetGet) {
   matrix->set(0, 0, false);
   EXPECT_EQ(0, matrix->getShapeArea());
   EXPECT_FALSE(matrix->get(0, 0));
+
+  int area = width * height;
+  for (int i = 0; i < area; i++) {
+    EXPECT_FALSE(matrix->get(i));
+  }
 
   delete matrix;
 }
