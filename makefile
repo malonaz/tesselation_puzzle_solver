@@ -1,4 +1,4 @@
-.PHONY: clean check coverage deps test
+.PHONY: clean check coverage test
 OBJDIR = obj
 SRCDIR = src
 BINDIR = bin
@@ -28,9 +28,6 @@ $(BINDIR)/$(TARGET): $(MAIN_OBJECT) $(OBJECTS)
 -include $(OBJECTS:.o=.d)
 
 include $(TESTDIR)/makefile
-
-deps:
-	cd dep/googletest/make && make
 
 check:
 	cppcheck --enable=all --check-config --suppress=missingIncludeSystem src
