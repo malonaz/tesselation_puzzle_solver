@@ -12,4 +12,4 @@ $(TESTS) : %.o: %.cc
 $(BINDIR)/$(TESTTARGET): $(TESTS) gtest_main.a
 	$(CXX) $(CPPFLAGS)\
 		$(TESTINCLUDES)\
-		$(CXXFLAGS) $(OBJECTS) $^ -o $@ -lpthread
+		$(CXXFLAGS) $(OBJECTS) $^ -o $@ -lpthread -lgcov
