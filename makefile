@@ -1,10 +1,11 @@
-.PHONY: clean check
+.PHONY: clean check coverage
 CXX = g++
-CXXFLAGS = -Weffc++ -g -MMD -std=c++11
+CXXFLAGS = -Weffc++ -g -MMD -std=c++11 -fprofile-arcs -ftest-coverage
 OBJDIR = obj
 SRCDIR = src
 BINDIR = bin
 TARGET = aps
+COVDIR = coverage
 MAIN_OBJECT = $(SRCDIR)/main.o
 COMMON_OBJECTS = $(SRCDIR)/common/shape_matrix_io.o \
 	$(SRCDIR)/common/puzzle_board.o \
@@ -26,6 +27,14 @@ $(BINDIR)/$(TARGET): $(OBJECTS)
 
 check:
 	cppcheck --enable=all --check-config --suppress=missingIncludeSystem src
+	
+coverage:
+	@mkdir -p $(COVDIR)
+	@find $(SRCDIR) -name '*.cc' -exec cp {} $(COVDIR) \;
+	@find $(SRCDIR) -name '*.gcno' -exec cp {} $(COVDIR) \;
+	@find $(SRCDIR) -name '*.gcda' -exec cp {} $(COVDIR) \;
+	@cd $(COVDIR) && find . -name '*.cc' -exec gcov -bf {} \;
+	@rm $(COVDIR)/*.cc
 
 clean:
-	rm -rf $(BINDIR) $(OBJECTS) $(OBJECTS:.o=.d) *.o *.d
+	rm -rf $(BINDIR) $(OBJECTS) $(OBJECTS:.o=.d) $(COVDIR) *.o *.d
