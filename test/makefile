@@ -21,5 +21,5 @@ coverage: test
 	@find $(OBJDIR) -name '*.gcno' -exec cp {} $(COVDIR) \;
 	@find $(OBJDIR) -name '*.gcda' -exec cp {} $(COVDIR) \;
 	@cd $(COVDIR) && find . -name '*.cc' -exec gcov -bf {} \;
-	lcov -o $(COVDIR)/.info -c -d $(COVDIR)
+	lcov --no-external -b $(SRCDIR) -o $(COVDIR)/.info -c -d $(COVDIR)
 	genhtml -o $(COVDIR)/html $(COVDIR)/.info
