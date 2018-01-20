@@ -29,7 +29,7 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 -include $(OBJECTS:.o=.d)
 
 check:
-	cppcheck --enable=all src
+	cppcheck --enable=all --check-config --suppress=missingIncludeSystem src
 
 clean:
 	rm -rf $(BINDIR) $(OBJECTS) $(OBJECTS:.o=.d) *.o *.d
