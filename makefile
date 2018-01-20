@@ -22,10 +22,6 @@ $(BINDIR)/$(TARGET): $(OBJECTS)
 	@mkdir -p bin
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-$(OBJDIR)/%.o : $(SRCDIR)/%.cc
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-	@echo "Compiled "$<" successfully!"
-
 -include $(OBJECTS:.o=.d)
 
 check:
