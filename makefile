@@ -19,9 +19,9 @@ PUZZLE_OBJECTS = $(SRCDIR)/solver/imageProcessor.o \
 	$(SRCDIR)/solver/solver.o \
 	$(SRCDIR)/solver/solutionProcessor.o
 
-OBJECTS = $(MAIN_OBJECT) $(COMMON_OBJECTS) $(DISCRETIZER_OBJECTS) $(PUZZLE_OBJECTS)
+OBJECTS = $(COMMON_OBJECTS) $(DISCRETIZER_OBJECTS) $(PUZZLE_OBJECTS)
 
-$(BINDIR)/$(TARGET): $(OBJECTS)
+$(BINDIR)/$(TARGET): $(MAIN_OBJECT) $(OBJECTS)
 	@mkdir -p bin
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
