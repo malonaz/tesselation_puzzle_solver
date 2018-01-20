@@ -28,7 +28,7 @@ $(BINDIR)/$(TARGET): $(OBJECTS)
 check:
 	cppcheck --enable=all --check-config --suppress=missingIncludeSystem src
 	
-coverage:
+coverage: $(BINDIR)/$(TARGET)
 	@mkdir -p $(COVDIR)
 	@find $(SRCDIR) -name '*.cc' -exec cp {} $(COVDIR) \;
 	@find $(SRCDIR) -name '*.gcno' -exec cp {} $(COVDIR) \;
