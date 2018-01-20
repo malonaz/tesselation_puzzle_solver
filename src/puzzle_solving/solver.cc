@@ -27,7 +27,7 @@ PuzzleBoard* createBoard(vector<ShapeMatrix*>* const matrices, vector<ShapeMatri
   return board;
 }
 
-bool recursiveSolver (PuzzleBoard* board, vector<ShapeMatrix*>* const pieces, int currentIndex) {
+bool recursiveSolver (PuzzleBoard* board, vector<ShapeMatrix*>* const pieces, unsigned int currentIndex) {
   if (board->getRemainingArea() == 0 && currentIndex == pieces->size()) {
     //the board is complete, and no more remaining pieces
     return true;
