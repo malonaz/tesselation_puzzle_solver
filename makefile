@@ -30,7 +30,7 @@ CXXFLAGS = -Wall -g -MMD -std=c++11 -I$(SRCDIR)/
 
 $(BINDIR)/$(TARGET): $(MAIN_OBJECT) $(OBJECTS)
 	@mkdir -p bin obj
-	$(CXX) $(CXXFLAGS) $^ -o $@
+	$(CXX) $(CXXFLAGS) $^ -o $@ -lgcov
 
 $(MAIN_OBJECT): $(OBJDIR)/%.o: $(SRCDIR)/%.cc
 	$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@
