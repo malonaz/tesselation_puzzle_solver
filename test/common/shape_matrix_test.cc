@@ -227,4 +227,48 @@ TEST(ShapeMatrixTest, RotateFourTimes) {
   delete matrix;
 }
 
+TEST(ShapeMatrixTest, AssignmentCopy) {
+  int width = 2;
+  int height = 3;
+
+  // ON STACK
+  ShapeMatrix matrix1(width, height);
+
+  matrix1.set(0, 0, true);
+  matrix1.set(1, 0, true);
+  matrix1.set(2, 0, true);
+  matrix1.set(2, 1, true);
+  // an L shape
+
+  ShapeMatrix matrix2(width, height);
+  EXPECT_NE(&matrix1, &matrix2);
+
+  matrix2 = matrix1;
+  EXPECT_NE(&matrix1, &matrix2);
+
+  EXPECT_EQ(width, matrix2.getWidth());
+  EXPECT_EQ(height, matrix2.getHeight());
+  int area = width * height;
+  for (int i = 0; i < area; ++i) {
+    EXPECT_EQ(matrix1.get(i), matrix2.get(i));
+  }
+}
+
+TEST(ShapeMatrixTest, AssignmentSelf) {
+  int width = 2;
+  int height = 3;
+
+  // ON STACK
+  ShapeMatrix matrix1(width, height);
+
+  matrix1.set(0, 0, true);
+  matrix1.set(1, 0, true);
+  matrix1.set(2, 0, true);
+  matrix1.set(2, 1, true);
+  // an L shape
+
+  // self assignment
+  matrix1 = matrix1;
+}
+
 } // namespace
