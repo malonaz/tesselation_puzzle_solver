@@ -1,4 +1,3 @@
-
 #include <algorithm>
 #include <cstddef>
 #include <cstdlib>
@@ -7,7 +6,7 @@
 #include <vector>
 
 #include "shape_translate.h"
-#include "../common/shape_matrix.h"
+#include "common/shape_matrix.h"
 
 using namespace std;
 

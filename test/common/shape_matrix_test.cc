@@ -1,4 +1,6 @@
-#include "gtest/gtest.h"
+
+#include <cstddef>
+#include <gtest/gtest.h>
 #include "common/shape_matrix.h"
 
 namespace {
@@ -28,6 +30,26 @@ TEST(ShapeMatrixTest, SetGet) {
   matrix->set(0, 0, false);
   EXPECT_EQ(0, matrix->getShapeArea());
   EXPECT_FALSE(matrix->get(0, 0));
+
+  delete matrix;
+}
+
+TEST(ShapeMatrixTest, RotateOnce) {
+  int width = 2;
+  int height = 3;
+  ShapeMatrix* matrix = new ShapeMatrix(width, height);
+  ShapeMatrix* rotatedMatrix = NULL;
+
+  matrix->set(0, 0, true);
+  matrix->set(1, 0, true);
+  matrix->set(2, 0, true);
+  matrix->set(2, 1, true);
+  // an L shape
+
+  rotatedMatrix = matrix->rotate();
+  EXPECT_EQ(height, rotatedMatrix->getWidth());
+  EXPECT_EQ(width, rotatedMatrix->getHeight());
+  delete rotatedMatrix;
 
   delete matrix;
 }

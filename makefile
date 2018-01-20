@@ -1,4 +1,4 @@
-.PHONY: clean check coverage test
+.PHONY: clean check coverage test main
 OBJDIR = obj
 SRCDIR = src
 BINDIR = bin
@@ -28,11 +28,14 @@ OBJECTS = $(COMMON_OBJECTS)\
 CXX = g++
 CXXFLAGS = -Wall -g -MMD -std=c++11 -I$(SRCDIR)/
 
+main: $(BINDIR)/$(TARGET)
+
 $(BINDIR)/$(TARGET): $(MAIN_OBJECT) $(OBJECTS)
-	@mkdir -p bin obj
+	@mkdir -p $(OBJDIR) $(BINDIR)
 	$(CXX) $(CXXFLAGS) $^ -o $@ -lgcov
 
 $(MAIN_OBJECT): $(OBJDIR)/%.o: $(SRCDIR)/%.cc
+	@mkdir -p $(OBJDIR) $(BINDIR)
 	$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
@@ -46,17 +49,5 @@ include $(TESTDIR)/makefile
 check:
 	cppcheck --enable=all --check-config --suppress=missingIncludeSystem src
 
-# TODO: Set up tests and ensure tests are run for code coverage
-
-coverage: $(BINDIR)/$(TARGET)
-	@mkdir -p $(COVDIR)
-	@find $(SRCDIR) -name '*.cc' -exec cp {} $(COVDIR) \;
-	@find $(SRCDIR) -name '*.gcno' -exec cp {} $(COVDIR) \;
-	@find $(SRCDIR) -name '*.gcda' -exec cp {} $(COVDIR) \;
-	@cd $(COVDIR) && find . -name '*.cc' -exec gcov -bf {} \;
-	@rm $(COVDIR)/*.cc
-	lcov -t "result" -o $(COVDIR)/.info -c -d .
-	genhtml -o coverage/html $(COVDIR)/.info
-
 clean: test-clean
-	rm -rf $(BINDIR) $(OBJECTS) $(OBJECTS:.o=.d) $(COVDIR) *.o *.d *.gcno *.gcda
+	rm -rf $(BINDIR) $(OBJDIR) $(COVDIR) *.o *.d *.gcno *.gcda
