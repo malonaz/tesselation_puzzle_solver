@@ -27,7 +27,7 @@ void shape_matrix_write(const char* filename, ListOfShapes* const list) {
     output_file << shape->getWidth() << ' ' << shape->getHeight() << ' ';
     int area = shape->getMatrixArea();
     for (int i = 0; i < area; ++i) {
-      output_file << shape->get(i) ? '1' : '0' << ' ';
+      output_file << (shape->get(i) ? '1' : '0') << ' ';
     }
     output_file << endl;
   }
