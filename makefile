@@ -32,7 +32,7 @@ main: $(BINDIR)/$(TARGET)
 
 $(BINDIR)/$(TARGET): $(MAIN_OBJECT) $(OBJECTS)
 	@mkdir -p $(OBJDIR) $(BINDIR)
-	$(CXX) $(CXXFLAGS) $^ -o $@ -lgcov
+	$(CXX) $(CXXFLAGS) -fprofile-arcs $^ -o $@
 
 $(MAIN_OBJECT): $(OBJDIR)/%.o: $(SRCDIR)/%.cc
 	@mkdir -p $(OBJDIR) $(BINDIR)
