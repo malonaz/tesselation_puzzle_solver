@@ -2,7 +2,7 @@
 #define APS_DISCRETIZER_SHAPE_TRANSLATE_H_
 
 #include <vector>
-#include "../common/shape_matrix.h"
+#include "common/shape_matrix.h"
 
 using namespace std;
 
