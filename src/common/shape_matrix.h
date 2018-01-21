@@ -1,10 +1,8 @@
 #ifndef APS_COMMON_SHAPE_MATRIX_H_
 #define APS_COMMON_SHAPE_MATRIX_H_
 
-/*
-  ShapeMatrix
-
-  describes the shape detected in the image as an discrete logocal matrix
+/**
+  Describes the shape detected in the image as an discrete logocal matrix
 */
 class ShapeMatrix {
 private:
