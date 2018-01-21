@@ -33,7 +33,7 @@ void shape_get_size(const ListOfPoints* const shape, uint& width, uint& height) 
     min_x = min(min_x, point.x);
     max_x = max(max_x, point.x);
     min_y = min(min_y, point.y);
-    min_y = max(max_y, point.y);
+    max_y = max(max_y, point.y);
   }
   width = (uint)(max_x - min_x);
   height = (uint)(max_y - min_y);
@@ -54,7 +54,7 @@ void shape_process_edge(map<uint, ListOfEdges*> &horizontal_edges,
   }
 
   // array must be created on heap so that other methods can access it later.
-  int* edge = new int[4]{ point1.x, point1.y, point2.x, point2.y };
+  int* edge = new int[2]{ point1.x, point2.x };
   horizontal_edges[y_coord]->push_back(edge);
 } // shape_process_edge(map<uint, ListOfEdges*>&, int[], int[])
 
@@ -70,7 +70,7 @@ void process_row_filter(map<uint, ListOfEdges*> &horizontal_edges,
   for (edges_it = edges->begin(); edges_it != edges->end(); ++edges_it) {
     int* current_edge = (int*) *edges_it;
     int x1 = current_edge[0];
-    int x2 = current_edge[2];
+    int x2 = current_edge[1];
 
     int min_x = min(x1, x2);
     int max_x = max(x1, x2);
