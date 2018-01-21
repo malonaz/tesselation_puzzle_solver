@@ -132,6 +132,7 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
     }
   }
 
+  // perform clean up on the edges we've created.
   map<uint, ListOfEdges*>::iterator map_it;
   for (map_it = horizontal_edges.begin(); map_it != horizontal_edges.end(); ++map_it) {
     ListOfEdges* edges = map_it->second;
@@ -198,6 +199,7 @@ int find_unit_length(const ListOfShapes* const shapes) {
 } // find_unit_length(ListOfShapes*)
 
 void shape_reduce(ListOfPoints* const shape, int unit_length) {
+  assert(shape != NULL);
   ListOfPoints::iterator iterator;
   for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
     Point current_point = *iterator;
@@ -208,6 +210,7 @@ void shape_reduce(ListOfPoints* const shape, int unit_length) {
 
 bool shape_translate_all_shapes(const ListOfShapes* const shapes,
     ListOfShapeMatrices* const matrices) {
+  assert(shapes != NULL);
   assert(matrices != NULL);
   int unit_length = find_unit_length(shapes);
   if (unit_length == -1) {
