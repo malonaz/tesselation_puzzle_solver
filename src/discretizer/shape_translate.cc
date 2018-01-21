@@ -18,10 +18,10 @@ Steps:
 2) translate the points into horizontal edges only
 */
 
-void shape_get_size(ListOfPoints* const shape, int& width, int& height) {
+void shape_get_size(const ListOfPoints* const shape, int& width, int& height) {
   width = 0;
   height = 0;
-  vector<int*>::const_iterator iterator;
+  ListOfPoints::const_iterator iterator;
 
   for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
     int* coordinate = (int*)*iterator;
@@ -44,7 +44,7 @@ void shape_process_edge(map<int, ListOfEdges*> &horizontal_edges, int coord1[2],
 
   if (horizontal_edges.find(y_coord) == horizontal_edges.end()) {
     // there's no entry of this y coordinate in the map
-    horizontal_edges[y_coord] = new vector<int*>();
+    horizontal_edges[y_coord] = new ListOfEdges();
   }
 
   // array must be created on heap so that other methods can access it later.
@@ -74,7 +74,7 @@ void process_row_filter(map<int, ListOfEdges*> &horizontal_edges, int row, bool 
   }
 }
 
-void shape_translate(ListOfPoints* const shape, ShapeMatrix* &matrix) {
+void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
   int width = 0;
   int height = 0;
   matrix = NULL;
@@ -138,7 +138,7 @@ void shape_translate(ListOfPoints* const shape, ShapeMatrix* &matrix) {
 
 int find_shortest_edge_in_shape(ListOfPoints* const shape) {
   int shortest_edge_length = -1;
-  vector<int*>::const_iterator iterator;
+  ListOfPoints::const_iterator iterator;
   int* first_point = (int*) *iterator;
   int* last_processed_point  = (int*) *iterator;
 
