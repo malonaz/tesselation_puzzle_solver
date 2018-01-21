@@ -1,3 +1,5 @@
+#include <cassert>
+#include <cstddef>
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -23,7 +25,11 @@ void shape_matrix_print(const ShapeMatrix& shape) {
 } // shape_matrix_print(ShapeMatrix&)
 
 void shape_matrix_write(const char* filename, ListOfShapes* const list) {
+  assert(list != NULL);
   ofstream output_file(filename);
+  if (output_file.fail()) {
+    return;
+  }
   ListOfShapes::iterator iterator;
 
   for (iterator = list->begin(); iterator != list->end(); ++iterator) {
@@ -38,7 +44,11 @@ void shape_matrix_write(const char* filename, ListOfShapes* const list) {
 } // shape_matrix_write(const char*, ListOfShapes*)
 
 void shape_matrix_read(const char* filename, ListOfShapes* const list) {
+  assert(list != NULL);
   ifstream input_file(filename);
+  if (input_file.fail()) {
+    return;
+  }
 
   while (!input_file.eof()) {
     int width, height, area;
