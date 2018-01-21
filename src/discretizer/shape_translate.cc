@@ -19,7 +19,7 @@ Steps:
 2) translate the points into horizontal edges only
 */
 
-void shape_get_size(const ListOfPoints* const shape, int& width, int& height) {
+void shape_get_size(const ListOfPoints* const shape, uint& width, uint& height) {
   width = 0;
   height = 0;
   ListOfPoints::const_iterator iterator;
@@ -35,7 +35,7 @@ void shape_get_size(const ListOfPoints* const shape, int& width, int& height) {
   }
 }
 
-void shape_process_edge(map<int, ListOfEdges*> &horizontal_edges, int coord1[2], int coord2[2]) {
+void shape_process_edge(map<uint, ListOfEdges*> &horizontal_edges, int coord1[2], int coord2[2]) {
   if (coord1[1] != coord2[1]) {
     return;
   }
@@ -53,7 +53,7 @@ void shape_process_edge(map<int, ListOfEdges*> &horizontal_edges, int coord1[2],
   horizontal_edges[y_coord]->push_back(edge);
 }
 
-void process_row_filter(map<int, ListOfEdges*> &horizontal_edges, int row, bool row_filter[]) {
+void process_row_filter(map<uint, ListOfEdges*> &horizontal_edges, uint row, bool row_filter[]) {
   if (horizontal_edges.find(row) == horizontal_edges.end()) {
     return;
   }
@@ -76,8 +76,8 @@ void process_row_filter(map<int, ListOfEdges*> &horizontal_edges, int row, bool 
 }
 
 void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
-  int width = 0;
-  int height = 0;
+  uint width = 0;
+  uint height = 0;
   matrix = NULL;
 
   // find width and height of the shape
@@ -99,7 +99,7 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
   }
 
   // the map of edges organized by their row-value
-  map<int, ListOfEdges*> horizontal_edges;
+  map<uint, ListOfEdges*> horizontal_edges;
   ListOfPoints::const_iterator iterator;
 
   iterator = shape->begin();
@@ -119,14 +119,14 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
   matrix = new ShapeMatrix(width, height);
 
   // process the matrix row-wise
-  for (int row = 0; row < height; ++row) {
+  for (uint row = 0; row < height; ++row) {
     process_row_filter(horizontal_edges, row, row_filter);
     for (int col = 0; col < width; ++col) {
       matrix->set(row, col, row_filter[col]);
     }
   }
 
-  map<int, ListOfEdges*>::iterator map_it;
+  map<uint, ListOfEdges*>::iterator map_it;
   for (map_it = horizontal_edges.begin(); map_it != horizontal_edges.end(); ++map_it) {
     ListOfEdges* edges = map_it->second;
     ListOfEdges::iterator list_it;
