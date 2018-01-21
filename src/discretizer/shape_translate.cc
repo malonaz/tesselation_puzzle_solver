@@ -170,6 +170,13 @@ int find_shortest_edge_in_shape(ListOfPoints* const shape) {
   return shortest_edge_length;
 } // find_shortest_edge_in_shape(ListOfPoints*)
 
+/**
+  Find the shortest edge length among all the shapes and take it
+  as the unit length
+
+  \param shapes The list of shapes to process
+  \return The unit length among all the shapes
+*/
 int find_unit_length(ListOfShapes* const shapes) {
   int unit_length = -1;
 
@@ -188,8 +195,8 @@ void shape_reduce(ListOfPoints* const shape, int unit_length) {
   ListOfPoints::const_iterator iterator;
   for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
     int* current_coord = (int*) *iterator;
-    current_coord[0] = current_coord[0] / unit_length;
-    current_coord[1] = current_coord[1] / unit_length;
+    current_coord[0] /= unit_length;
+    current_coord[1] /= unit_length;
   }
 } // shape_reduce(ListOfPoints* shape, int)
 
@@ -207,6 +214,7 @@ bool shape_translate_all_shapes(ListOfShapes* const shapes,
     shape_reduce(shape, unit_length);
     ShapeMatrix* matrix = NULL;
     shape_translate(shape, matrix);
+    // we're ignoring shapes that cannot be produced from
     if (matrix == NULL) {
       continue;
     }
