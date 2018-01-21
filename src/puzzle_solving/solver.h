@@ -9,7 +9,7 @@
 using namespace std;
 
 PuzzleBoard* createBoard(ListOfShapeMatrices* const matrices,
-  ListOfShapeMatrices* const pieces);
+    ListOfShapeMatrices* const pieces, int& containerArea, int& totalPieceArea);
 
 bool recursiveSolver (PuzzleBoard* board,
   ListOfShapeMatrices* const pieces,

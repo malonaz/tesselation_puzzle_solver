@@ -8,9 +8,11 @@
 
 using namespace std;
 
-PuzzleBoard* createBoard(ListOfShapeMatrices* const matrices, ListOfShapeMatrices* const pieces) {
+PuzzleBoard* createBoard(ListOfShapeMatrices* const matrices,
+    ListOfShapeMatrices* const pieces, int& containerArea, int& totalPieceArea) {
   int maxArea = (*matrices)[0]->getShapeArea();
   int maxAreaIdx = 0;
+  int accumArea = 0;
   int matricesSize = (int)matrices->size();
 
   for (int i = 1; i < matricesSize; i++) {
@@ -19,13 +21,17 @@ PuzzleBoard* createBoard(ListOfShapeMatrices* const matrices, ListOfShapeMatrice
     if (tempArea > maxArea) {
       //places the previous largest piece into the puzzle pieces vector
       pushIdx = maxAreaIdx;
+      accumArea += maxArea;
       maxArea = tempArea;
       maxAreaIdx = i;
     }
+    accumArea += tempArea;
     pieces->push_back((*matrices)[pushIdx]);
   }
 
   PuzzleBoard* board = new PuzzleBoard((*matrices)[maxAreaIdx]);
+  containerArea = maxArea; // return container area as a reference
+  totalPieceArea = accumArea; // return total area of puzzle pieces
   return board;
 }
 
@@ -68,7 +74,17 @@ bool recursiveSolver (PuzzleBoard* board,
 bool puzzleSolver(ListOfShapeMatrices* const matrices) {
   ListOfShapeMatrices shapes;
   ListOfShapeMatrices* pieces = &shapes;
-  PuzzleBoard* board = createBoard(matrices, pieces);
+  int containerArea =0;
+  int totalPieceArea  =0;
+  PuzzleBoard* board = createBoard(matrices, pieces,
+      containerArea, totalPieceArearea);
+  if (totalPieceArea > containerArea) { // case of undersized container
+    return false;
+  }
+  if (totalPieceArea < containerArea){ // case of oversized container
+    return false;
+  }
+  // if puzzle pieces area == container area
   bool success = recursiveSolver(board, pieces, 0);
   if (success) {
     board->printBoard();
