@@ -38,23 +38,45 @@ namespace {
     delete matrix;
   }
 
-    TEST(ShapeTranslateTest, shape_translate_NonNullPointer) {
-      ShapeMatrix*  matrix = new ShapeMatrix(5, 5);
+  TEST(ShapeTranslateTest, shape_translate_NonNullPointer) {
+    ShapeMatrix*  matrix = new ShapeMatrix(5, 5);
 
-      ListOfPoints shape;
-      shape.push_back(new int[2]{ 0, 0 });
-      shape.push_back(new int[2]{ 3, 0 });
-      shape.push_back(new int[2]{ 3, 3 });
-      shape.push_back(new int[2]{ 2, 3 });
-      shape.push_back(new int[2]{ 2, 2 });
-      shape.push_back(new int[2]{ 1, 2 });
-      shape.push_back(new int[2]{ 1, 3 });
-      shape.push_back(new int[2]{ 0, 3 });
+    ListOfPoints shape;
+    shape.push_back(new int[2]{ 0, 0 });
+    shape.push_back(new int[2]{ 3, 0 });
+    shape.push_back(new int[2]{ 3, 3 });
+    shape.push_back(new int[2]{ 2, 3 });
+    shape.push_back(new int[2]{ 2, 2 });
+    shape.push_back(new int[2]{ 1, 2 });
+    shape.push_back(new int[2]{ 1, 3 });
+    shape.push_back(new int[2]{ 0, 3 });
 
-      // because matrix is not NULL, assert should cause this statement to fail
-      EXPECT_DEATH(shape_translate(&shape, matrix),
-        "Assertion.+matrix == NULL.+failed");
-      delete matrix;
-    }
+    // because matrix is not NULL, assert should cause this statement to fail
+    EXPECT_DEATH(shape_translate(&shape, matrix),
+      "Assertion.+matrix == NULL.+failed");
+    delete matrix;
+  }
+
+  TEST(ShapeTranslateTest, shape_translate_ZeroWidth) {
+    ShapeMatrix*  matrix = NULL;
+
+    ListOfPoints shape;
+    shape.push_back(new int[2]{ 0, 2 });
+
+    // because matrix is not NULL, assert should cause this statement to fail
+    shape_translate(&shape, matrix);
+    EXPECT_EQ(NULL, matrix);
+  }
+
+  TEST(ShapeTranslateTest, shape_translate_ZeroHeight) {
+    ShapeMatrix*  matrix = NULL;
+
+    ListOfPoints shape;
+    shape.push_back(new int[2]{ 5, 0 });
+
+    // because matrix is not NULL, assert should cause this statement to fail
+    shape_translate(&shape, matrix);
+    EXPECT_EQ(NULL, matrix);
+  }
 
 }
