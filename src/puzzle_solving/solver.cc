@@ -1,9 +1,9 @@
-#include "solver.h"
-#include <vector>
-#include "../common/shape_matrix.h"
-#include "../common/puzzle_board.h"
-#include "../common/shape_matrix_io.h"
 #include <iostream>
+#include <vector>
+#include "common/shape_matrix.h"
+#include "common/puzzle_board.h"
+#include "common/shape_matrix_io.h"
+#include "solver.h"
 
 using namespace std;
 
