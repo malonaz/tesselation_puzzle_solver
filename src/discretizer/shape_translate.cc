@@ -76,9 +76,9 @@ void process_row_filter(map<uint, ListOfEdges*> &horizontal_edges, uint row, boo
 } // process_row_filter(map<uint, ListOfEdges*>&, uint, bool[])
 
 void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
+  assert(matrix == NULL);
   uint width = 0;
   uint height = 0;
-  matrix = NULL;
 
   // find width and height of the shape
   shape_get_size(shape, width, height);
@@ -195,6 +195,7 @@ void shape_reduce(ListOfPoints* const shape, int unit_length) {
 
 bool shape_translate_all_shapes(ListOfShapes* const shapes,
     vector<ShapeMatrix*>* const matrices) {
+  assert(matrices != NULL);
   int unit_length = find_unit_length(shapes);
   if (unit_length == -1) {
     return false;
