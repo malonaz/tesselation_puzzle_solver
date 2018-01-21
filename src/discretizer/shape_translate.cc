@@ -4,11 +4,14 @@
 #include <cstdlib>
 #include <map>
 
+#include "common/point.h"
 #include "common/shape_matrix.h"
 #include "common/types.h"
 #include "shape_translate.h"
 
 using std::map;
+using std::min;
+using std::max;
 
 /*
 
@@ -18,29 +21,32 @@ Steps:
 */
 
 void shape_get_size(const ListOfPoints* const shape, uint& width, uint& height) {
-  width = 0;
-  height = 0;
+  int max_x = 0;
+  int max_y = 0;
+  int min_x = 0;
+  int min_y = 0;
+  
   ListOfPoints::const_iterator iterator;
 
   for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
-    int* coordinate = (int*)*iterator;
-    if ((uint)coordinate[0] > width) {
-      width = coordinate[0];
-    }
-    if ((uint)coordinate[1] > height) {
-      height = coordinate[1];
-    }
+    Point point = *iterator;
+    min_x = min(min_x, point.x);
+    max_x = max(max_x, point.x);
+    min_y = min(min_y, point.y);
+    min_y = max(max_y, point.y);
   }
+  width = (uint)(max_x - min_x);
+  height = (uint)(max_y - min_y);
 } // shape_get_size(ListOfPoints*, uint&, uint&)
 
 void shape_process_edge(map<uint, ListOfEdges*> &horizontal_edges,
-    int coord1[2], int coord2[2]) {
-  if (coord1[1] != coord2[1]) {
+    Point point1, Point point2) {
+  if (point1.y != point2.y) {
     return;
   }
 
   // edge has same y coordinates
-  int y_coord = coord1[1];
+  int y_coord = point1.y;
 
   if (horizontal_edges.find(y_coord) == horizontal_edges.end()) {
     // there's no entry of this y coordinate in the map
@@ -48,7 +54,7 @@ void shape_process_edge(map<uint, ListOfEdges*> &horizontal_edges,
   }
 
   // array must be created on heap so that other methods can access it later.
-  int* edge = new int[4]{ coord1[0], coord1[1], coord2[0], coord2[1] };
+  int* edge = new int[4]{ point1.x, point1.y, point2.x, point2.y };
   horizontal_edges[y_coord]->push_back(edge);
 } // shape_process_edge(map<uint, ListOfEdges*>&, int[], int[])
 
@@ -103,14 +109,14 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
   ListOfPoints::const_iterator iterator;
 
   iterator = shape->begin();
-  int* first_point = (int*) *iterator;
-  int* last_processed_point  = (int*) *iterator;
+  Point first_point = *iterator;
+  Point last_processed_point  = *iterator;
 
   // skip processing the first point
   for (++iterator; iterator != shape->end(); ++iterator) {
-    int* current_coord = (int*) *iterator;
-    shape_process_edge(horizontal_edges, last_processed_point, current_coord);
-    last_processed_point = current_coord;
+    Point current_point = *iterator;
+    shape_process_edge(horizontal_edges, last_processed_point, current_point);
+    last_processed_point = current_point;
   }
   // process the edge of last point to the first point
   shape_process_edge(horizontal_edges, last_processed_point, first_point);
@@ -140,28 +146,28 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
 int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
   int shortest_edge_length = -1;
   ListOfPoints::const_iterator iterator;
-  int* first_point = (int*) *iterator;
-  int* last_processed_point  = (int*) *iterator;
+  Point first_point = *iterator;
+  Point last_processed_point  = *iterator;
 
   // skip processing the first point
   for (++iterator; iterator != shape->end(); ++iterator) {
-    int* current_coord = (int*) *iterator;
+    Point current_point = *iterator;
 
-    int length = abs(current_coord[0] - last_processed_point[0]);
+    int length = abs(current_point.x - last_processed_point.x);
     if (length == 0) {
-      length = abs(current_coord[1] - last_processed_point[1]);
+      length = abs(current_point.x - last_processed_point.y);
     }
     if (length < shortest_edge_length || shortest_edge_length == -1) {
       shortest_edge_length = length;
     }
 
-    last_processed_point = current_coord;
+    last_processed_point = current_point;
   }
 
   // process the edge of last point to the first point
-  int length = abs(first_point[0] - last_processed_point[0]);
+  int length = abs(first_point.x - last_processed_point.x);
   if (length == 0) {
-    length = abs(first_point[1] - last_processed_point[1]);
+    length = abs(first_point.y - last_processed_point.y);
   }
   if (length < shortest_edge_length || shortest_edge_length == -1) {
     shortest_edge_length = length;
@@ -192,11 +198,11 @@ int find_unit_length(const ListOfShapes* const shapes) {
 } // find_unit_length(ListOfShapes*)
 
 void shape_reduce(ListOfPoints* const shape, int unit_length) {
-  ListOfPoints::const_iterator iterator;
+  ListOfPoints::iterator iterator;
   for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
-    int* current_coord = (int*) *iterator;
-    current_coord[0] /= unit_length;
-    current_coord[1] /= unit_length;
+    Point current_point = *iterator;
+    current_point.x /= unit_length;
+    current_point.y /= unit_length;
   }
 } // shape_reduce(ListOfPoints* shape, int)
 
