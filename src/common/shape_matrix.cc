@@ -124,6 +124,10 @@ ShapeMatrix& ShapeMatrix::operator=(const ShapeMatrix& rhs) {
 } // ShapeMatrix::operator=(ShapeMatrix&)
 
 bool ShapeMatrix::operator==(const ShapeMatrix& rhs) const {
+  if (this == &rhs) {
+    return true;
+  }
+  
   if (this->width != rhs.width || this->height != rhs.height) {
     return false;
   }
