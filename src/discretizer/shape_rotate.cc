@@ -1,13 +1,12 @@
-#include "shape_rotate.h"
+#include <cassert>
+#include <cmath>
+#include <iostream>
+
 #include "common/shape_matrix.h"
 #include "common/point.h"
 #include "common/types.h"
+#include "shape_rotate.h"
 #include "shape_translate.h"
-
-#include "assert.h"
-#include <iostream>
-#include <cmath>
-
 
 // used to keep track of direction of segment w.r to x-y axis.
 enum Direction {NORTH, EAST, SOUTH, WEST};
