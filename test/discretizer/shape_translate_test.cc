@@ -79,4 +79,17 @@ namespace {
     EXPECT_EQ(NULL, matrix);
   }
 
+  TEST(ShapeTranslateTest, shape_translate_MinPoints) {
+    ShapeMatrix*  matrix = NULL;
+
+    ListOfPoints shape;
+    shape.push_back(new int[2]{ 0, 0 });
+    shape.push_back(new int[2]{ 0, 1 });
+    shape.push_back(new int[2]{ 1, 0 });
+
+    // because matrix is not NULL, assert should cause this statement to fail
+    shape_translate(&shape, matrix);
+    EXPECT_EQ(NULL, matrix);
+  }
+
 }
