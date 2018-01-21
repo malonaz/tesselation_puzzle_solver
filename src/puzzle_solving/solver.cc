@@ -77,7 +77,7 @@ bool puzzleSolver(ListOfShapeMatrices* const matrices) {
   int containerArea =0;
   int totalPieceArea  =0;
   PuzzleBoard* board = createBoard(matrices, pieces,
-      containerArea, totalPieceArearea);
+      containerArea, totalPieceArea);
   if (totalPieceArea > containerArea) { // case of undersized container
     return false;
   }
