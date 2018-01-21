@@ -12,9 +12,13 @@
 // used to keep track of direction of segment w.r to x-y axis.
 enum Direction {NORTH, EAST, SOUTH, WEST};
 
+// used to repesent the quadrants of a Cartesian coordinate graph
 enum Quadrant {I = 1, II = 2, III = 3, IV = 4, INVALID_QUADRANT};
+
+
+
 /**
- * Returns Quadrant relative to origin
+ * Helper function which returns the Quadrant where (x, y) lies relative to the origin
  */ 
 Quadrant get_quadrant(int x, int y){
   if (x == 0 || y == 0)
@@ -36,8 +40,9 @@ Quadrant get_quadrant(int x, int y){
 }
 
 
+
 /**
- * Returns true if we are making a right turn
+ * Helper function, which returns true if the given change of Quadrant implies a right turn.
  */
 bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant){
   // assert quadrants are not equal
@@ -52,7 +57,6 @@ bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant){
     return false;
    
   return current_quadrant > previous_quadrant;
-
 }
 
 
@@ -138,7 +142,9 @@ void rotate_shape(std::vector<Point> shape_points, std::vector<Point> rotated_sh
 }
 
 
-
+/**
+ * Helper function which prints the given vector of points.
+ */ 
 void print_shape(std::vector<Point> shape_points){
   for (uint i = 0; i < shape_points.size(); i++){
     int x = shape_points[i].x;

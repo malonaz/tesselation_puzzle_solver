@@ -6,9 +6,13 @@
 #include <vector>
 
 
+void rotate_shapes(std::vector< std::vector<Point> > list_shape_points,
+		   std::vector< std::vector<Point> > list_rotated_shape_points);
 
-void rotate_shape(std::vector<Point> shape_points, std::vector<Point> rotated_shape_points);
+void rotate_shape(const std::vector<Point> shape_points, std::vector<Point> rotated_shape_points);
 
-void print_shape(std::vector<Point> shape_points);
+
+void print_shape(const std::vector<Point> shape_points);
 
 #endif
+
