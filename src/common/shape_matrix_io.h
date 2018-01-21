@@ -13,7 +13,15 @@ typedef vector<ShapeMatrix*> ListOfShapes;
   
   \param shape The pointer to the shape matrix to print.
 */
-void shape_matrix_print(ShapeMatrix* const shape);
+void shape_matrix_print(const ShapeMatrix* const shape);
+
+/**
+  Prints a shape matrix as a 2D array on the standard output.
+  
+  \param shape The shape matrix to print.
+*/
+void shape_matrix_print(const ShapeMatrix& shape);
+
 void shape_matrix_write(const char* filename, ListOfShapes* const list);
 void shape_matrix_read(const char* filename, ListOfShapes* const list);
 

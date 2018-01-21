@@ -7,16 +7,20 @@
 
 using namespace std;
 
-void shape_matrix_print(ShapeMatrix* const shape) {
-  int width = shape->getWidth();
-  int height = shape->getHeight();
+void shape_matrix_print(const ShapeMatrix* const shape) {
+  shape_matrix_print(*shape);
+} // shape_matrix_print(ShapeMatrix*)
+
+void shape_matrix_print(const ShapeMatrix& shape) {
+  int width = shape.getWidth();
+  int height = shape.getHeight();
   for (int r = 0; r < height; ++r) {
     for (int c = 0; c < width; ++c) {
-      cout << (shape->get(r, c) ? '1' : '0') << '\t';
+      cout << (shape.get(r, c) ? '1' : '0') << '\t';
     }
     cout << endl;
   }
-} // shape_matrix_print(ShapeMatrix*)
+} // shape_matrix_print(ShapeMatrix&)
 
 void shape_matrix_write(const char* filename, ListOfShapes* const list) {
   ofstream output_file(filename);
