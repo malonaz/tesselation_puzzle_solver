@@ -24,6 +24,7 @@ PuzzleBoard* createBoard(ListOfShapeMatrices* const matrices,
       accumArea += maxArea;
       maxArea = tempArea;
       maxAreaIdx = i;
+      accumArea -= tempArea;
     }
     accumArea += tempArea;
     pieces->push_back((*matrices)[pushIdx]);
@@ -79,15 +80,19 @@ bool puzzleSolver(ListOfShapeMatrices* const matrices) {
   PuzzleBoard* board = createBoard(matrices, pieces,
       containerArea, totalPieceArea);
   if (totalPieceArea > containerArea) { // case of undersized container
+    cout<<"pieces area= "<<totalPieceArea<<"container area= "<<containerArea<<endl;
     return false;
   }
   if (totalPieceArea < containerArea){ // case of oversized container
+    cout<<"pieces area= "<<totalPieceArea<<"container area= "<<containerArea<<endl;
     return false;
   }
   // if puzzle pieces area == container area
   bool success = recursiveSolver(board, pieces, 0);
   if (success) {
+    cout<<endl;
     board->printBoard();
   }
+  cout<<success<<endl;
   return success;
 }

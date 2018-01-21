@@ -20,7 +20,7 @@ int main(int argc, char** argv){
   shape1->set(2,0, true);
   matrices->push_back(shape1);
 
-  ShapeMatrix* shape1 = new ShapeMatrix(3,1);
+  ShapeMatrix* shape2 = new ShapeMatrix(3,1);
   shape2->set(0,0, true);
   shape2->set(0,1, true);
   shape2->set(0,2, true);
