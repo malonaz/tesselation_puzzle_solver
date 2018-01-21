@@ -69,6 +69,7 @@ public:
   ShapeMatrix& operator=(const ShapeMatrix& shape);
 
   virtual ~ShapeMatrix();
-};
+
+}; // ShapeMatrix
 
 #endif
