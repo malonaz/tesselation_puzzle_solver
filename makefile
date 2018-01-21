@@ -47,7 +47,7 @@ $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 include $(TESTDIR)/makefile
 
 check:
-	cppcheck --enable=all --check-config --suppress=missingIncludeSystem src
+	cppcheck --enable=all --check-config --suppress=missingIncludeSystem -I src src
 
 clean: test-clean
 	rm -rf $(BINDIR) $(OBJDIR) $(COVDIR) *.o *.d *.gcno *.gcda
