@@ -67,6 +67,8 @@ public:
   ShapeMatrix& operator=(const ShapeMatrix& shape);
   
   bool operator==(const ShapeMatrix& rhs) const;
+  
+  bool operator!=(const ShapeMatrix& rhs) const;
 
   virtual ~ShapeMatrix();
 

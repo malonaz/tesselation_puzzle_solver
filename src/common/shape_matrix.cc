@@ -145,6 +145,10 @@ bool ShapeMatrix::operator==(const ShapeMatrix& rhs) const {
   return true;
 }
 
+bool ShapeMatrix::operator!=(const ShapeMatrix& rhs) const {
+  return !(*this == rhs);
+}
+
 ShapeMatrix::~ShapeMatrix() {
   delete[] this->shape;
 } // ShapeMatrix::~ShapeMatrix()
