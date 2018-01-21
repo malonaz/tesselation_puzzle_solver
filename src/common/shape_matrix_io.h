@@ -1,5 +1,5 @@
-#ifndef APS_COMMON_SHAPE_MATRIX_FILE_H_
-#define APS_COMMON_SHAPE_MATRIX_FILE_H_
+#ifndef APS_COMMON_SHAPE_MATRIX_IO_H_
+#define APS_COMMON_SHAPE_MATRIX_IO_H_
 
 #include <vector>
 #include "shape_matrix.h"
