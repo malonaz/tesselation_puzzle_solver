@@ -271,4 +271,132 @@ TEST(ShapeMatrixTest, AssignmentSelf) {
   matrix1 = matrix1;
 }
 
+TEST(ShapeMatrixTest, EqualityCheckSelf) {
+  int width = 2;
+  int height = 3;
+
+  // ON STACK
+  ShapeMatrix matrix1(width, height);
+
+  matrix1.set(0, 0, true);
+  matrix1.set(1, 0, true);
+  matrix1.set(2, 0, true);
+  matrix1.set(2, 1, true);
+  // an L shape
+
+  // self equality check
+  EXPECT_TRUE(matrix1 == matrix1);
+  EXPECT_FALSE(matrix1 != matrix1);
+}
+
+TEST(ShapeMatrixTest, EqualityCheckCopy) {
+  int width = 2;
+  int height = 3;
+
+  // ON STACK
+  ShapeMatrix matrix1(width, height);
+
+  matrix1.set(0, 0, true);
+  matrix1.set(1, 0, true);
+  matrix1.set(2, 0, true);
+  matrix1.set(2, 1, true);
+  // an L shape
+  
+  ShapeMatrix matrix2(matrix1);
+
+  // equality with copy
+  EXPECT_TRUE(matrix1 == matrix2);
+  EXPECT_FALSE(matrix1 != matrix2);
+}
+
+TEST(ShapeMatrixTest, EqualityCheckIdentical) {
+  int width = 2;
+  int height = 3;
+
+  // ON STACK
+  ShapeMatrix matrix1(width, height);
+
+  matrix1.set(0, 0, true);
+  matrix1.set(1, 0, true);
+  matrix1.set(2, 0, true);
+  matrix1.set(2, 1, true);
+  // an L shape
+  
+  ShapeMatrix matrix2(width, height);
+
+  matrix2.set(0, 0, true);
+  matrix2.set(1, 0, true);
+  matrix2.set(2, 0, true);
+  matrix2.set(2, 1, true);
+
+  // equality with copy
+  EXPECT_TRUE(matrix1 == matrix2);
+  EXPECT_FALSE(matrix1 != matrix2);
+}
+
+TEST(ShapeMatrixTest, EqualityCheckDifferentSize) {
+  int width = 2;
+  int height = 3;
+
+  // ON STACK
+  ShapeMatrix matrix1(width, height);
+
+  matrix1.set(0, 0, true);
+  matrix1.set(1, 0, true);
+  matrix1.set(2, 0, true);
+  matrix1.set(2, 1, true);
+  // an L shape
+  
+  ShapeMatrix matrix2(height, width);
+
+  // inequality with different size
+  EXPECT_FALSE(matrix1 == matrix2);
+  EXPECT_TRUE(matrix1 != matrix2);
+}
+
+TEST(ShapeMatrixTest, EqualityCheckDifferentShapeArea) {
+  int width = 2;
+  int height = 3;
+
+  // ON STACK
+  ShapeMatrix matrix1(width, height);
+
+  matrix1.set(0, 0, true);
+  matrix1.set(1, 0, true);
+  matrix1.set(2, 0, true);
+  matrix1.set(2, 1, true);
+  // an L shape
+  
+  ShapeMatrix matrix2(width, height);
+
+  // inequality with different shape area
+  EXPECT_FALSE(matrix1 == matrix2);
+  EXPECT_TRUE(matrix1 != matrix2);
+}
+
+TEST(ShapeMatrixTest, EqualityCheckDifferentShape) {
+  int width = 2;
+  int height = 3;
+
+  // ON STACK
+  ShapeMatrix matrix1(width, height);
+
+  matrix1.set(0, 0, true);
+  matrix1.set(1, 0, true);
+  matrix1.set(2, 0, true);
+  matrix1.set(2, 1, true);
+  // an L shape
+  
+  ShapeMatrix matrix2(width, height);
+
+  matrix2.set(0, 0, true);
+  matrix2.set(1, 0, true);
+  matrix2.set(2, 0, true);
+  matrix2.set(1, 1, true);
+
+  // inequality with different shape
+  EXPECT_FALSE(matrix1 == matrix2);
+  EXPECT_TRUE(matrix1 != matrix2);
+}
+
 } // namespace
