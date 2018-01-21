@@ -123,6 +123,24 @@ ShapeMatrix& ShapeMatrix::operator=(const ShapeMatrix& rhs) {
   return *this;
 } // ShapeMatrix::operator=(ShapeMatrix&)
 
+bool ShapeMatrix::operator==(const ShapeMatrix& rhs) const {
+  if (this->width != rhs.width || this->height != rhs.height) {
+    return false;
+  }
+  
+  if (this->shapeArea != rhs.shapeArea) {
+    return false;
+  }
+  
+  int area = this->width * this->height;
+  for (int i = 0; i < area; ++i) {
+    if (this->shape[i] != rhs.shape[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
 ShapeMatrix::~ShapeMatrix() {
   delete[] this->shape;
 } // ShapeMatrix::~ShapeMatrix()

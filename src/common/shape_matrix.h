@@ -65,6 +65,8 @@ public:
   ShapeMatrix* rotate(int n) const;
 
   ShapeMatrix& operator=(const ShapeMatrix& shape);
+  
+  bool operator==(const ShapeMatrix& rhs) const;
 
   virtual ~ShapeMatrix();
 
