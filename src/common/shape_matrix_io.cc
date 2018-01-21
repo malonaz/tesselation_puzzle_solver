@@ -16,7 +16,7 @@ void shape_matrix_print(ShapeMatrix* const shape) {
     }
     cout << endl;
   }
-}
+} // shape_matrix_print(ShapeMatrix*)
 
 void shape_matrix_write(const char* filename, ListOfShapes* const list) {
   ofstream output_file(filename);
@@ -31,7 +31,7 @@ void shape_matrix_write(const char* filename, ListOfShapes* const list) {
     }
     output_file << endl;
   }
-}
+} // shape_matrix_write(const char*, ListOfShapes*)
 
 void shape_matrix_read(const char* filename, ListOfShapes* const list) {
   ifstream input_file(filename);
@@ -49,4 +49,4 @@ void shape_matrix_read(const char* filename, ListOfShapes* const list) {
     }
     list->push_back(shape);
   }
-}
+} // shape_matrix_read(const char*, ListOfShapes*)

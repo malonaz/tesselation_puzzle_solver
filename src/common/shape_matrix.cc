@@ -12,7 +12,7 @@ ShapeMatrix::ShapeMatrix(int width, int height):
   for (int i = 0; i < area; ++i) {
     this->shape[i] = false;
   }
-}
+} // ShapeMatrix::ShapeMatrix(int, int)
 
 ShapeMatrix::ShapeMatrix(const ShapeMatrix &copy):
     width(copy.width), height(copy.height),
@@ -22,7 +22,7 @@ ShapeMatrix::ShapeMatrix(const ShapeMatrix &copy):
   for (int i = 0; i < area; ++i) {
     this->shape[i] = copy.shape[i];
   }
-}
+} // ShapeMatrix::ShapeMatrix(ShapeMatrix&)
 
 void ShapeMatrix::set(int index, bool value) {
   assert(index >= 0 && index < (this->width * this->height));
@@ -35,40 +35,40 @@ void ShapeMatrix::set(int index, bool value) {
     --this->shapeArea;
   }
   this->shape[index] = value;
-}
+} // ShapeMatrix::set(int, bool)
 
 void ShapeMatrix::set(int row, int col, bool value) {
   assert(row >= 0 && row < this->height);
   assert(col >= 0 && col < this->width);
   this->set(row * this->width + col, value);
-}
+} // ShapeMatrix::set(int, int, bool)
 
 bool ShapeMatrix::get(int index) const {
   assert(index >= 0 && index < (this->width * this->height));
   return this->shape[index];
-}
+} // ShapeMatrix::get(int)
 
 bool ShapeMatrix::get(int row, int col) const {
   assert(row >= 0 && row < this->height);
   assert(col >= 0 && col < this->width);
   return this->shape[row * this->width + col];
-}
+} // ShapeMatrix::get(int, int)
 
 int ShapeMatrix::getWidth() const {
   return this->width;
-}
+} // ShapeMatrix::getWidth()
 
 int ShapeMatrix::getHeight() const {
   return this->height;
-}
+} // ShapeMatrix::getHeight()
 
 int ShapeMatrix::getShapeArea() const {
   return this->shapeArea;
-}
+} // ShapeMatrix::getShapeArea()
 
 int ShapeMatrix::getMatrixArea() const {
   return this->width * this->height;
-}
+} // ShapeMatrix::getMatrixArea()
 
 ShapeMatrix* ShapeMatrix::rotate() const {
   ShapeMatrix* rotated = new ShapeMatrix(this->height, this->width);
@@ -81,7 +81,7 @@ ShapeMatrix* ShapeMatrix::rotate() const {
     }
   }
   return rotated;
-}
+} // ShapeMatrix::rotate()
 
 ShapeMatrix* ShapeMatrix::rotate(int n) const {
   if (n < 0) {
@@ -100,7 +100,7 @@ ShapeMatrix* ShapeMatrix::rotate(int n) const {
   ShapeMatrix* result = tempMatrix->rotate(n - 1);
   delete tempMatrix;
   return result;
-}
+} // ShapeMatrix::rotate(int)
 
 
 ShapeMatrix& ShapeMatrix::operator=(const ShapeMatrix& rhs) {
@@ -120,8 +120,8 @@ ShapeMatrix& ShapeMatrix::operator=(const ShapeMatrix& rhs) {
   }
 
   return *this;
-}
+} // ShapeMatrix::operator=(ShapeMatrix&)
 
 ShapeMatrix::~ShapeMatrix() {
   delete[] this->shape;
-}
+} // ShapeMatrix::~ShapeMatrix()
