@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cassert>
 #include <cstddef>
 #include <cstdlib>
 #include <iostream>
@@ -67,7 +68,7 @@ void process_row_filter(map<int, ListOfEdges*> &horizontal_edges, int row, bool 
     int min_x = min(x1, x2);
     int max_x = max(x1, x2);
 
-    for(int col = min_x; col < max_x; ++col) {
+    for (int col = min_x; col < max_x; ++col) {
       row_filter[col] = !row_filter[col];
     }
   }
@@ -127,9 +128,9 @@ void shape_translate(ListOfPoints* const shape, ShapeMatrix* &matrix) {
   map<int, ListOfEdges*>::iterator map_it;
   for (map_it = horizontal_edges.begin(); map_it != horizontal_edges.end(); ++map_it) {
     ListOfEdges* edges = map_it->second;
-    ListOfEdges::iterator list_iterator;
-    for (list_iterator = edges->begin(); list_iterator != edges->end(); ++list_iterator) {
-      delete[] *list_iterator;
+    ListOfEdges::iterator list_it;
+    for (list_it = edges->begin(); list_it != edges->end(); ++list_it) {
+      delete[] *list_it;
     }
     delete map_it->second;
   }
@@ -171,10 +172,9 @@ int find_shortest_edge_in_shape(ListOfPoints* const shape) {
 int find_unit_length(ListOfShapes* const shapes) {
   int unit_length = -1;
 
-  ListOfShapes::iterator shapes_iterator;
-
-  for(shapes_iterator = shapes->begin(); shapes_iterator != shapes->end(); ++shapes_iterator) {
-    int shortest_edge_in_shape = find_shortest_edge_in_shape(*shapes_iterator);
+  ListOfShapes::iterator it;
+  for (it = shapes->begin(); it != shapes->end(); ++it) {
+    int shortest_edge_in_shape = find_shortest_edge_in_shape(*it);
     if (shortest_edge_in_shape < unit_length || unit_length == -1) {
       unit_length = shortest_edge_in_shape;
     }
@@ -192,16 +192,16 @@ void shape_reduce(ListOfPoints* const shape, int unit_length) {
   }
 }
 
-bool shape_translate_all_shapes(ListOfShapes* const shapes, vector<ShapeMatrix*>* const matrices) {
+bool shape_translate_all_shapes(ListOfShapes* const shapes,
+    vector<ShapeMatrix*>* const matrices) {
   int unit_length = find_unit_length(shapes);
   if (unit_length == -1) {
     return false;
   }
 
-  ListOfShapes::iterator shapes_iterator;
-
-  for(shapes_iterator = shapes->begin(); shapes_iterator != shapes->end(); ++shapes_iterator) {
-    ListOfPoints* shape = *shapes_iterator;
+  ListOfShapes::iterator it;
+  for (it = shapes->begin(); it != shapes->end(); ++it) {
+    ListOfPoints* shape = *it;
     shape_reduce(shape, unit_length);
     ShapeMatrix* matrix = NULL;
     shape_translate(shape, matrix);

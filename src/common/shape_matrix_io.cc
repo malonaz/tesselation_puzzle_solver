@@ -40,7 +40,7 @@ void shape_matrix_write(const char* filename, ListOfShapes* const list) {
 void shape_matrix_read(const char* filename, ListOfShapes* const list) {
   ifstream input_file(filename);
 
-  while(!input_file.eof()) {
+  while (!input_file.eof()) {
     int width, height, area;
     input_file >> width;
     input_file >> height;

@@ -3,7 +3,8 @@
 #include "shape_matrix.h"
 
 ShapeMatrix::ShapeMatrix(int width, int height):
-    width(width), height(height), shapeArea(0), shape(NULL) {
+    width(width), height(height),
+    shapeArea(0), shape(NULL) {
   assert(width > 0);
   assert(height > 0);
 
