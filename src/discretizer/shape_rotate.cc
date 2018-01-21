@@ -15,6 +15,20 @@ enum Direction {NORTH, EAST, SOUTH, WEST};
 // used to repesent the quadrants of a Cartesian coordinate graph
 enum Quadrant {I = 1, II = 2, III = 3, IV = 4, INVALID_QUADRANT};
 
+/**
+ * Helper function which prints the list of points to the standard output stream
+ * in the following way (x1, y1), (x2, y2) etc.
+ */
+void print_list_of_points(std::vector<Point> shape_points){
+  for (uint i = 0; i < shape_points.size(); i++){
+    int x = shape_points[i].x;
+    int y = shape_points[i].y;
+    std::cout << "(" << x << ", " << y << "), ";
+
+  }
+
+  std::cout << std::endl;  
+}
 
 
 /**
@@ -136,23 +150,10 @@ void rotate_shape(std::vector<Point> shape_points, std::vector<Point> rotated_sh
     // save previous quadrant
     previous_quadrant = current_quadrant;
   }
-
-  print_shape(shape_points);
-  print_shape(rotated_shape_points);
 }
 
 
-/**
- * Helper function which prints the given vector of points.
- */ 
-void print_shape(std::vector<Point> shape_points){
-  for (uint i = 0; i < shape_points.size(); i++){
-    int x = shape_points[i].x;
-    int y = shape_points[i].y;
-    std::cout << "(" << x << ", " << y << "), ";
+void rotate_shapes(std::vector< std::vector<Point> > shapes,
+		   std::vector< std::vector<Point> > rotated_shapes){
 
-  }
-
-  std::cout << std::endl;
-  
 }

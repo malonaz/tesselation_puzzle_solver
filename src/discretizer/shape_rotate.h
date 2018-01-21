@@ -6,13 +6,14 @@
 #include <vector>
 
 
-void rotate_shapes(std::vector< std::vector<Point> > list_shape_points,
-		   std::vector< std::vector<Point> > list_rotated_shape_points);
+/**
+ * At this stage, shapes are represented by a list of of point coordinates. This function
+ * rotates these shapes such that the shapes's sides are vertical or horizontal. These
+ * new shapes are stored in output parameter rotated shapes.
+ */
+void rotate_shapes(std::vector< std::vector<Point> > shapes,
+		   std::vector< std::vector<Point> > rotated_shapes);
 
-void rotate_shape(const std::vector<Point> shape_points, std::vector<Point> rotated_shape_points);
-
-
-void print_shape(const std::vector<Point> shape_points);
 
 #endif
 
