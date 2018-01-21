@@ -10,8 +10,8 @@ using namespace std;
 
 int main(int argc, char** argv){
 //cout<<"Testing....."<<endl;
-ListOfShapes shapes;
-ListOfShapes* matrices = &shapes;
+ListOfShapeMatrices shapes;
+ListOfShapeMatrices* matrices = &shapes;
 //cout<<"Testing 2....."<<endl;
 
   ShapeMatrix* shape1 = new ShapeMatrix(4,3);

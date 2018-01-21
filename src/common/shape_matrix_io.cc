@@ -6,6 +6,7 @@
 
 #include "shape_matrix_io.h"
 #include "shape_matrix.h"
+#include "types.h"
 
 using namespace std;
 
@@ -24,13 +25,13 @@ void shape_matrix_print(const ShapeMatrix& shape) {
   }
 } // shape_matrix_print(ShapeMatrix&)
 
-void shape_matrix_write(const char* filename, ListOfShapes* const list) {
+void shape_matrix_write(const char* filename, ListOfShapeMatrices* const list) {
   assert(list != NULL);
   ofstream output_file(filename);
   if (output_file.fail()) {
     return;
   }
-  ListOfShapes::iterator iterator;
+  ListOfShapeMatrices::iterator iterator;
 
   for (iterator = list->begin(); iterator != list->end(); ++iterator) {
     ShapeMatrix* shape = *iterator;
@@ -41,9 +42,9 @@ void shape_matrix_write(const char* filename, ListOfShapes* const list) {
     }
     output_file << endl;
   }
-} // shape_matrix_write(const char*, ListOfShapes*)
+} // shape_matrix_write(const char*, ListOfShapeMatrices*)
 
-void shape_matrix_read(const char* filename, ListOfShapes* const list) {
+void shape_matrix_read(const char* filename, ListOfShapeMatrices* const list) {
   assert(list != NULL);
   ifstream input_file(filename);
   if (input_file.fail()) {
@@ -63,4 +64,4 @@ void shape_matrix_read(const char* filename, ListOfShapes* const list) {
     }
     list->push_back(shape);
   }
-} // shape_matrix_read(const char*, ListOfShapes*)
+} // shape_matrix_read(const char*, ListOfShapeMatrices*)

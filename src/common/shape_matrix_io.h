@@ -1,12 +1,10 @@
 #ifndef APS_COMMON_SHAPE_MATRIX_IO_H_
 #define APS_COMMON_SHAPE_MATRIX_IO_H_
 
-#include <vector>
 #include "shape_matrix.h"
+#include "types.h"
 
 using namespace std;
-
-typedef vector<ShapeMatrix*> ListOfShapes;
 
 /**
   Prints a shape matrix as a 2D array on the standard output.
@@ -28,7 +26,7 @@ void shape_matrix_print(const ShapeMatrix& shape);
   \param filename The path name to the file to save to.
   \param list The list of shapes.
 */
-void shape_matrix_write(const char* filename, const ListOfShapes* const list);
+void shape_matrix_write(const char* filename, const ListOfShapeMatrices* const list);
 
 /**
   Read a list of shape matrices from a file
@@ -36,6 +34,6 @@ void shape_matrix_write(const char* filename, const ListOfShapes* const list);
   \param filename The path name to the file to read from.
   \param list The list to add the newly read in shapes to.
 */
-void shape_matrix_read(const char* filename, ListOfShapes* const list);
+void shape_matrix_read(const char* filename, ListOfShapeMatrices* const list);
 
 #endif

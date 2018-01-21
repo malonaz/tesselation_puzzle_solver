@@ -3,11 +3,12 @@
 #include "common/shape_matrix.h"
 #include "common/puzzle_board.h"
 #include "common/shape_matrix_io.h"
+#include "common/types.h"
 #include "solver.h"
 
 using namespace std;
 
-PuzzleBoard* createBoard(vector<ShapeMatrix*>* const matrices, vector<ShapeMatrix*>* const pieces) {
+PuzzleBoard* createBoard(ListOfShapeMatrices* const matrices, ListOfShapeMatrices* const pieces) {
   int maxArea = (*matrices)[0]->getShapeArea();
   int maxAreaIdx = 0;
   int matricesSize = (int)matrices->size();
@@ -29,7 +30,7 @@ PuzzleBoard* createBoard(vector<ShapeMatrix*>* const matrices, vector<ShapeMatri
 }
 
 bool recursiveSolver (PuzzleBoard* board,
-    vector<ShapeMatrix*>* const pieces,
+    ListOfShapeMatrices* const pieces,
     unsigned int currentIndex) {
   if (board->getRemainingArea() == 0 && currentIndex == pieces->size()) {
     //the board is complete, and no more remaining pieces
@@ -64,9 +65,9 @@ bool recursiveSolver (PuzzleBoard* board,
   return false;
 }
 
-bool puzzleSolver(vector<ShapeMatrix*>* const matrices) {
-  ListOfShapes shapes;
-  ListOfShapes* pieces = &shapes;
+bool puzzleSolver(ListOfShapeMatrices* const matrices) {
+  ListOfShapeMatrices shapes;
+  ListOfShapeMatrices* pieces = &shapes;
   PuzzleBoard* board = createBoard(matrices, pieces);
   bool success = recursiveSolver(board, pieces, 0);
   if (success) {

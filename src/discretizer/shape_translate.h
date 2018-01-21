@@ -3,12 +3,9 @@
 
 #include <vector>
 #include "common/shape_matrix.h"
+#include "common/types.h"
 
 using namespace std;
-
-typedef vector<int*> ListOfPoints;
-typedef vector<int*> ListOfEdges;
-typedef vector<ListOfPoints*> ListOfShapes;
 
 void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix);
 bool shape_translate_all_shapes(ListOfShapes* const shapes,

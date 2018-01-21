@@ -1,19 +1,20 @@
-#ifndef APS_PUZZLE_SOLVING_SOLVER_H
-#define APS_PUZZLE_SOLVING_SOLVER_H
+#ifndef APS_PUZZLE_SOLVING_SOLVER_H_
+#define APS_PUZZLE_SOLVING_SOLVER_H_
 
 #include <vector>
 #include "common/shape_matrix.h"
 #include "common/puzzle_board.h"
+#include "common/types.h"
 
 using namespace std;
 
-PuzzleBoard* createBoard(vector<ShapeMatrix*>* const matrices,
-  vector<ShapeMatrix*>* const pieces);
+PuzzleBoard* createBoard(ListOfShapeMatrices* const matrices,
+  ListOfShapeMatrices* const pieces);
 
 bool recursiveSolver (PuzzleBoard* board,
-  vector<ShapeMatrix*>* const pieces,
+  ListOfShapeMatrices* const pieces,
   unsigned int currentIndex);
 
-bool puzzleSolver(vector<ShapeMatrix*>* const matrices);
+bool puzzleSolver(ListOfShapeMatrices* const matrices);
 
 #endif
