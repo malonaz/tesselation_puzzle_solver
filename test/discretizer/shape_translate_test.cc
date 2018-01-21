@@ -54,7 +54,7 @@ TEST(ShapeTranslateTest, shape_translate_NonNullPointer) {
 
   // because matrix is not NULL, assert should cause this statement to fail
   EXPECT_DEATH(shape_translate(&shape, matrix),
-    "Assertion.+matrix == NULL.+failed");
+    "Assertion.+matrix == NULL");
   delete matrix;
 }
 
