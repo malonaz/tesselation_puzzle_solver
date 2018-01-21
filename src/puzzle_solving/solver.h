@@ -2,8 +2,8 @@
 #define APS_PUZZLE_SOLVING_SOLVER_H
 
 #include <vector>
-#include "../common/shape_matrix.h"
-#include "../common/puzzle_board.h"
+#include "common/shape_matrix.h"
+#include "common/puzzle_board.h"
 
 using namespace std;
 
