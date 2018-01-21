@@ -80,11 +80,9 @@ bool puzzleSolver(ListOfShapeMatrices* const matrices) {
   PuzzleBoard* board = createBoard(matrices, pieces,
       containerArea, totalPieceArea);
   if (totalPieceArea > containerArea) { // case of undersized container
-    cout<<"pieces area= "<<totalPieceArea<<"container area= "<<containerArea<<endl;
     return false;
   }
   if (totalPieceArea < containerArea){ // case of oversized container
-    cout<<"pieces area= "<<totalPieceArea<<"container area= "<<containerArea<<endl;
     return false;
   }
   // if puzzle pieces area == container area
@@ -93,6 +91,5 @@ bool puzzleSolver(ListOfShapeMatrices* const matrices) {
     cout<<endl;
     board->printBoard();
   }
-  cout<<success<<endl;
   return success;
 }
