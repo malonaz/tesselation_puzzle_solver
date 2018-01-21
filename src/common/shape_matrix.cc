@@ -70,7 +70,7 @@ int ShapeMatrix::getMatrixArea() const {
   return this->width * this->height;
 }
 
-ShapeMatrix* ShapeMatrix::rotate() {
+ShapeMatrix* ShapeMatrix::rotate() const {
   ShapeMatrix* rotated = new ShapeMatrix(this->height, this->width);
   rotated->shapeArea = this->shapeArea;
 
@@ -83,7 +83,7 @@ ShapeMatrix* ShapeMatrix::rotate() {
   return rotated;
 }
 
-ShapeMatrix* ShapeMatrix::rotate(int n) {
+ShapeMatrix* ShapeMatrix::rotate(int n) const {
   if (n < 0) {
     return NULL;
   }

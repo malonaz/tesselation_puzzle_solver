@@ -41,9 +41,9 @@ public:
 
   int getMatrixArea() const;
 
-  ShapeMatrix* rotate();
+  ShapeMatrix* rotate() const;
 
-  ShapeMatrix* rotate(int n);
+  ShapeMatrix* rotate(int n) const;
 
   ShapeMatrix& operator=(const ShapeMatrix& shape);
 
