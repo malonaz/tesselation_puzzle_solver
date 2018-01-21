@@ -26,10 +26,10 @@ void shape_get_size(const ListOfPoints* const shape, uint& width, uint& height) 
 
   for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
     int* coordinate = (int*)*iterator;
-    if (coordinate[0] > width) {
+    if ((uint)coordinate[0] > width) {
       width = coordinate[0];
     }
-    if (coordinate[1] > height) {
+    if ((uint)coordinate[1] > height) {
       height = coordinate[1];
     }
   }
@@ -94,7 +94,7 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
 
   // create the row filter
   bool row_filter[width];
-  for (int i = 0; i < width; ++i) {
+  for (uint i = 0; i < width; ++i) {
     row_filter[i] = false;
   }
 
@@ -121,7 +121,7 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
   // process the matrix row-wise
   for (uint row = 0; row < height; ++row) {
     process_row_filter(horizontal_edges, row, row_filter);
-    for (int col = 0; col < width; ++col) {
+    for (uint col = 0; col < width; ++col) {
       matrix->set(row, col, row_filter[col]);
     }
   }
