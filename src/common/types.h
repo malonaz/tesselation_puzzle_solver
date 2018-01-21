@@ -1,5 +1,6 @@
 #include <vector>
 #include "point.h"
+#include "shape_matrix.h"
 
 using std::vector;
 
