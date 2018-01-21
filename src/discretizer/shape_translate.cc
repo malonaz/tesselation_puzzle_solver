@@ -35,7 +35,8 @@ void shape_get_size(const ListOfPoints* const shape, uint& width, uint& height) 
   }
 } // shape_get_size(ListOfPoints*, uint&, uint&)
 
-void shape_process_edge(map<uint, ListOfEdges*> &horizontal_edges, int coord1[2], int coord2[2]) {
+void shape_process_edge(map<uint, ListOfEdges*> &horizontal_edges,
+    int coord1[2], int coord2[2]) {
   if (coord1[1] != coord2[1]) {
     return;
   }
@@ -53,16 +54,17 @@ void shape_process_edge(map<uint, ListOfEdges*> &horizontal_edges, int coord1[2]
   horizontal_edges[y_coord]->push_back(edge);
 } // shape_process_edge(map<uint, ListOfEdges*>&, int[], int[])
 
-void process_row_filter(map<uint, ListOfEdges*> &horizontal_edges, uint row, bool row_filter[]) {
+void process_row_filter(map<uint, ListOfEdges*> &horizontal_edges,
+    uint row, bool row_filter[]) {
   if (horizontal_edges.find(row) == horizontal_edges.end()) {
     return;
   }
   // has the entry for this row. so let's loop through and perform the flips
   ListOfEdges* edges = horizontal_edges[row];
 
-  ListOfEdges::const_iterator edges_iterator;
-  for (edges_iterator = edges->begin(); edges_iterator != edges->end(); ++edges_iterator) {
-    int* current_edge = (int*) *edges_iterator;
+  ListOfEdges::const_iterator edges_it;
+  for (edges_it = edges->begin(); edges_it != edges->end(); ++edges_it) {
+    int* current_edge = (int*) *edges_it;
     int x1 = current_edge[0];
     int x2 = current_edge[2];
 
@@ -137,7 +139,7 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
   }
 } // shape_translate(ListOfPoints*, ShapeMatrix*&)
 
-int find_shortest_edge_in_shape(ListOfPoints* const shape) {
+int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
   int shortest_edge_length = -1;
   ListOfPoints::const_iterator iterator;
   int* first_point = (int*) *iterator;
@@ -170,10 +172,17 @@ int find_shortest_edge_in_shape(ListOfPoints* const shape) {
   return shortest_edge_length;
 } // find_shortest_edge_in_shape(ListOfPoints*)
 
-int find_unit_length(ListOfShapes* const shapes) {
+/**
+  Find the shortest edge length among all the shapes and take it
+  as the unit length
+
+  \param shapes The list of shapes to process
+  \return The unit length among all the shapes
+*/
+int find_unit_length(const ListOfShapes* const shapes) {
   int unit_length = -1;
 
-  ListOfShapes::iterator it;
+  ListOfShapes::const_iterator it;
   for (it = shapes->begin(); it != shapes->end(); ++it) {
     int shortest_edge_in_shape = find_shortest_edge_in_shape(*it);
     if (shortest_edge_in_shape < unit_length || unit_length == -1) {
@@ -188,12 +197,12 @@ void shape_reduce(ListOfPoints* const shape, int unit_length) {
   ListOfPoints::const_iterator iterator;
   for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
     int* current_coord = (int*) *iterator;
-    current_coord[0] = current_coord[0] / unit_length;
-    current_coord[1] = current_coord[1] / unit_length;
+    current_coord[0] /= unit_length;
+    current_coord[1] /= unit_length;
   }
 } // shape_reduce(ListOfPoints* shape, int)
 
-bool shape_translate_all_shapes(ListOfShapes* const shapes,
+bool shape_translate_all_shapes(const ListOfShapes* const shapes,
     vector<ShapeMatrix*>* const matrices) {
   assert(matrices != NULL);
   int unit_length = find_unit_length(shapes);
@@ -201,12 +210,13 @@ bool shape_translate_all_shapes(ListOfShapes* const shapes,
     return false;
   }
 
-  ListOfShapes::iterator it;
+  ListOfShapes::const_iterator it;
   for (it = shapes->begin(); it != shapes->end(); ++it) {
     ListOfPoints* shape = *it;
     shape_reduce(shape, unit_length);
     ShapeMatrix* matrix = NULL;
     shape_translate(shape, matrix);
+    // we're ignoring shapes that cannot be produced from
     if (matrix == NULL) {
       continue;
     }
