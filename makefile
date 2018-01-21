@@ -13,7 +13,8 @@ COMMON_OBJECTS = $(OBJDIR)/common/shape_matrix_io.o \
 	$(OBJDIR)/common/puzzle_board.o \
 	$(OBJDIR)/common/shape_matrix.o
 
-DISCRETIZER_OBJECTS = $(OBJDIR)/discretizer/shape_translate.o
+DISCRETIZER_OBJECTS = $(OBJDIR)/discretizer/shape_translate.o \
+			$(OBJDIR)/discretizer/shape_rotate.o
 
 PUZZLE_SOLVING_OBJECTS = $(OBJDIR)/puzzle_solving/solver.o
 
