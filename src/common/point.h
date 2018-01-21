@@ -3,8 +3,9 @@
 
 
 struct Point{
-  // x and coordinates
-  const int x, y;
+  // x and y coordinates
+  int x;
+  int y;
 
 
   /**
@@ -22,7 +23,6 @@ struct Point{
    * returns the slope to that point
    */
   float slopeTo(Point that);
-
 };
 
 #endif
