@@ -7,9 +7,12 @@
 
 using namespace std;
 
-PuzzleBoard* createBoard(vector<ShapeMatrix*>* const matrices, vector<ShapeMatrix*>* const pieces);
+PuzzleBoard* createBoard(vector<ShapeMatrix*>* const matrices,
+  vector<ShapeMatrix*>* const pieces);
 
-bool recursiveSolver (PuzzleBoard* board, vector<ShapeMatrix*>* const pieces, unsigned int currentIndex);
+bool recursiveSolver (PuzzleBoard* board,
+  vector<ShapeMatrix*>* const pieces,
+  unsigned int currentIndex);
 
 bool puzzleSolver(vector<ShapeMatrix*>* const matrices);
 

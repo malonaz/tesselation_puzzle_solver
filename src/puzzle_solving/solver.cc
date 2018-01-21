@@ -12,7 +12,7 @@ PuzzleBoard* createBoard(vector<ShapeMatrix*>* const matrices, vector<ShapeMatri
   int maxAreaIdx = 0;
   int matricesSize = (int)matrices->size();
 
-  for (int i = 1; i < matricesSize; i++ ) {
+  for (int i = 1; i < matricesSize; i++) {
     int tempArea = (*matrices)[i]->getShapeArea();
     int pushIdx = i;
     if (tempArea > maxArea) {
@@ -28,7 +28,9 @@ PuzzleBoard* createBoard(vector<ShapeMatrix*>* const matrices, vector<ShapeMatri
   return board;
 }
 
-bool recursiveSolver (PuzzleBoard* board, vector<ShapeMatrix*>* const pieces, unsigned int currentIndex) {
+bool recursiveSolver (PuzzleBoard* board,
+    vector<ShapeMatrix*>* const pieces,
+    unsigned int currentIndex) {
   if (board->getRemainingArea() == 0 && currentIndex == pieces->size()) {
     //the board is complete, and no more remaining pieces
     return true;
@@ -45,14 +47,14 @@ bool recursiveSolver (PuzzleBoard* board, vector<ShapeMatrix*>* const pieces, un
   for (int r = 0; r < board->getHeight(); r++) {
     for (int c = 0; c < board->getWidth(); c++) {
       ShapeMatrix* temp = (*pieces)[currentIndex];
-      for (int rotation = 0; rotation < 4; rotation ++){
+      for (int rotation = 0; rotation < 4; rotation++) {
         ShapeMatrix* r_temp;
         r_temp = temp->rotate(rotation);
-        if (board->placePiece(c,r,(currentIndex+1),r_temp)) {
-          if(recursiveSolver(board,pieces, currentIndex+1)) {
+        if (board->placePiece(c, r, (currentIndex + 1), r_temp)) {
+          if (recursiveSolver(board, pieces, currentIndex + 1)) {
             return true;
           }
-          board->removePiece(c, r, currentIndex+1); //reversing
+          board->removePiece(c, r, currentIndex + 1); //reversing
         }
         delete r_temp;
       }
