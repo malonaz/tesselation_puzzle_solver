@@ -1,8 +1,6 @@
-#include "solver/imageProcessor.h"
 #include "common/shape_matrix.h"
 #include "common/shape_matrix_io.h"
 #include "puzzle_solving/solver.h"
-#include "solver/solutionProcessor.h"
 #include "discretizer/shape_rotate.h"
 #include <iostream>
 

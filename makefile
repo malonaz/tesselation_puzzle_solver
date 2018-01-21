@@ -19,9 +19,6 @@ DISCRETIZER_OBJECTS = $(OBJDIR)/discretizer/shape_translate.o \
 
 PUZZLE_SOLVING_OBJECTS = $(OBJDIR)/puzzle_solving/solver.o
 
-PUZZLE_OBJECTS = $(OBJDIR)/solver/imageProcessor.o \
-	$(OBJDIR)/solver/solutionProcessor.o
-
 OBJECTS = $(COMMON_OBJECTS)\
 	$(DISCRETIZER_OBJECTS)\
 	$(PUZZLE_OBJECTS)\
