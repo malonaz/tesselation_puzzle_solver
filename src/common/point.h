@@ -1,12 +1,16 @@
 #ifndef APS_COMMON_POINT_H_
 #define APS_COMMON_POINT_H_
 
-
 struct Point{
-  // x and y coordinates
+  /**
+    x-coordinate of this point
+  */
   int x;
+  
+  /**
+    y-coordinate of this point
+  */
   int y;
-
 
   /**
    * Constructor
@@ -15,12 +19,14 @@ struct Point{
 
   
   /*
-   * Returns the euclidean distance to that point
+    \param that The other point to calculate distance to
+    \return the euclidean distance to that point
    */ 
   float distanceTo(Point that) const;
 
   /*
-   * returns the slope to that point
+    \param
+    \return The slope to that point
    */
   float slopeTo(Point that) const;
   
