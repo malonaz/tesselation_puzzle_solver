@@ -11,18 +11,18 @@ struct Point{
   /**
    * Constructor
    */
-  Point(int x, int y): x(x), y(y){}
+  Point(int x, int y): x(x), y(y) {}
 
   
   /*
    * Returns the euclidean distance to that point
    */ 
-  float distanceTo(Point that);
+  float distanceTo(Point that) const;
 
   /*
    * returns the slope to that point
    */
-  float slopeTo(Point that);
+  float slopeTo(Point that) const;
   
   bool operator==(const Point& rhs) const;
 };
