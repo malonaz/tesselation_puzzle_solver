@@ -33,7 +33,7 @@ void shape_get_size(const ListOfPoints* const shape, uint& width, uint& height) 
       height = coordinate[1];
     }
   }
-}
+} // shape_get_size(ListOfPoints*, uint&, uint&)
 
 void shape_process_edge(map<uint, ListOfEdges*> &horizontal_edges, int coord1[2], int coord2[2]) {
   if (coord1[1] != coord2[1]) {
@@ -51,7 +51,7 @@ void shape_process_edge(map<uint, ListOfEdges*> &horizontal_edges, int coord1[2]
   // array must be created on heap so that other methods can access it later.
   int* edge = new int[4]{ coord1[0], coord1[1], coord2[0], coord2[1] };
   horizontal_edges[y_coord]->push_back(edge);
-}
+} // shape_process_edge(map<uint, ListOfEdges*>&, int[], int[])
 
 void process_row_filter(map<uint, ListOfEdges*> &horizontal_edges, uint row, bool row_filter[]) {
   if (horizontal_edges.find(row) == horizontal_edges.end()) {
@@ -73,7 +73,7 @@ void process_row_filter(map<uint, ListOfEdges*> &horizontal_edges, uint row, boo
       row_filter[col] = !row_filter[col];
     }
   }
-}
+} // process_row_filter(map<uint, ListOfEdges*>&, uint, bool[])
 
 void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
   uint width = 0;
@@ -135,7 +135,7 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
     }
     delete map_it->second;
   }
-}
+} // shape_translate(ListOfPoints*, ShapeMatrix*&)
 
 int find_shortest_edge_in_shape(ListOfPoints* const shape) {
   int shortest_edge_length = -1;
@@ -168,7 +168,7 @@ int find_shortest_edge_in_shape(ListOfPoints* const shape) {
   }
 
   return shortest_edge_length;
-}
+} // find_shortest_edge_in_shape(ListOfPoints*)
 
 int find_unit_length(ListOfShapes* const shapes) {
   int unit_length = -1;
@@ -182,7 +182,7 @@ int find_unit_length(ListOfShapes* const shapes) {
   }
 
   return unit_length;
-}
+} // find_unit_length(ListOfShapes*)
 
 void shape_reduce(ListOfPoints* const shape, int unit_length) {
   ListOfPoints::const_iterator iterator;
@@ -191,7 +191,7 @@ void shape_reduce(ListOfPoints* const shape, int unit_length) {
     current_coord[0] = current_coord[0] / unit_length;
     current_coord[1] = current_coord[1] / unit_length;
   }
-}
+} // shape_reduce(ListOfPoints* shape, int)
 
 bool shape_translate_all_shapes(ListOfShapes* const shapes,
     vector<ShapeMatrix*>* const matrices) {
@@ -213,4 +213,4 @@ bool shape_translate_all_shapes(ListOfShapes* const shapes,
   }
 
   return true;
-}
+} // shape_translate_all_shapes(ListOfShapes*, vector<ShapeMatrix*>*)
