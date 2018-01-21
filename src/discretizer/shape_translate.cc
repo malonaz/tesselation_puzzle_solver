@@ -2,15 +2,13 @@
 #include <cassert>
 #include <cstddef>
 #include <cstdlib>
-#include <iostream>
 #include <map>
-#include <vector>
 
 #include "common/shape_matrix.h"
 #include "common/types.h"
 #include "shape_translate.h"
 
-using namespace std;
+using std::map;
 
 /*
 
@@ -203,7 +201,7 @@ void shape_reduce(ListOfPoints* const shape, int unit_length) {
 } // shape_reduce(ListOfPoints* shape, int)
 
 bool shape_translate_all_shapes(const ListOfShapes* const shapes,
-    vector<ShapeMatrix*>* const matrices) {
+    ListOfShapeMatrices* const matrices) {
   assert(matrices != NULL);
   int unit_length = find_unit_length(shapes);
   if (unit_length == -1) {
