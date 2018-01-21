@@ -23,6 +23,8 @@ struct Point{
    * returns the slope to that point
    */
   float slopeTo(Point that);
+  
+  bool operator==(const Point& rhs) const;
 };
 
 #endif
