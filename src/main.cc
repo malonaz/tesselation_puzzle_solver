@@ -3,7 +3,7 @@
 #include "common/shape_matrix_io.h"
 #include "puzzle_solving/solver.h"
 #include "solver/solutionProcessor.h"
-
+#include "discretizer/shape_rotate.h"
 #include <iostream>
 
 using namespace std;
@@ -61,6 +61,17 @@ ListOfShapeMatrices* matrices = &shapes;
   shape_matrix_print(shape4);
 
   puzzleSolver(matrices);
+
+
+  cout << endl << "malon's test!" << endl << endl;
+  vector<Point> shape_points;
+  shape_points.push_back(Point(0, 0));
+  shape_points.push_back(Point(1, 1));
+  shape_points.push_back(Point(2, 0));
+  shape_points.push_back(Point(1, -1));
+  shape_points.push_back(Point(2, -2));
+  vector<Point> rotated_shape_points;
+  rotate_shape(shape_points, rotated_shape_points);
 
 
   //shape_matrix_print(shape);

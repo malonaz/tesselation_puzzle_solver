@@ -5,13 +5,10 @@
 #include "common/types.h"
 #include <vector>
 
-/**
- * Helper function which rotates the given shape's coordinates so that all sides 
- * of the given shape are vertical or horizontal.
- */
-void rotate_shape(const ListOfPoints* const shape);
 
 
+void rotate_shape(std::vector<Point> shape_points, std::vector<Point> rotated_shape_points);
 
+void print_shape(std::vector<Point> shape_points);
 
 #endif
