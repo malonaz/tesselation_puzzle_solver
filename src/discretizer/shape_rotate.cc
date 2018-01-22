@@ -111,6 +111,12 @@ void rotate_shape(std::vector<Point> &shape_points, std::vector<Point> &rotated_
     // get quadrant
     Quadrant current_quadrant = get_quadrant(end.x - start.x, end.y - start.y);
 
+    if (current_quadrant == INVALID_QUADRANT){
+      // shape is already rotated
+      rotated_shape_points = shape_points;
+      return;
+    }
+
     // get length
     length = std::round(start.distanceTo(end));
     
