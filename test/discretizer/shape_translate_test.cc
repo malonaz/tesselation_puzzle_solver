@@ -133,7 +133,7 @@ TEST(ShapeTranslateTest, shape_translate_all_shapes_Normal) {
   shape2.push_back(Point(9, 9));
   shape2.push_back(Point(6, 9));
   shape2.push_back(Point(6, 3));
-  shape2.push_back(Point(6, 0));
+  shape2.push_back(Point(0, 3));
 
   ListOfPoints shape3;
   shape3.push_back(Point(0, 0));
