@@ -199,13 +199,14 @@ int find_unit_length(const ListOfShapes* const shapes) {
   return unit_length;
 } // find_unit_length(ListOfShapes*)
 
-void shape_reduce(ListOfPoints* const shape, int unit_length) {
+void shape_reduce(ListOfPoints* const shape, ListOfPoints* reducedShape, int unit_length) {
   assert(shape != NULL);
   ListOfPoints::iterator iterator;
   for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
     Point current_point = *iterator;
     current_point.x /= unit_length;
     current_point.y /= unit_length;
+    reducedShape->push_back(current_point);
   }
 } // shape_reduce(ListOfPoints* shape, int)
 
@@ -221,9 +222,10 @@ bool shape_translate_all_shapes(const ListOfShapes* const shapes,
   ListOfShapes::const_iterator it;
   for (it = shapes->begin(); it != shapes->end(); ++it) {
     ListOfPoints* shape = *it;
-    shape_reduce(shape, unit_length);
+    ListOfPoints* reducedShape = new ListOfPoints();
+    shape_reduce(shape, reducedShape, unit_length);
     ShapeMatrix* matrix = NULL;
-    shape_translate(shape, matrix);
+    shape_translate(reducedShape, matrix);
     // we're ignoring shapes that cannot be produced from
     if (matrix == NULL) {
       continue;
