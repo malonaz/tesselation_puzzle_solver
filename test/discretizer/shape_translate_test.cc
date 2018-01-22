@@ -164,5 +164,27 @@ TEST(ShapeTranslateTest, shape_translate_all_shapes_Normal) {
   EXPECT_TRUE(matrices[0]->get(2, 0));
   EXPECT_TRUE(matrices[0]->get(2, 1));
   EXPECT_TRUE(matrices[0]->get(2, 2));
+  
+  EXPECT_EQ(9, matrices[1]->getMatrixArea());
+  EXPECT_EQ(5, matrices[1]->getShapeArea());
+  EXPECT_TRUE(matrices[1]->get(0, 0));
+  EXPECT_TRUE(matrices[1]->get(0, 1));
+  EXPECT_TRUE(matrices[1]->get(0, 2));
+  
+  EXPECT_FALSE(matrices[1]->get(1, 0));
+  EXPECT_FALSE(matrices[1]->get(1, 1));
+  EXPECT_TRUE(matrices[1]->get(1, 2));
+  
+  EXPECT_FALSE(matrices[1]->get(2, 0));
+  EXPECT_FALSE(matrices[1]->get(2, 1));
+  EXPECT_TRUE(matrices[1]->get(2, 2));
+  
+  EXPECT_EQ(4, matrices[2]->getMatrixArea());
+  EXPECT_EQ(4, matrices[2]->getShapeArea());
+  EXPECT_TRUE(matrices[2]->get(0, 0));
+  EXPECT_TRUE(matrices[2]->get(0, 1));
+  
+  EXPECT_TRUE(matrices[2]->get(1, 0));
+  EXPECT_TRUE(matrices[2]->get(1, 1));
 }
 } // namespace
