@@ -4,7 +4,7 @@ TESTS = $(TESTDIR)/common/shape_matrix_test.o \
 	$(TESTDIR)/discretizer/shape_translate_test.o \
 	$(TESTDIR)/discretizer/shape_rotate_test.o
 
-test: $(BINDIR)/$(TARGET) $(BINDIR)/$(TESTTARGET)
+test: $(BINDIR)/$(TESTTARGET)
 
 $(TESTS) : %.o: %.cc
 	@echo "Compiling for test object file \"$@\""
@@ -12,11 +12,12 @@ $(TESTS) : %.o: %.cc
 		$(TESTINCLUDES)\
 		$(CXXFLAGS) -c $< -o $@
 
-$(BINDIR)/$(TESTTARGET): $(TESTS) gtest_main.a
+$(BINDIR)/$(TESTTARGET): $(OBJECTS) $(TESTS) gtest_main.a
 	@echo "Linking test file \"$@\""
+	@mkdir -p bin
 	@$(CXX) $(CPPFLAGS)\
 		$(TESTINCLUDES)\
-		$(CXXFLAGS) -fprofile-arcs $(OBJECTS) $^ -o $@ -lpthread
+		$(CXXFLAGS) -fprofile-arcs $^ -o $@ -lpthread
 
 coverage: test
 	./bin/test
