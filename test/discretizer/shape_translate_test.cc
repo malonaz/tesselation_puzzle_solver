@@ -150,5 +150,19 @@ TEST(ShapeTranslateTest, shape_translate_all_shapes_Normal) {
   
   bool op_result = shape_translate_all_shapes(&listOfShapes, &matrices);
   EXPECT_TRUE(op_result);
+  
+  EXPECT_EQ(9, matrices[0]->getMatrixArea());
+  EXPECT_EQ(9, matrices[0]->getShapeArea());
+  EXPECT_TRUE(matrices[0]->get(0, 0));
+  EXPECT_TRUE(matrices[0]->get(0, 1));
+  EXPECT_TRUE(matrices[0]->get(0, 2));
+  
+  EXPECT_TRUE(matrices[0]->get(1, 0));
+  EXPECT_TRUE(matrices[0]->get(1, 1));
+  EXPECT_TRUE(matrices[0]->get(1, 2));
+  
+  EXPECT_TRUE(matrices[0]->get(2, 0));
+  EXPECT_TRUE(matrices[0]->get(2, 1));
+  EXPECT_TRUE(matrices[0]->get(2, 2));
 }
 } // namespace
