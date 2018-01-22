@@ -7,17 +7,19 @@ TESTS = $(TESTDIR)/common/shape_matrix_test.o \
 test: $(BINDIR)/$(TESTTARGET)
 
 $(TESTS) : %.o: %.cc
-	@echo "Compiling for test object file \"$@\""
+	@echo "\tCompiling \"$@\""
 	@$(CXX) $(CPPFLAGS)\
 		$(TESTINCLUDES)\
 		$(CXXFLAGS) -c $< -o $@
+	@echo "[Done]\tCompiling \"$@\""
 
 $(BINDIR)/$(TESTTARGET): $(OBJECTS) $(TESTS) gtest_main.a
-	@echo "Linking test file \"$@\""
+	@echo "\tLinking \"$@\""
 	@mkdir -p bin
 	@$(CXX) $(CPPFLAGS)\
 		$(TESTINCLUDES)\
 		$(CXXFLAGS) -fprofile-arcs $^ -o $@ -lpthread
+	@echo "[Done]\tLinking \"$@\""
 
 coverage: test
 	./bin/test

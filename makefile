@@ -30,19 +30,22 @@ CXXFLAGS = -Wall -g -MMD -std=c++11 -I$(SRCDIR)/
 main: $(BINDIR)/$(TARGET)
 
 $(BINDIR)/$(TARGET): $(MAIN_OBJECT) $(OBJECTS)
-	@echo "Linking main file \"$@\""
+	@echo "\tLinking \"$@\""
 	@mkdir -p $(OBJDIR) $(BINDIR)
 	@$(CXX) $(CXXFLAGS) -fprofile-arcs $^ -o $@
+	@echo "[Done]\tLinking \"$@\""
 
 $(MAIN_OBJECT): $(OBJDIR)/%.o: $(SRCDIR)/%.cc
-	@echo "Compiling for object file \"$@\""
+	@echo "\tCompiling \"$@\""
 	@mkdir -p $(OBJDIR) $(BINDIR)
 	@$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@
+	@echo "[Done]\tCompiling \"$@\""
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
-	@echo "Compiling for object file \"$@\""
+	@echo "\tCompiling \"$@\""
 	@mkdir -p `dirname $@`
 	@$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@
+	@echo "[Done]\tCompiling \"$@\""
 
 -include $(OBJECTS:.o=.d)
 
