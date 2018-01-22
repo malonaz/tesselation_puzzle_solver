@@ -21,7 +21,7 @@ enum Quadrant {I = 1, II = 2, III = 3, IV = 4, INVALID_QUADRANT};
  * Helper function which prints the list of points to the standard output stream
  * in the following way (x1, y1), (x2, y2) etc.
  */
-void print_list_of_points(std::vector<Point> shape_points){
+void print_list_of_points(std::vector<Point> &shape_points){
   for (uint i = 0; i < shape_points.size(); i++){
     std::cout << shape_points[i];
 
@@ -80,7 +80,7 @@ bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant){
  * Helper function which rotates the given shape's coordinates so that all sides 
  * of the given shape are vertical or horizontal.
  */
-void rotate_shape(std::vector<Point> shape_points, std::vector<Point> rotated_shape_points ){
+void rotate_shape(std::vector<Point> &shape_points, std::vector<Point> &rotated_shape_points ){
   // size must be minimum 4 for a polygon with 90 degrees corners only
   assert(shape_points.size() >= 4);
 
@@ -117,7 +117,6 @@ void rotate_shape(std::vector<Point> shape_points, std::vector<Point> rotated_sh
     // are we turning right?
     bool turning_right = turn_right(previous_quadrant, current_quadrant);
 
-
     // create new_point
     Point new_point = previous_endpoint;
     
@@ -153,7 +152,12 @@ void rotate_shape(std::vector<Point> shape_points, std::vector<Point> rotated_sh
 }
 
 
-void rotate_shapes(std::vector< std::vector<Point> > shapes,
-		   std::vector< std::vector<Point> > rotated_shapes){
-  
+void rotate_shapes(std::vector< std::vector<Point> > &shapes,
+		   std::vector< std::vector<Point> > &rotated_shapes){
+  for (uint i = 0; i < shapes.size(); i++){
+    // create new vector
+    std::vector<Point> rotated_shape;
+    rotate_shape(shapes[i], rotated_shape);
+    rotated_shapes.push_back(rotated_shape);
+  }
 }
