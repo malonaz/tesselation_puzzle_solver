@@ -203,7 +203,7 @@ void shape_reduce(const ListOfPoints* const shape,
     ListOfPoints* const reducedShape, int unit_length) {
   assert(shape != NULL);
   assert(reducedShape != NULL);
-  ListOfPoints::iterator iterator;
+  ListOfPoints::const_iterator iterator;
   for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
     Point current_point = *iterator;
     current_point.x /= unit_length;
