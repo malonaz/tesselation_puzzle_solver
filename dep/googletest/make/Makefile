@@ -43,15 +43,19 @@ GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
 # conservative and not optimized.  This is fine as Google Test
 # compiles fast and for ordinary users its source rarely changes.
 gtest-all.o : $(GTEST_SRCS_)
-	$(CXX) $(CPPFLAGS) $(TESTINCLUDES) $(TESTFLAGS) -c \
+	@echo "Making GoogleTest File \"$@\""
+	@$(CXX) $(CPPFLAGS) $(TESTINCLUDES) $(TESTFLAGS) -c \
             $(GTEST_DIR)/src/gtest-all.cc
 
 gtest_main.o : $(GTEST_SRCS_)
-	$(CXX) $(CPPFLAGS) $(TESTINCLUDES) $(TESTFLAGS) -c \
+	@echo "Making GoogleTest File \"$@\""
+	@$(CXX) $(CPPFLAGS) $(TESTINCLUDES) $(TESTFLAGS) -c \
             $(GTEST_DIR)/src/gtest_main.cc
 
 gtest.a : gtest-all.o
-	$(AR) $(ARFLAGS) $@ $^
+	@echo "Making GoogleTest File \"$@\""
+	@$(AR) $(ARFLAGS) $@ $^
 
 gtest_main.a : gtest-all.o gtest_main.o
-	$(AR) $(ARFLAGS) $@ $^
+	@echo "Making GoogleTest File \"$@\""
+	@$(AR) $(ARFLAGS) $@ $^
