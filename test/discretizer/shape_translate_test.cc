@@ -93,7 +93,7 @@ TEST(ShapeTranslateTest, shape_translate_MinPoints) {
   EXPECT_EQ(NULL, matrix);
 }
 
-/*TEST(ShapeTranslateTest, shape_translate_all_shapes_Normal) {
+TEST(ShapeTranslateTest, shape_translate_all_shapes_Normal) {
   ListOfPoints shape1;
   shape1.push_back(Point(0, 0));
   shape1.push_back(Point(9, 0));
@@ -123,5 +123,5 @@ TEST(ShapeTranslateTest, shape_translate_MinPoints) {
   
   bool op_result = shape_translate_all_shapes(&listOfShapes, &matrices);
   EXPECT_TRUE(op_result);
-}*/
+}
 } // namespace
