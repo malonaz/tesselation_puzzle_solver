@@ -93,4 +93,35 @@ TEST(ShapeTranslateTest, shape_translate_MinPoints) {
   EXPECT_EQ(NULL, matrix);
 }
 
+TEST(ShapeTranslateTest, shape_translate_all_shapes_Normal) {
+  ListOfPoints shape1;
+  shape1.push_back(Point(0, 0));
+  shape1.push_back(Point(9, 0));
+  shape1.push_back(Point(9, 9));
+  shape1.push_back(Point(0, 9));
+
+  ListOfPoints shape2;
+  shape2.push_back(Point(0, 0));
+  shape2.push_back(Point(9, 0));
+  shape2.push_back(Point(9, 9));
+  shape2.push_back(Point(6, 9));
+  shape2.push_back(Point(6, 3));
+  shape2.push_back(Point(6, 0));
+
+  ListOfPoints shape3;
+  shape3.push_back(Point(0, 0));
+  shape3.push_back(Point(6, 0));
+  shape3.push_back(Point(6, 6));
+  shape3.push_back(Point(0, 6));
+
+  ListOfShapes listOfShapes;
+  listOfShapes.push_back(&shape1);
+  listOfShapes.push_back(&shape2);
+  listOfShapes.push_back(&shape3);
+  
+  ListOfShapeMatrices matrices;
+  
+  bool op_result = shape_translate_all_shapes(&listOfShapes, &matrices);
+  EXPECT_TRUE(op_result);
+}
 } // namespace
