@@ -17,9 +17,23 @@ void shape_matrix_print(const ShapeMatrix* const shape) {
 void shape_matrix_print(const ShapeMatrix& shape) {
   int width = shape.getWidth();
   int height = shape.getHeight();
+  int shapeArea = shape.getShapeArea();
+  cout << "-- [ rows: " << height << ", cols: " << width
+      << ", sa: " << shapeArea << " ] --" << endl;
+  cout << "+";
+  for (int c = 0; c < width; ++c) {
+    cout <<  "---+";
+  }
+  cout << endl;
   for (int r = 0; r < height; ++r) {
+    cout << "| ";
     for (int c = 0; c < width; ++c) {
-      cout << (shape.get(r, c) ? '1' : '0') << '\t';
+      cout << (shape.get(r, c) ? '1' : '0') << " | ";
+    }
+    cout << endl;
+    cout << "+";
+    for (int c = 0; c < width; ++c) {
+      cout <<  "---+";
     }
     cout << endl;
   }
