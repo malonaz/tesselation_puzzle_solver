@@ -22,7 +22,7 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix);
     the puzzle pieces in the image.
   \param matrices The list of output matrices translated from the list of shapes.
 */
-bool shape_translate_all_shapes(ListOfShapes* const shapes,
+bool shape_translate_all_shapes(const ListOfShapes* const shapes,
   ListOfShapeMatrices* const matrices);
 
 #endif
