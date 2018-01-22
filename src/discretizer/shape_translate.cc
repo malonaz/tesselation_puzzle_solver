@@ -146,6 +146,10 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
 
 int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
   int shortest_edge_length = -1;
+  if (shape->size() < 4) {
+    return shortest_edge_length;
+  }
+  
   ListOfPoints::const_iterator iterator;
   iterator = shape->begin();
   Point first_point = *iterator;
@@ -173,6 +177,10 @@ int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
   }
   if (length < shortest_edge_length || shortest_edge_length == -1) {
     shortest_edge_length = length;
+  }
+  
+  if (shortest_edge_length == 0) {
+    shortest_edge_length = -1;
   }
 
   return shortest_edge_length;
