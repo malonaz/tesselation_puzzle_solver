@@ -8,6 +8,8 @@
 #include <iostream>
 #include <cmath>
 
+// used for reset call to get next point
+#define RESET NULL
 
 // used to keep track of direction of segment w.r to x-y axis.
 enum Direction {NORTH, EAST, SOUTH, WEST};
@@ -21,10 +23,11 @@ enum Quadrant {I = 1, II = 2, III = 3, IV = 4, INVALID_QUADRANT};
  */
 void print_list_of_points(std::vector<Point> shape_points){
   for (uint i = 0; i < shape_points.size(); i++){
-    int x = shape_points[i].x;
-    int y = shape_points[i].y;
-    std::cout << "(" << x << ", " << y << "), ";
+    std::cout << shape_points[i];
 
+    if (i < shape_points.size() - 1)
+      // add comma after each (x, y) unless it is the last
+      std::cout << ", ";
   }
 
   std::cout << std::endl;  
@@ -72,8 +75,7 @@ bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant){
    
   return current_quadrant > previous_quadrant;
 }
-
-
+   
 /**
  * Helper function which rotates the given shape's coordinates so that all sides 
  * of the given shape are vertical or horizontal.
@@ -89,7 +91,7 @@ void rotate_shape(std::vector<Point> shape_points, std::vector<Point> rotated_sh
   // get distance rounded to nearest integer
   float length = std::round(start.distanceTo(end));
 
-  // add point 0,0 as start of the shape and corresponding end of shape
+  // add point (0,0) as start of the shape and corresponding end of shape
   rotated_shape_points.push_back(Point(0, 0));
   rotated_shape_points.push_back(Point(length, 0));
 
@@ -97,11 +99,12 @@ void rotate_shape(std::vector<Point> shape_points, std::vector<Point> rotated_sh
   Quadrant previous_quadrant = get_quadrant(end.x - start.x, end.y - start.y);
   Direction previous_direction = EAST;
 
-  // set previous endpoint
+  // save the endpoint of the first side. This is the point we are moving from next
   Point previous_endpoint = rotated_shape_points[1];
 
+  // point a, point b, (use statc for previous_direction)  
   for (uint i = 1; i < shape_points.size() - 1; i++){
-
+    
     start = shape_points[i];
     end = shape_points[i + 1];
 
@@ -133,15 +136,12 @@ void rotate_shape(std::vector<Point> shape_points, std::vector<Point> rotated_sh
       previous_direction = turning_right? EAST: WEST; 
     }
 
-    else { // previous direction is WEST
-      if (turning_right)
-	std::cout << i << " making a right turn " << std::endl;
-
+    else { // previous direction is WEST)
       new_point.y += turning_right? length: -length;
       previous_direction = turning_right? NORTH: SOUTH;
     }
     
-    // pushback new point
+    // add new point
     rotated_shape_points.push_back(new_point);
 
     // save this side's endpoint
@@ -155,5 +155,5 @@ void rotate_shape(std::vector<Point> shape_points, std::vector<Point> rotated_sh
 
 void rotate_shapes(std::vector< std::vector<Point> > shapes,
 		   std::vector< std::vector<Point> > rotated_shapes){
-
+  
 }
