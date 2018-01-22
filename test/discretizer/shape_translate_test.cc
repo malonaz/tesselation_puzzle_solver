@@ -187,4 +187,65 @@ TEST(ShapeTranslateTest, shape_translate_all_shapes_Normal) {
   EXPECT_TRUE(matrices[2]->get(1, 0));
   EXPECT_TRUE(matrices[2]->get(1, 1));
 }
+
+TEST(ShapeTranslateTest, shape_translate_all_shapes_Empty) {
+  ListOfShapes listOfShapes;
+  ListOfShapeMatrices matrices;
+  
+  bool op_result = shape_translate_all_shapes(&listOfShapes, &matrices);
+  EXPECT_FALSE(op_result);
+  EXPECT_EQ(0, matrices.size());
+}
+
+TEST(ShapeTranslateTest, shape_translate_all_shapes_InvalidShape) {
+  ListOfShapes listOfShapes;
+  ListOfShapeMatrices matrices;
+  
+  ListOfPoints shape1;
+  shape1.push_back(Point(0, 0));
+  
+  listOfShapes.push_back(&shape1);
+  
+  bool op_result = shape_translate_all_shapes(&listOfShapes, &matrices);
+  EXPECT_FALSE(op_result);
+  EXPECT_EQ(0, matrices.size());
+}
+
+TEST(ShapeTranslateTest, shape_translate_all_shapes_InvalidShape2) {
+  ListOfShapes listOfShapes;
+  ListOfShapeMatrices matrices;
+  
+  ListOfPoints shape1;
+  shape1.push_back(Point(0, 0));
+
+  ListOfPoints shape2;
+  shape2.push_back(Point(0, 0));
+  shape2.push_back(Point(6, 0));
+  shape2.push_back(Point(6, 6));
+  shape2.push_back(Point(0, 6));
+  
+  listOfShapes.push_back(&shape1);
+  listOfShapes.push_back(&shape2);
+  
+  bool op_result = shape_translate_all_shapes(&listOfShapes, &matrices);
+  EXPECT_TRUE(op_result);
+  EXPECT_EQ(1, matrices.size());
+}
+
+TEST(ShapeTranslateTest, shape_translate_all_shapes_InvalidShape3) {
+  ListOfShapes listOfShapes;
+  ListOfShapeMatrices matrices;
+  
+  ListOfPoints shape1;
+  shape1.push_back(Point(0, 0));
+  shape1.push_back(Point(0, 0));
+  shape1.push_back(Point(0, 0));
+  shape1.push_back(Point(0, 0));
+
+  listOfShapes.push_back(&shape1);
+  
+  bool op_result = shape_translate_all_shapes(&listOfShapes, &matrices);
+  EXPECT_FALSE(op_result);
+  EXPECT_EQ(0, matrices.size());
+}
 } // namespace
