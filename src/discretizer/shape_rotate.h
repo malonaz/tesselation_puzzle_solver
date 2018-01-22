@@ -14,5 +14,7 @@
 void rotate_shapes(std::vector< std::vector<Point> > &shapes,
 		   std::vector< std::vector<Point> > &rotated_shapes);
 
+
+
 #endif
 

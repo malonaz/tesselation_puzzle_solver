@@ -154,10 +154,15 @@ void rotate_shape(std::vector<Point> &shape_points, std::vector<Point> &rotated_
 
 void rotate_shapes(std::vector< std::vector<Point> > &shapes,
 		   std::vector< std::vector<Point> > &rotated_shapes){
+
   for (uint i = 0; i < shapes.size(); i++){
-    // create new vector
+    // create new shape to store the rotated_shape in
     std::vector<Point> rotated_shape;
+
+    // rotate the shape
     rotate_shape(shapes[i], rotated_shape);
+
+    // push it onto output parameter rotated_shapes
     rotated_shapes.push_back(rotated_shape);
   }
 }
