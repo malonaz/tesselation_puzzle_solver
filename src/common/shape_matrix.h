@@ -63,6 +63,8 @@ public:
     \return The pointer to the new copy of the rotated matrix.
   */
   ShapeMatrix* rotate(int n) const;
+  
+  ShapeMatrix* mirror() const;
 
   ShapeMatrix& operator=(const ShapeMatrix& shape);
   
