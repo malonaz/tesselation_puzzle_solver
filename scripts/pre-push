@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# NOTE: Run the file 'script/install-git-hooks.sh' to install this hook.
+# This file is a pre-push hook that would run the tests before pushing
+# whenever you try to push to remote's master branch. 
+
+protected_branch='master'
+
+# Check if we actually have commits to push
+commits=`git log @{u}..`
+if [ -z "$commits" ]; then
+    exit 0
+fi
+
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+if [[ $current_branch = $protected_branch ]]; then
+    make clean
+    make test
+    ./bin/test
+    RESULT=$?
+    if [ $RESULT -ne 0 ]; then 
+        echo "failed $CMD"
+        exit 1
+    fi
+fi
+exit 0
