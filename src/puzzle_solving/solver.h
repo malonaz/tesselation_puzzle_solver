@@ -5,6 +5,10 @@
 #include "common/puzzle_board.h"
 #include "common/types.h"
 
+#define UNDERSIZED -1
+#define OVERSIZED -2
+#define SOLVED 1
+#define UNSOLVED 0
 
 PuzzleBoard* createBoard(ListOfShapeMatrices* const matrices,
     ListOfShapeMatrices* const pieces, int& containerArea, int& totalPieceArea);
@@ -13,6 +17,6 @@ bool recursiveSolver (PuzzleBoard* board,
   ListOfShapeMatrices* const pieces,
   unsigned int currentIndex);
 
-bool puzzleSolver(ListOfShapeMatrices* const matrices);
+int puzzleSolver(ListOfShapeMatrices* const matrices);
 
 #endif
