@@ -19,7 +19,8 @@ int main(int argc, char** argv){ //  ./demo <input_filename>
   }
 
   /* READ FILE */
-  ListOfShapes* puzzle_pieces = NULL;
+  cout << " Reading file ....." <<endl;
+  ListOfShapes* puzzle_pieces = new ListOfShapes();
   bool file_read = read_coordinates_file(argv[1], puzzle_pieces);
 
   if (file_read == false){
@@ -27,10 +28,16 @@ int main(int argc, char** argv){ //  ./demo <input_filename>
     return 1;
   }
 
+  cout << "File Read Complete!" << endl;
+
+  cout<< "Rotating Pieces..." << endl;
   /* SHAPE TRANSLATE MODULE */
   ListOfShapes* rotated_puzzle_pieces = NULL;
   rotate_shapes(puzzle_pieces, rotated_puzzle_pieces);
 
+  cout << "Pieces translated!" << endl;
+
+  cout << "Translating shape to Boolean Matrix...." <<endl;
   /* DISCRETIZER MODULE */
   ListOfShapeMatrices* pieces = NULL;
   bool translate_success = shape_translate_all_shapes(rotated_puzzle_pieces, pieces);
@@ -39,6 +46,10 @@ int main(int argc, char** argv){ //  ./demo <input_filename>
     cout << "INTERNAL ERROR: SHAPE TRANSLATE FAIL" <<endl;
     return 1;
   }
+
+  cout << "Translation complete!" << endl;
+
+  cout << "Solving Puzzle...." <<endl;
 
   /* SOLVER MODULE */
   int solve_success = 0;
