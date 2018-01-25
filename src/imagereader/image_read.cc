@@ -1,42 +1,34 @@
-#include "image_read.h"
-#include "opencv2/highgui.hpp"
-#include "opencv2/imgproc.hpp"
 #include <iostream>
+#include "image_read.h"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
 
 using namespace cv;
 using namespace std;
 
-Mat src, src_gray, src_processed;
-int thresh = 80;
+Mat src, src_gray;
+int thresh = 180;
 int max_thresh = 255;
 const char* source_window = "Source image";
 const char* corners_window = "Corners detected";
 
 void cornerHarris_demo( int, void* );
 
-void find_coordinates(const char* input){
-
+void find_coordinates(const char* input) {
   src = imread(input, IMREAD_COLOR);
   if (src.empty()) {
     cout << "Could not open or find the image!\n" << endl;
     return;
   }
-  src_processed = Mat::zeros( src.size(), src.type() );
-  double alpha = 1.5;
-  int beta = -25;
-  for( int y = 0; y < src.rows; y++ ) {
-    for( int x = 0; x < src.cols; x++ ) {
-      for( int c = 0; c < 3; c++ ) {
-        src_processed.at<Vec3b>(y,x)[c] =
-           saturate_cast<uchar>( alpha * ( src.at<Vec3b>(y,x)[c] ) + beta );
-      }
-    }
-  }
-  
+  Mat src_processed;
+
+  double scale = 800.0 / src.size().width;
+  resize(src, src_processed, Size(scale * src.size().width, scale * src.size().height));
   cvtColor(src_processed, src_gray, COLOR_BGR2GRAY);
+  adaptiveThreshold(src_gray, src_gray, 140, CV_ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 11, 2);
   namedWindow( source_window, WINDOW_AUTOSIZE );
   imshow( source_window, src_gray );
-  cornerHarris_demo( 0, 0 );
+  cornerHarris_demo(0, 0);
   waitKey(0);
   return;
 }
@@ -60,4 +52,4 @@ void cornerHarris_demo( int, void* ) {
    }
   namedWindow( corners_window, WINDOW_AUTOSIZE );
   imshow( corners_window, dst_norm_scaled );
-}s
+}
