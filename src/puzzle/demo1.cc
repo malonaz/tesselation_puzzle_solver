@@ -63,5 +63,9 @@ int main(int argc, char** argv){ //  ./demo <input_filename>
       cout << "INTERNAL ERROR: SOLVER ERROR" << endl;
   }
 
+  delete puzzle_pieces;
+  delete rotated_puzzle_pieces;
+  delete pieces;
+
   return 0;
 }
