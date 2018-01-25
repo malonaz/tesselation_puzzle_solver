@@ -7,7 +7,7 @@ using namespace cv;
 using namespace std;
 
 Mat src, src_gray;
-int thresh = 180;
+int thresh = 150;
 int max_thresh = 255;
 const char* source_window = "Source image";
 const char* corners_window = "Corners detected";
@@ -25,7 +25,8 @@ void find_coordinates(const char* input) {
   double scale = 800.0 / src.size().width;
   resize(src, src_processed, Size(scale * src.size().width, scale * src.size().height));
   cvtColor(src_processed, src_gray, COLOR_BGR2GRAY);
-  adaptiveThreshold(src_gray, src_gray, 140, CV_ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 11, 2);
+  adaptiveThreshold(src_gray, src_gray, 120, CV_ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 11, 2);
+  GaussianBlur(src_gray, src_gray, Size(5, 5), 0, 0);
   namedWindow( source_window, WINDOW_AUTOSIZE );
   imshow( source_window, src_gray );
   cornerHarris_demo(0, 0);
