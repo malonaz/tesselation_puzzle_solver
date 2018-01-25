@@ -19,7 +19,7 @@ int main(int argc, char** argv){ //  ./demo <input_filename>
   }
 
   /* READ FILE */
-  ListOfShapes* puzzle_pieces;
+  ListOfShapes* puzzle_pieces = NULL;
   bool file_read = read_coordinates_file(argv[1], puzzle_pieces);
 
   if (file_read == false){
@@ -28,11 +28,11 @@ int main(int argc, char** argv){ //  ./demo <input_filename>
   }
 
   /* SHAPE TRANSLATE MODULE */
-  ListOfShapes* rotated_puzzle_pieces;
+  ListOfShapes* rotated_puzzle_pieces = NULL;
   rotate_shapes(puzzle_pieces, rotated_puzzle_pieces);
 
   /* DISCRETIZER MODULE */
-  ListOfShapeMatrices* pieces;
+  ListOfShapeMatrices* pieces = NULL;
   bool translate_success = shape_translate_all_shapes(rotated_puzzle_pieces, pieces);
 
   if (translate_success == false){
