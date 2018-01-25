@@ -5,7 +5,7 @@ bool compareByArea(const Rectangle &a, const Rectangle &b){
   return a.area > b.area;
 }
 
-void find_coordinates(char* input){
+void find_coordinates(const char* input){
   int thresh = 155;
   int max_thresh = 255 ;
   Mat source, source_gray,source_gray_blurred,source_gray_blurred_thresh;
