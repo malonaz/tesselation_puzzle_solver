@@ -1,6 +1,6 @@
 DEMO_TARGET = demo
 
-demo: $(BINDIR)/$(DEMOTARGET)
+demo: $(BINDIR)/$(DEMO_TARGET)
 
 DEMO_OBJECTS = $(OBJDIR)/puzzle/demo1.o
 
@@ -11,7 +11,7 @@ $(DEMO_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 	@$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@
 	@echo "[Done]\tCompiling \"$@\""
 
-$(BINDIR)/$(DEMOTARGET): $(OBJECTS) $(DEMO_OBJECTS)
+$(BINDIR)/$(DEMO_TARGET): $(OBJECTS) $(DEMO_OBJECTS)
 	@echo "\tLinking \"$@\""
 	@mkdir -p bin
 	@$(CXX) $(CPPFLAGS)\
