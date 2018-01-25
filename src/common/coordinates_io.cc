@@ -25,5 +25,7 @@ bool read_coordinates_file(const char* file, ListOfShapes* list) {
     list->push_back(points);
   }
 
+  input_file.close();
+  
   return true;
 }
