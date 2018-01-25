@@ -5,6 +5,7 @@ BINDIR = bin
 TARGET = aps
 TESTTARGET = test
 TESTDIR = test
+DEMODIR = src/puzzle
 COVDIR = coverage
 
 MAIN_OBJECT = $(OBJDIR)/main.o
@@ -51,6 +52,7 @@ $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 -include $(OBJECTS:.o=.d)
 
 include $(TESTDIR)/makefile
+include $(DEMODIR)/makefile
 
 check:
 	cppcheck --enable=all --check-config --suppress=missingIncludeSystem -I src src
