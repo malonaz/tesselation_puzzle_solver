@@ -1,14 +1,13 @@
 
-#include "common/shape_matrix.h"
+#include <cassert>
+#include <cmath>
+#include <iostream>
+
 #include "common/point.h"
+#include "common/shape_matrix.h"
 #include "common/types.h"
 #include "shape_rotate.h"
 #include "shape_translate.h"
-
-
-#include "assert.h"
-#include <iostream>
-#include <cmath>
 
 using std::cout;
 using std::endl;
