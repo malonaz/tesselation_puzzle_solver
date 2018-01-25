@@ -32,14 +32,14 @@ int main(int argc, char** argv){ //  ./demo <input_filename>
 
   cout<< "Rotating Pieces..." << endl;
   /* SHAPE TRANSLATE MODULE */
-  ListOfShapes* rotated_puzzle_pieces = NULL;
+  ListOfShapes* rotated_puzzle_pieces = new ListOfShapes();
   rotate_shapes(puzzle_pieces, rotated_puzzle_pieces);
 
   cout << "Pieces translated!" << endl;
 
   cout << "Translating shape to Boolean Matrix...." <<endl;
   /* DISCRETIZER MODULE */
-  ListOfShapeMatrices* pieces = NULL;
+  ListOfShapeMatrices* pieces = new ListOfShapeMatrices();
   bool translate_success = shape_translate_all_shapes(rotated_puzzle_pieces, pieces);
 
   if (translate_success == false){
