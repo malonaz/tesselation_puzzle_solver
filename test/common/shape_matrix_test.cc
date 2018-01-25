@@ -238,13 +238,13 @@ TEST(ShapeMatrixTest, Mirror) {
   matrix->set(2, 0, true);
   matrix->set(2, 1, true);
   // an L shape
-  
+
   mirroredMatrix = matrix->mirror();
   EXPECT_EQ(width, mirroredMatrix->getWidth());
   EXPECT_EQ(height, mirroredMatrix->getHeight());
   EXPECT_EQ(matrix->getMatrixArea(), mirroredMatrix->getMatrixArea());
   EXPECT_EQ(matrix->getShapeArea(), mirroredMatrix->getShapeArea());
-  
+
   EXPECT_TRUE(mirroredMatrix->get(0, 0));
   EXPECT_TRUE(mirroredMatrix->get(0, 1));
   EXPECT_TRUE(mirroredMatrix->get(1, 0));
@@ -325,7 +325,7 @@ TEST(ShapeMatrixTest, EqualityCheckCopy) {
   matrix1.set(2, 0, true);
   matrix1.set(2, 1, true);
   // an L shape
-  
+
   ShapeMatrix matrix2(matrix1);
 
   // equality with copy
@@ -345,7 +345,7 @@ TEST(ShapeMatrixTest, EqualityCheckIdentical) {
   matrix1.set(2, 0, true);
   matrix1.set(2, 1, true);
   // an L shape
-  
+
   ShapeMatrix matrix2(width, height);
 
   matrix2.set(0, 0, true);
@@ -370,7 +370,7 @@ TEST(ShapeMatrixTest, EqualityCheckDifferentSize) {
   matrix1.set(2, 0, true);
   matrix1.set(2, 1, true);
   // an L shape
-  
+
   ShapeMatrix matrix2(height, width);
 
   // inequality with different size
@@ -390,7 +390,7 @@ TEST(ShapeMatrixTest, EqualityCheckDifferentShapeArea) {
   matrix1.set(2, 0, true);
   matrix1.set(2, 1, true);
   // an L shape
-  
+
   ShapeMatrix matrix2(width, height);
 
   // inequality with different shape area
@@ -410,7 +410,7 @@ TEST(ShapeMatrixTest, EqualityCheckDifferentShape) {
   matrix1.set(2, 0, true);
   matrix1.set(2, 1, true);
   // an L shape
-  
+
   ShapeMatrix matrix2(width, height);
 
   matrix2.set(0, 0, true);
