@@ -1,11 +1,13 @@
-#include <iostream>
+#include <cassert>
+#include <fstream>
 #include "types.h"
 
 using std::ifstream;
 
 bool read_coordinates_file(const char* file, ListOfShapes* list) {
   assert(list != NULL);
-  ifstream input_file(file);
+  ifstream input_file;
+  input_file.open(file);
   if (input_file.fail()) {
     return false;
   }
