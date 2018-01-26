@@ -1,0 +1,10 @@
+runtests:
+  before_script:
+    - sudo apt-get install -yq libopencv-dev
+  script:
+    # compile it up
+    - export ARCH=x86_64
+    - make
+    # run the tests..
+    - make test
+    - bin/test

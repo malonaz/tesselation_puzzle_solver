@@ -1,23 +1,29 @@
 #ifndef APS_COMMON_SHAPE_MATRIX_H_
 #define APS_COMMON_SHAPE_MATRIX_H_
 
-/*
-  ShapeMatrix
-
-  describes the shape detected in the image as an discrete logocal matrix
+/**
+  Describes the shape detected in the image as an discrete logocal matrix
 */
 class ShapeMatrix {
 private:
-  /* width: The width of the matrix */
+  /**
+    The width of the matrix
+  */
   int width;
 
-  /* height: The height of the matrix */
+  /** 
+    The height of the matrix
+  */
   int height;
 
-  /* shapeArea: The area that the shape occupies out of the matrix */
+  /**
+    The area that the shape occupies out of the matrix
+  */
   int shapeArea;
 
-  /* The logical matrix that represent */
+  /**
+    The logical matrix that represent
+  */
   bool* shape;
 
 public:
@@ -41,13 +47,38 @@ public:
 
   int getMatrixArea() const;
 
-  ShapeMatrix* rotate();
+  /**
+    Creates a new copy of the shape matrix that is rotated clockwise by
+    90 degrees.
+    
+    \return The pointer to the new copy of the rotated matrix.
+  */
+  ShapeMatrix* rotate() const;
 
-  ShapeMatrix* rotate(int n);
+  /**
+    Creates a new copy of the shape matrix that is rotated clockwise by
+    n * 90 degrees.
+    
+    \param n The number of 90 degree transpose to rotate
+    \return The pointer to the new copy of the rotated matrix.
+  */
+  ShapeMatrix* rotate(int n) const;
+  
+  /**
+    Creates a copy of the shape matrix that is mirrored row-wise.
+    
+    \return The pointer to the new copy of the mirroed matrix.
+  */
+  ShapeMatrix* mirror() const;
 
   ShapeMatrix& operator=(const ShapeMatrix& shape);
+  
+  bool operator==(const ShapeMatrix& rhs) const;
+  
+  bool operator!=(const ShapeMatrix& rhs) const;
 
   virtual ~ShapeMatrix();
-};
+
+}; // ShapeMatrix
 
 #endif

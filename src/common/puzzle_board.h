@@ -11,19 +11,23 @@ private:
 public:
   PuzzleBoard(ShapeMatrix* shape);
 
-  int getHeight();
+  PuzzleBoard(const PuzzleBoard &copy);
 
-  int getWidth();
+  int getHeight() const;
+
+  int getWidth() const;
 
   bool placePiece(int x, int y, int idx, ShapeMatrix* piece);
 
   bool removePiece(int x, int y, int indexToRemove);
 
-  int** getCurrentBoard();
+  int** getCurrentBoard() const;
 
-  int getRemainingArea();
+  int getRemainingArea() const;
 
-  void printBoard();
+  void printBoard() const;
+
+  PuzzleBoard& operator=(const PuzzleBoard& rhs);
 
   virtual ~PuzzleBoard();
 };

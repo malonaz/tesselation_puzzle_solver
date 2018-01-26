@@ -1,18 +1,25 @@
 include ./dep/googletest/make/Makefile
 
-TESTS = $(TESTDIR)/common/shape_matrix_test.o
+TESTS = $(TESTDIR)/common/shape_matrix_test.o \
+	$(TESTDIR)/discretizer/shape_translate_test.o \
+	$(TESTDIR)/discretizer/shape_rotate_test.o
 
-test: $(BINDIR)/$(TARGET) $(BINDIR)/$(TESTTARGET)
+test: $(BINDIR)/$(TESTTARGET)
 
 $(TESTS) : %.o: %.cc
-	$(CXX) $(CPPFLAGS)\
+	@echo "\tCompiling \"$@\""
+	@$(CXX) $(CPPFLAGS)\
 		$(TESTINCLUDES)\
 		$(CXXFLAGS) -c $< -o $@
+	@echo "[Done]\tCompiling \"$@\""
 
-$(BINDIR)/$(TESTTARGET): $(TESTS) gtest_main.a
-	$(CXX) $(CPPFLAGS)\
+$(BINDIR)/$(TESTTARGET): $(OBJECTS) $(TESTS) gtest_main.a
+	@echo "\tLinking \"$@\""
+	@mkdir -p bin
+	@$(CXX) $(CPPFLAGS)\
 		$(TESTINCLUDES)\
-		$(CXXFLAGS) $(OBJECTS) $^ -o $@ -lpthread -lgcov
+		$(CXXFLAGS) -fprofile-arcs $^ -o $@ -lpthread $(OPENCV_LIBFLAGS)
+	@echo "[Done]\tLinking \"$@\""
 
 coverage: test
 	./bin/test
@@ -20,6 +27,6 @@ coverage: test
 	@find $(SRCDIR) -name '*.cc' -exec cp {} $(COVDIR) \;
 	@find $(OBJDIR) -name '*.gcno' -exec cp {} $(COVDIR) \;
 	@find $(OBJDIR) -name '*.gcda' -exec cp {} $(COVDIR) \;
-	@cd $(COVDIR) && find . -name '*.cc' -exec gcov -bf {} \;
-	lcov --no-external -b $(SRCDIR) -o $(COVDIR)/.info -c -d $(COVDIR)
+	@find $(COVDIR) -name '*.cc' -exec gcov -bf {} \;
+	lcov --no-external -b $(SRCDIR) -o $(COVDIR)/.info -c -q -d $(COVDIR)
 	genhtml -o $(COVDIR)/html $(COVDIR)/.info
