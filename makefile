@@ -24,12 +24,12 @@ IMAGE_READER_OBJECTS = $(OBJDIR)/imagereader/image_read.o
 DISCRETIZER_OBJECTS = $(OBJDIR)/discretizer/shape_translate.o \
 			$(OBJDIR)/discretizer/shape_rotate.o
 
-PUZZLE_SOLVING_OBJECTS = $(OBJDIR)/puzzle_solving/solver.o
+SOLVER_OBJECTS = $(OBJDIR)/solver/solver.o
 
 OBJECTS = $(COMMON_OBJECTS)\
 	$(DISCRETIZER_OBJECTS)\
 	$(PUZZLE_OBJECTS)\
-	$(PUZZLE_SOLVING_OBJECTS)\
+	$(SOLVER_OBJECTS)\
 	$(IMAGE_READER_OBJECTS)
 
 CXX = g++

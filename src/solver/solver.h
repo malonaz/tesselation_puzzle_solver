@@ -1,5 +1,5 @@
-#ifndef APS_PUZZLE_SOLVING_SOLVER_H_
-#define APS_PUZZLE_SOLVING_SOLVER_H_
+#ifndef APS_SOLVER_SOLVER_H_
+#define APS_SOLVER_SOLVER_H_
 
 #include "common/shape_matrix.h"
 #include "common/puzzle_board.h"

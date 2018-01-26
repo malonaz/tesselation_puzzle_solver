@@ -8,7 +8,7 @@
 #include "common/point.h"
 #include "discretizer/shape_rotate.h"
 #include "discretizer/shape_translate.h"
-#include "puzzle_solving/solver.h"
+#include "solver/solver.h"
 
 using namespace std;
 
