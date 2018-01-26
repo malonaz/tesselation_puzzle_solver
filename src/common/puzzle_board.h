@@ -7,6 +7,7 @@ class PuzzleBoard {
 private:
   ShapeMatrix* container;
   int** current_board;
+  int remainingArea;
 
 public:
   PuzzleBoard(ShapeMatrix* shape);

@@ -6,7 +6,9 @@
 using namespace std;
 
 PuzzleBoard::PuzzleBoard(ShapeMatrix* shape):
-    container(shape), current_board(NULL) {
+    container(shape),
+    current_board(NULL),
+    remainingArea(shape->getShapeArea()) {
   int width = shape->getWidth();
   int height = shape->getHeight();
   this->current_board = new int*[height];
@@ -20,7 +22,8 @@ PuzzleBoard::PuzzleBoard(ShapeMatrix* shape):
 
 PuzzleBoard::PuzzleBoard(const PuzzleBoard &copy):
     container(new ShapeMatrix(*copy.container)),
-    current_board(NULL) {
+    current_board(NULL),
+    remainingArea(copy.remainingArea) {
   int width = copy.container->getWidth();
   int height = copy.container->getHeight();
   this->current_board = new int*[height];
@@ -85,6 +88,7 @@ bool PuzzleBoard::placePiece(int x, int y, int idx, ShapeMatrix* piece) {
       }
     }
   }
+  this->remainingArea -= piece->getShapeArea();
   return true;
 }
 
@@ -96,6 +100,7 @@ bool PuzzleBoard::removePiece(int x, int y, int indexToRemove) {
     for (int j = 0; j < container_width; j++){
       if (this->current_board[i][j] == indexToRemove) {
         this->current_board[i][j] = 0;
+        ++this->remainingArea;
       }
     }
   }
@@ -107,18 +112,7 @@ int** PuzzleBoard::getCurrentBoard() const {
 }
 
 int PuzzleBoard::getRemainingArea() const {
-  int area =0;
-  int container_height = this->container->getHeight();
-  int container_width = this->container->getWidth();
-  for (int i = 0; i < container_height; i++) {
-    for (int j = 0; j < container_width; j++) {
-      if (this->container->get(i, j)
-          && this->current_board[i][j] == 0) {
-        area++;
-      }
-    }
-  }
-  return area;
+  return this->remainingArea;
 }
 
 void PuzzleBoard::printBoard() const {
