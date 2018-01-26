@@ -36,6 +36,34 @@ PuzzleBoard* createBoard(ListOfShapeMatrices* const matrices,
   return board;
 }
 
+ListOfShapeMatrices* combinations(ShapeMatrix* temp, int& num_orientations) {
+  ListOfShapeMatrices* combi = new ListOfShapeMatrices;
+  ShapeMatrix* r_temp = temp;
+
+  for (int i = 0; i < 8; i++) {
+    bool doAddTheShape = true;
+    for (int j = 0; j < num_orientations; j++) {
+      if (*r_temp == *((*combi)[j])) {
+        doAddTheShape = false;
+        break;
+      }
+    } //rotate and check
+
+    if (!doAddTheShape) {
+      continue;
+    }
+
+    combi->push_back(r_temp);
+    r_temp = r_temp->rotate();
+    if (i == 3) {
+      r_temp = r_temp->mirror();
+    }
+  }
+
+  num_orientations = combi->size();
+  return combi;
+}
+
 bool recursiveSolver (PuzzleBoard* board,
     ListOfShapeMatrices* const pieces,
     unsigned int currentIndex) {
@@ -44,19 +72,27 @@ bool recursiveSolver (PuzzleBoard* board,
     return true;
   }
 
+  ShapeMatrix* temp = (*pieces)[currentIndex];
+  int num_orientations = 0;
+  ListOfShapeMatrices* shapesList = combinations(temp, num_orientations);
+  int nextIndex = currentIndex + 1;
+/*
+1) ShapeMatrix** orientation_array =
+
+FUNCITON WILL BE -> ShapeMatrix* combinations(temp, num_orientations);
+2) int num_orientations (should range between 1-8);
+
+*/
   for (int r = 0; r < board->getHeight(); r++) {
     for (int c = 0; c < board->getWidth(); c++) {
-      ShapeMatrix* temp = (*pieces)[currentIndex];
-      for (int rotation = 0; rotation < 4; rotation++) {
-        ShapeMatrix* r_temp;
-        r_temp = temp->rotate(rotation);
-        if (board->placePiece(c, r, (currentIndex + 1), r_temp)) {
-          if (recursiveSolver(board, pieces, currentIndex + 1)) {
+      for (int counteri = 0; counteri < num_orientations; counteri++) {
+        ShapeMatrix* r_temp = (*shapesList)[counteri];
+        if (board->placePiece(c, r, nextIndex, r_temp)) {
+          if (recursiveSolver(board, pieces, nextIndex)) {
             return true;
           }
-          board->removePiece(c, r, currentIndex + 1); //reversing
+          board->removePiece(c, r, nextIndex); //reversing
         }
-        delete r_temp;
       }
     }
   }
