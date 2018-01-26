@@ -1,25 +1,9 @@
 #ifndef IMAGE_READ_H_
 #define IMAGE_READ_H_
-#include <cmath>
-#include <iostream>
-#include <string>
-#include <vector>
-#include "opencv2/core/core.hpp"
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
-using namespace cv;
-using namespace std;
+#include "common/types.h"
 
-struct Rectangle{
-  Rect rectangleOfAPolygon;
-  int area;
-  Rectangle(Rect input1, int input2){rectangleOfAPolygon = input1; area = input2;}
-};
-
-void find_coordinates(const char* input);
-bool compareByArea(const Rectangle &a, const Rectangle &b);
-void find_coordinates(const char* input);
-
+void find_coordinates(const char* input,ListOfShapes* const list);
+void debug_coordinates(const char* filename, ListOfShapes* const list);
 #endif
 
 //ordering points clockwise
