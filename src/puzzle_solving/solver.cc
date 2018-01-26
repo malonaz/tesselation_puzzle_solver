@@ -75,10 +75,9 @@ bool recursiveSolver (PuzzleBoard* board,
 int puzzleSolver(ListOfShapeMatrices* const matrices) {
   int returnCode = 0;
   ListOfShapeMatrices shapes;
-  ListOfShapeMatrices* pieces = &shapes;
   int containerArea =0;
   int totalPieceArea  =0;
-  PuzzleBoard* board = createBoard(matrices, pieces,
+  PuzzleBoard* board = createBoard(matrices, &shapes,
       containerArea, totalPieceArea);
   if (totalPieceArea > containerArea) { // case of undersized container
     return UNDERSIZED;
@@ -87,7 +86,7 @@ int puzzleSolver(ListOfShapeMatrices* const matrices) {
     return OVERSIZED;
   }
   // if puzzle pieces area == container area
-  bool success = recursiveSolver(board, pieces, 0);
+  bool success = recursiveSolver(board, &shapes, 0);
 
   if (success) {
     returnCode = SOLVED;
@@ -96,7 +95,6 @@ int puzzleSolver(ListOfShapeMatrices* const matrices) {
   } else {
     returnCode = UNSOLVED;
   }
-  delete pieces;
   delete board;
   return returnCode;
 }
