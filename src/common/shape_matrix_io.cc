@@ -1,10 +1,11 @@
+#include "shape_matrix_io.h"
+
 #include <cassert>
 #include <cstddef>
 #include <fstream>
 #include <iostream>
 #include <vector>
 
-#include "shape_matrix_io.h"
 #include "shape_matrix.h"
 #include "types.h"
 

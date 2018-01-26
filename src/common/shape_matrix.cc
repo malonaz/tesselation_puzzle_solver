@@ -1,6 +1,7 @@
+#include "shape_matrix.h"
+
 #include <cassert>
 #include <cstddef>
-#include "shape_matrix.h"
 
 ShapeMatrix::ShapeMatrix(int width, int height):
     width(width), height(height),
@@ -138,15 +139,15 @@ bool ShapeMatrix::operator==(const ShapeMatrix& rhs) const {
   if (this == &rhs) {
     return true;
   }
-  
+
   if (this->width != rhs.width || this->height != rhs.height) {
     return false;
   }
-  
+
   if (this->shapeArea != rhs.shapeArea) {
     return false;
   }
-  
+
   int area = this->width * this->height;
   for (int i = 0; i < area; ++i) {
     if (this->shape[i] != rhs.shape[i]) {

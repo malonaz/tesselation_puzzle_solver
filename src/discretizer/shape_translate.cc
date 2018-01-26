@@ -1,3 +1,5 @@
+#include "shape_translate.h"
+
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
@@ -7,7 +9,6 @@
 #include "common/point.h"
 #include "common/shape_matrix.h"
 #include "common/types.h"
-#include "shape_translate.h"
 
 using std::map;
 using std::min;

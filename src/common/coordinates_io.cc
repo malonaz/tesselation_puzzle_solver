@@ -1,5 +1,9 @@
+#include "coordinates_io.h"
+
 #include <cassert>
+#include <cstddef>
 #include <fstream>
+
 #include "types.h"
 
 using std::ifstream;
@@ -26,6 +30,6 @@ bool read_coordinates_file(const char* file, ListOfShapes* list) {
   }
 
   input_file.close();
-  
+
   return true;
 }
