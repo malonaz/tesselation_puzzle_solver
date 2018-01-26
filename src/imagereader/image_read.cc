@@ -63,7 +63,7 @@ void find_coordinates(const char* input){
       continue;
     }
 
-    setLabel(src_gray_display, patch::to_string(approx.size()), contours[i]);
+    setLabel(src_gray_display, std::to_string(approx.size()), contours[i]);
     std::cout << "New Contour: " << std::endl;
     for (unsigned int j = 0; j < approx.size(); ++j) {
       std::cout << approx[j] << std::endl;
