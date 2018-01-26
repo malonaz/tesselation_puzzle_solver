@@ -7,6 +7,7 @@
 #include "types.h"
 
 using std::ifstream;
+using std::ws;
 
 bool read_coordinates_file(const char* file, ListOfShapes* list) {
   assert(list != NULL);
@@ -27,6 +28,7 @@ bool read_coordinates_file(const char* file, ListOfShapes* list) {
       points->push_back(Point(x, y));
     }
     list->push_back(points);
+    input_file >> ws;
   }
 
   input_file.close();
