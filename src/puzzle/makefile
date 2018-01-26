@@ -4,7 +4,6 @@ demo: $(BINDIR)/$(DEMO_TARGET)
 
 DEMO_OBJECTS = $(OBJDIR)/puzzle/demo1.o
 
-
 $(DEMO_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 	@echo "\tCompiling \"$@\""
 	@mkdir -p `dirname $@`
@@ -16,5 +15,5 @@ $(BINDIR)/$(DEMO_TARGET): $(OBJECTS) $(DEMO_OBJECTS)
 	@mkdir -p bin
 	@$(CXX) $(CPPFLAGS)\
 		$(TESTINCLUDES)\
-		$(CXXFLAGS) -fprofile-arcs $^ -o $@
+		$(CXXFLAGS) -fprofile-arcs $^ -o $@ $(OPENCV_LIBFLAGS)
 	@echo "[Done]\tLinking \"$@\""
