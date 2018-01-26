@@ -11,10 +11,7 @@
  * rotates these shapes such that the shapes's sides are vertical or horizontal. These
  * new shapes are stored in output parameter rotated shapes.
  */
-void rotate_shapes(std::vector< std::vector<Point> > &shapes,
-		   std::vector< std::vector<Point> > &rotated_shapes);
-
-
+void rotate_shapes(const ListOfShapes* const shapes,
+		   ListOfShapes* const rotated_shapes);
 
 #endif
-

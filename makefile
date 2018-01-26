@@ -5,6 +5,7 @@ BINDIR = bin
 TARGET = aps
 TESTTARGET = test
 TESTDIR = test
+DEMODIR = src/puzzle
 COVDIR = coverage
 
 MAIN_OBJECT = $(OBJDIR)/main.o
@@ -12,7 +13,8 @@ MAIN_OBJECT = $(OBJDIR)/main.o
 COMMON_OBJECTS = $(OBJDIR)/common/shape_matrix_io.o \
 	$(OBJDIR)/common/puzzle_board.o \
 	$(OBJDIR)/common/shape_matrix.o \
-	$(OBJDIR)/common/point.o
+	$(OBJDIR)/common/point.o \
+	$(OBJDIR)/common/coordinates_io.o
 
 DISCRETIZER_OBJECTS = $(OBJDIR)/discretizer/shape_translate.o \
 			$(OBJDIR)/discretizer/shape_rotate.o
@@ -50,6 +52,7 @@ $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 -include $(OBJECTS:.o=.d)
 
 include $(TESTDIR)/makefile
+include $(DEMODIR)/makefile
 
 check:
 	cppcheck --enable=all --check-config --suppress=missingIncludeSystem -I src src

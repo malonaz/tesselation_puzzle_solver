@@ -41,7 +41,8 @@ void shape_matrix_print(const ShapeMatrix& shape) {
 
 void shape_matrix_write(const char* filename, ListOfShapeMatrices* const list) {
   assert(list != NULL);
-  ofstream output_file(filename);
+  ofstream output_file;
+  output_file.open(filename);
   if (output_file.fail()) {
     return;
   }
@@ -60,7 +61,8 @@ void shape_matrix_write(const char* filename, ListOfShapeMatrices* const list) {
 
 void shape_matrix_read(const char* filename, ListOfShapeMatrices* const list) {
   assert(list != NULL);
-  ifstream input_file(filename);
+  ifstream input_file;
+  input_file.open(filename);
   if (input_file.fail()) {
     return;
   }

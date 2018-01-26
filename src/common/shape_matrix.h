@@ -63,6 +63,13 @@ public:
     \return The pointer to the new copy of the rotated matrix.
   */
   ShapeMatrix* rotate(int n) const;
+  
+  /**
+    Creates a copy of the shape matrix that is mirrored row-wise.
+    
+    \return The pointer to the new copy of the mirroed matrix.
+  */
+  ShapeMatrix* mirror() const;
 
   ShapeMatrix& operator=(const ShapeMatrix& shape);
   

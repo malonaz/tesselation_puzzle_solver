@@ -103,6 +103,17 @@ ShapeMatrix* ShapeMatrix::rotate(int n) const {
   return result;
 } // ShapeMatrix::rotate(int)
 
+ShapeMatrix* ShapeMatrix::mirror() const {
+  ShapeMatrix* result = new ShapeMatrix(width, height);
+  int last_index = this->height - 1;
+  // copy the matrix over but mirrored row-wise
+  for (int i = 0; i < this->height; ++i) {
+    for (int j = 0; j < this->width; ++j) {
+      result->set(last_index - i, j, this->get(i, j));
+    }
+  }
+  return result;
+} // ShapeMatrix::mirror()
 
 ShapeMatrix& ShapeMatrix::operator=(const ShapeMatrix& rhs) {
   if (this == &rhs) {

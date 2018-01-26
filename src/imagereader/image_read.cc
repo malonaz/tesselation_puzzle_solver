@@ -3,7 +3,11 @@ bool show = 1;
 
 
 
-void find_coordinates(char* input){
+void find_coordinates(const char* input){
+/*  int thresh = 155;
+  int max_thresh = 255 ;
+  Mat source, source_gray,source_gray_blurred,source_gray_blurred_thresh;
+  source = imread(input,CV_LOAD_IMAGE_COLOR); //read the file
 
   namedWindow("DISPLAY window", WINDOW_NORMAL);
   resizeWindow("DISPLAY window",3000,3000);
@@ -19,7 +23,7 @@ void find_coordinates(char* input){
 
   GaussianBlur( source,source, Size(5,5), 0,0);
   if(show){imshow("DISPLAY window", source);waitKey(0);}
-/*
+
   temp = source.clone();
   bilateralFilter(temp,source, 11,50,50);
   if(show){imshow("DISPLAY window",source );waitKey(0);}
@@ -32,7 +36,7 @@ void find_coordinates(char* input){
 
   medianBlur( source, source, 11 );
   if(show){imshow("DISPLAY window", source);waitKey(0);}
-*/
+
 
 
   int scale = 3; int delta = 0; int ddepth = CV_16S;
@@ -69,7 +73,7 @@ void find_coordinates(char* input){
 
   equalizeHist( source,source );
   if(show){imshow("DISPLAY window", source);waitKey(0);}
-*/
+
 
   temp = source.clone();
   adaptiveThreshold(temp,source,255,ADAPTIVE_THRESH_MEAN_C,THRESH_BINARY,5,5);
@@ -95,7 +99,7 @@ void find_coordinates(char* input){
 
   std::cout << "flag 1" << std::endl;
   imshow( "DISPLAY window", drawing ); waitKey(0);
-/*
+
   vector<Vec4i> lines;
   HoughLinesP(source, lines, 1, CV_PI/180, 50, 0, 0 );
   std::cout<<"Size of hough line vector is " << lines.size()<< std::endl;
@@ -105,7 +109,7 @@ void find_coordinates(char* input){
     line( source, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 3, CV_AA);
   }
   imshow( "DISPLAY window", source ); waitKey(0);
-*/
+
   thresh = 155; max_thresh = 255; RNG rng(12345);
 
   Mat threshold_output;
@@ -216,7 +220,7 @@ Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,25
     }
     std::cout<<std::endl;
   }
-
+*/
 }
 
 
