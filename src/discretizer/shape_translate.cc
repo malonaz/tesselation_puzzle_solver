@@ -194,6 +194,9 @@ int find_unit_length(const ListOfShapes* const shapes) {
   ListOfShapes::const_iterator it;
   for (it = shapes->begin(); it != shapes->end(); ++it) {
     int shortest_edge_in_shape = find_shortest_edge_in_shape(*it);
+    if (shortest_edge_in_shape == -1) {
+      continue;
+    }
     if (shortest_edge_in_shape < unit_length || unit_length == -1) {
       unit_length = shortest_edge_in_shape;
     }
