@@ -43,14 +43,6 @@ bool recursiveSolver (PuzzleBoard* board,
     //the board is complete, and no more remaining pieces
     return true;
   }
-  if (board->getRemainingArea() == 0 && currentIndex < pieces->size()) {
-    //the board is complete, but there are remaining pieces
-    return false;
-  }
-  if (board->getRemainingArea() > 0 && currentIndex == pieces->size()) {
-    //the board is incomplete, but there are no more remaining pieces
-    return false;
-  }
 
   for (int r = 0; r < board->getHeight(); r++) {
     for (int c = 0; c < board->getWidth(); c++) {
