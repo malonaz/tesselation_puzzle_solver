@@ -1,10 +1,15 @@
-#include <cmath>
 #include "point.h"
+
+#include <cmath>
+#include <ostream>
+
+using std::ostream;
+using std::sqrt;
 
 float Point::distanceTo(Point that) const {
   float y_diff = that.y - y;
   float x_diff = that.x - x;
-  return std::sqrt(y_diff * y_diff + x_diff * x_diff);
+  return sqrt(y_diff * y_diff + x_diff * x_diff);
 }
 
 float Point::slopeTo(Point that) const {
@@ -18,10 +23,6 @@ bool Point::operator==(const Point& rhs) const {
     && y == rhs.y;
 }
 
-
-
-
-std::ostream& operator<<(std::ostream& stream, const Point& point){
-  stream << '(' << point.x << ", " << point.y << ')';
-  return stream;
+ostream& operator<<(ostream& stream, const Point& point){
+  return stream << '(' << point.x << ", " << point.y << ')';
 }

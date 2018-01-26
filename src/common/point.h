@@ -3,11 +3,13 @@
 
 #include <ostream>
 
+using ostream;
+
 /**
  * Point. This structure represents a point in the Cartesian coordinate graph.
- */ 
-struct Point{
-  
+ */
+struct Point {
+
    // x-coordinate of this point
   int x;
 
@@ -19,10 +21,10 @@ struct Point{
    */
   Point(int x, int y): x(x), y(y) {}
 
-  
+
   /**
    * Returns the euclidean distance to that point.
-   */ 
+   */
   float distanceTo(Point that) const;
 
   /**
@@ -35,10 +37,10 @@ struct Point{
 
 
   /**
-   * Overrides the the << operator for a Point object such that it is print (x, y). 
-   */ 
-  friend std::ostream& operator<<(std::ostream& stream, const Point& point);
-  
+   * Overrides the the << operator for a Point object such that it is print (x, y).
+   */
+  friend ostream& operator<<(ostream& stream, const Point& point);
+
 };
 
 #endif
