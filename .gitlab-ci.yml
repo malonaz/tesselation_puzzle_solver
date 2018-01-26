@@ -1,6 +1,6 @@
 runtests:
   before_script:
-    - apt-get install libopencv-dev
+    - sudo apt-get install libopencv-dev
   script:
     # compile it up
     - export ARCH=x86_64
