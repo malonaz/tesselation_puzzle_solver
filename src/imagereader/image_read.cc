@@ -1,76 +1,83 @@
 #include"image_read.h"
-bool show = 0;
+bool show = 1;
 
-bool compareByArea(const Rectangle &a, const Rectangle &b){
-  return a.area > b.area;
-}
+
 
 void find_coordinates(char* input){
-  int thresh = 155;
-  int max_thresh = 255 ;
-  Mat source, source_gray,source_gray_blurred,source_gray_blurred_thresh;
-  source = imread(input,CV_LOAD_IMAGE_COLOR); //read the file
 
-  cvtColor( source, source_gray, COLOR_BGR2GRAY );
   namedWindow("DISPLAY window", WINDOW_NORMAL);
-  if(show){resizeWindow("DISPLAY window",3000,3000);imshow("DISPLAY window", source_gray);waitKey(0);}
+  resizeWindow("DISPLAY window",3000,3000);
 
-  GaussianBlur( source_gray,source_gray_blurred, Size(5,5), 0,0);
-  if(show){imshow("DISPLAY window", source_gray_blurred);waitKey(0);}
+  //temp is used whenever the function requires output can't directly overwrite input
+  Mat source, temp;
 
-  int scale = 3;
-  int delta = 0;
-  int ddepth = CV_16S;
+  int thresh = 155; int max_thresh = 255 ;
 
-  /// Generate grad_x and grad_y
-  Mat grad_x, grad_y,grad;
-  Mat abs_grad_x, abs_grad_y;
+  temp = imread(input,CV_LOAD_IMAGE_COLOR); //read the file
+  cvtColor( temp, source, COLOR_BGR2GRAY );
+  if(show){imshow("DISPLAY window", source);waitKey(0);}
 
-  /// Gradient X
-  Scharr( source_gray, grad_x, ddepth, 1, 0, scale, delta, BORDER_DEFAULT );
-  Sobel( source_gray_blurred, grad_x, ddepth, 1, 0, 1, scale, delta, BORDER_DEFAULT);
+  GaussianBlur( source,source, Size(5,5), 0,0);
+  if(show){imshow("DISPLAY window", source);waitKey(0);}
+/*
+  temp = source.clone();
+  bilateralFilter(temp,source, 11,50,50);
+  if(show){imshow("DISPLAY window",source );waitKey(0);}
+
+  blur(source,source,Size(5,5) );
+  if(show){imshow("DISPLAY window", source);waitKey(0);}
+
+  GaussianBlur( source, source, Size(3,3), 0, 0, BORDER_DEFAULT );
+  if(show){imshow("DISPLAY window", source);waitKey(0);}
+
+  medianBlur( source, source, 11 );
+  if(show){imshow("DISPLAY window", source);waitKey(0);}
+*/
+
+
+  int scale = 3; int delta = 0; int ddepth = CV_16S;
+
+  /// Generate Mat to store temporary gradient data
+  Mat grad_x, grad_y,grad, abs_grad_x, abs_grad_y;
+
+  //Apply eithe the Sobel or the Scharr algorithm to find edges
+  Sobel( source, grad_x, ddepth, 1, 0, 1, scale, delta, BORDER_DEFAULT);
+  Sobel( source, grad_y, ddepth, 0, 1, 1, scale, delta, BORDER_DEFAULT);
+
+  //Scharr( source, grad_y, ddepth, 0, 1, scale, delta, BORDER_DEFAULT );
+  //Scharr( source, grad_x, ddepth, 1, 0, scale, delta, BORDER_DEFAULT );
+
   convertScaleAbs( grad_x, abs_grad_x );
-
-  /// Gradient Y
-  Scharr( source_gray, grad_y, ddepth, 0, 1, scale, delta, BORDER_DEFAULT );
-  Sobel( source_gray_blurred, grad_y, ddepth, 0, 1, 1, scale, delta, BORDER_DEFAULT);
   convertScaleAbs( grad_y, abs_grad_y );
 
   /// Total Gradient (approximate)
-  addWeighted( abs_grad_x, 0.5, abs_grad_y, 0.5,20, grad );
-  if(show){imshow( "DISPLAY window", grad );waitKey(0);}
+  addWeighted( abs_grad_x, 0.5, abs_grad_y, 0.5,20, temp);
+  if(show){imshow( "DISPLAY window", temp );waitKey(0);}
+
+  source = temp.clone();
+/*
+  int threshold_value = 100; int max_BINARY_value = 200;
+  threshold(source,source,threshold_value,max_BINARY_value,THRESH_BINARY);
+  if(show){imshow("DISPLAY window", source);waitKey(0);}
 
 
-  adaptiveThreshold(grad,source_gray_blurred_thresh,255,ADAPTIVE_THRESH_MEAN_C,THRESH_BINARY,5,5);
-  if(show){imshow("DISPLAY window", source_gray_blurred_thresh);waitKey(0);}
 
-  /*
-  Mat canny_output;
-  vector<vector<Point> > contours;
-  vector<Vec4i> hierarchy;
-  RNG rng(12345);
-  /// Detect edges using canny
-  Canny( source_gray, canny_output, thresh, thresh*2, 3 );
-  /// Find contours
-  findContours( canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+  Ptr<CLAHE> clahe = createCLAHE();
+  clahe->setClipLimit(1);
+  clahe->apply(source,source);
+  if(show){imshow("DISPLAY window", source);waitKey(0);}
 
-  /// Draw contours
-  Mat drawing = Mat::zeros( canny_output.size(), CV_8UC3 );
-  for( int i = 0; i< contours.size(); i++ )
-  {
-    Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-    drawContours( drawing, contours, i, color, 2, 8, hierarchy, 0, Point() );
-  }
+  equalizeHist( source,source );
+  if(show){imshow("DISPLAY window", source);waitKey(0);}
+*/
 
-  /// Show in a window
-  namedWindow( "DISPLAY window", WINDOW_NORMAL );
-  resizeWindow("DISPLAY window",3000,3000);
-  imshow( "DISPLAY window", drawing );
-  waitKey(0);
-  */
+  temp = source.clone();
+  adaptiveThreshold(temp,source,255,ADAPTIVE_THRESH_MEAN_C,THRESH_BINARY,5,5);
+  if(show){imshow("DISPLAY window", source);waitKey(0);}
+
   //GOOD FEATURES PARAMETERS
   vector<Point> corners;
-  Mat mask;
+  Mat mask; Mat drawing = source.clone();
   int maxCorners = 50;
   double qualityLevel = 0.01;
   double minDistance = 13.;
@@ -78,32 +85,43 @@ void find_coordinates(char* input){
   bool useHarrisDetector = true;
   double k = 0.04;
 
-  goodFeaturesToTrack(grad,corners,maxCorners,qualityLevel,minDistance,mask,blockSize,useHarrisDetector,k);
+  goodFeaturesToTrack(source,corners,maxCorners,qualityLevel,minDistance,mask,blockSize,useHarrisDetector,k);
   for (size_t i=0; i<corners.size(); i++){
     //std::cout<<"x is " << dst[i].x<<std::endl;
     //std::cout<<"y is " << dst[i].y<<std::endl;
-    circle(source, corners[i], 6, Scalar(40,32,203) , 2, 8, 0 );
+    circle(drawing, corners[i], 6, Scalar(40,32,203) , 2, 8, 0 );
   }
+  std::cout << "size of corner vector is " << corners.size() << std::endl;
 
-  resizeWindow("DISPLAY window",3000,3000);
-  imshow( "DISPLAY window", source );
-  waitKey(0);
-
-
-
-
-  thresh = 155;
-   max_thresh = 255;
-  RNG rng(12345);
+  std::cout << "flag 1" << std::endl;
+  imshow( "DISPLAY window", drawing ); waitKey(0);
+/*
+  vector<Vec4i> lines;
+  HoughLinesP(source, lines, 1, CV_PI/180, 50, 0, 0 );
+  std::cout<<"Size of hough line vector is " << lines.size()<< std::endl;
+  for( size_t i = 0; i < lines.size(); i++ )
+  {
+    Vec4i l = lines[i];
+    line( source, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 3, CV_AA);
+  }
+  imshow( "DISPLAY window", source ); waitKey(0);
+*/
+  thresh = 155; max_thresh = 255; RNG rng(12345);
 
   Mat threshold_output;
   vector<vector<Point> > contours;
   vector<Vec4i> hierarchy;
-
+  temp = source.clone();
   /// Detect edges using Threshold
-  threshold( source_gray, threshold_output, thresh, 255, THRESH_BINARY );
+  threshold( source, threshold_output, thresh, 255, THRESH_BINARY );
+  if(show){imshow("DISPLAY window", source);waitKey(0);}
+
+  std::cout<<"flag 2" << std::endl;
   /// Find contours
   findContours( threshold_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+  std::cout<<"flag 3" << std::endl;
+  std::cout << "size of contours vector is " << contours.size() << std::endl;
+
   /// Approximate contours to polygons + get bounding rects and circles
   vector<vector<Point> > contours_poly( contours.size() );
   vector<Rect> boundRect( contours.size() );
@@ -114,9 +132,12 @@ void find_coordinates(char* input){
     boundRect[i] = boundingRect( Mat(contours_poly[i]) );
     minEnclosingCircle( (Mat)contours_poly[i], center[i], radius[i] );
   }
+  std::cout << "size of boundRect vector is " << boundRect.size() << std::endl;
+
+  std::cout<<"flag 4" << std::endl;
 
   /// Draw polygonal contour + bonding rects + circles
-  Mat drawing1 = Mat::zeros( threshold_output.size(), CV_8UC3 );
+  Mat drawing1 = Mat::zeros( source.size(), CV_8UC3 );
   for( int i = 0; i< contours.size(); i++ )
    {
      Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
@@ -124,13 +145,9 @@ void find_coordinates(char* input){
      rectangle( drawing1, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0 );
      circle( drawing1, center[i], (int)radius[i], color, 2, 8, 0 );
    }
-   std::cout << "size of corner vector is " << corners.size() << std::endl;
-   std::cout << "size of boundRect vector is " << boundRect.size() << std::endl;
 
     /// Show in a window
-    namedWindow( "DISPLAY window", CV_WINDOW_AUTOSIZE );
-    imshow( "DISPLAY window", drawing1 );
-    waitKey(0);
+    imshow( "DISPLAY window", drawing1 );waitKey(0);
 
 
   //NEED TO FIND A WAY TO GROUP COORDINATES BY SHAPE
@@ -200,4 +217,9 @@ Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,25
     std::cout<<std::endl;
   }
 
+}
+
+
+bool compareByArea(const Rectangle &a, const Rectangle &b){
+  return a.area > b.area;
 }
