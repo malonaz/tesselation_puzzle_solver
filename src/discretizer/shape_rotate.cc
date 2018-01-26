@@ -84,10 +84,11 @@ bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant){
  * of the given shape are vertical or horizontal.
  */
 void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_points) {
-  // size must be minimum 4 for a polygon with 90 degrees corners only
+  // size must be minimum 4 for a polygon with 90 degrees corners only & size must be even
   assert(shape_points != NULL);
   assert(rotated_shape_points != NULL);
   assert(shape_points->size() >= 4);
+  assert(shape_points->size() % 2 == 0);
 
   // gather information about first side
   Point start = (*shape_points)[0];
