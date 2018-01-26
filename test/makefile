@@ -18,7 +18,7 @@ $(BINDIR)/$(TESTTARGET): $(OBJECTS) $(TESTS) gtest_main.a
 	@mkdir -p bin
 	@$(CXX) $(CPPFLAGS)\
 		$(TESTINCLUDES)\
-		$(CXXFLAGS) -fprofile-arcs $^ -o $@ -lpthread
+		$(CXXFLAGS) -fprofile-arcs $^ -o $@ -lpthread $(OPENCV_LIBFLAGS)
 	@echo "[Done]\tLinking \"$@\""
 
 coverage: test
