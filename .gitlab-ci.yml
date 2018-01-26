@@ -5,3 +5,4 @@ runtests:
     - make
     # run the tests..
     - make test
+    - bin/test
