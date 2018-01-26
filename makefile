@@ -8,6 +8,9 @@ TESTDIR = test
 DEMODIR = src/puzzle
 COVDIR = coverage
 
+OPENCV_CXXFLAGS = $(shell pkg-config --cflags opencv)
+OPENCV_LIBFLAGS = $(shell pkg-config --cflags --libs opencv)
+
 MAIN_OBJECT = $(OBJDIR)/main.o
 
 COMMON_OBJECTS = $(OBJDIR)/common/shape_matrix_io.o \
