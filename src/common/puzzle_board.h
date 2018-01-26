@@ -20,7 +20,7 @@ public:
 
   bool placePiece(int x, int y, int idx, ShapeMatrix* piece);
 
-  bool removePiece(int x, int y, int indexToRemove);
+  bool removePiece(int indexToRemove);
 
   int** getCurrentBoard() const;
 

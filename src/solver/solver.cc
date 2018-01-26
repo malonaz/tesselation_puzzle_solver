@@ -91,7 +91,7 @@ FUNCITON WILL BE -> ShapeMatrix* combinations(temp, num_orientations);
           if (recursiveSolver(board, pieces, nextIndex)) {
             return true;
           }
-          board->removePiece(c, r, nextIndex); //reversing
+          board->removePiece(nextIndex); //reversing
         }
       }
     }

@@ -92,7 +92,7 @@ bool PuzzleBoard::placePiece(int x, int y, int idx, ShapeMatrix* piece) {
   return true;
 }
 
-bool PuzzleBoard::removePiece(int x, int y, int indexToRemove) {
+bool PuzzleBoard::removePiece(int indexToRemove) {
   int container_height = this->container->getHeight();
   int container_width = this->container->getWidth();
 
