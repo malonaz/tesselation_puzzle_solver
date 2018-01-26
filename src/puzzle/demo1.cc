@@ -32,10 +32,11 @@ int main(int argc, char** argv){ //  ./demo <input_filename>
 
   cout<< "Rotating Pieces..." << endl;
   /* SHAPE TRANSLATE MODULE */
-  ListOfShapes* rotated_puzzle_pieces = new ListOfShapes();
+  //ListOfShapes* rotated_puzzle_pieces = new ListOfShapes();
   //rotate_shapes(puzzle_pieces, rotated_puzzle_pieces);
 
   cout << puzzle_pieces->size() << " Pieces rotated!" << endl;
+
 
   cout << "Translating shape to Boolean Matrix...." <<endl;
   /* DISCRETIZER MODULE */
@@ -74,8 +75,9 @@ int main(int argc, char** argv){ //  ./demo <input_filename>
       cout << "INTERNAL ERROR: SOLVER ERROR" << endl;
   }
 
+
   delete puzzle_pieces;
-  delete rotated_puzzle_pieces;
+  //delete rotated_puzzle_pieces;
   delete pieces;
 
   return 0;
