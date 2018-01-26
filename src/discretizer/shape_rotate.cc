@@ -83,8 +83,10 @@ bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant){
  * Helper function which rotates the given shape's coordinates so that all sides
  * of the given shape are vertical or horizontal.
  */
-void rotate_shape(ListOfPoints* shape_points, ListOfPoints* rotated_shape_points ){
+void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_points) {
   // size must be minimum 4 for a polygon with 90 degrees corners only
+  assert(shape_points != NULL);
+  assert(rotated_shape_points != NULL);
   assert(shape_points->size() >= 4);
 
   // gather information about first side
@@ -161,8 +163,10 @@ void rotate_shape(ListOfPoints* shape_points, ListOfPoints* rotated_shape_points
 }
 
 
-void rotate_shapes(ListOfShapes* shapes,
-		   ListOfShapes* rotated_shapes) {
+void rotate_shapes(const ListOfShapes* const shapes,
+     ListOfShapes* const rotated_shapes) {
+  assert(shapes != NULL);
+  assert(rotated_shapes != NULL);
   for (uint i = 0; i < shapes->size(); i++){
     // create new shape to store the rotated_shape in
     ListOfPoints* rotated_shape = new ListOfPoints();

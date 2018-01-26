@@ -96,6 +96,7 @@ int puzzleSolver(ListOfShapeMatrices* const matrices) {
   } else {
     returnCode = UNSOLVED;
   }
-
+  delete pieces;
+  delete board;
   return returnCode;
 }

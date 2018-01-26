@@ -25,7 +25,7 @@ void shape_get_size(const ListOfPoints* const shape, uint& width, uint& height) 
   int max_y = 0;
   int min_x = 0;
   int min_y = 0;
-  
+
   ListOfPoints::const_iterator iterator;
 
   for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
@@ -149,7 +149,7 @@ int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
   if (shape->size() < 4) {
     return shortest_edge_length;
   }
-  
+
   ListOfPoints::const_iterator iterator;
   iterator = shape->begin();
   Point first_point = *iterator;
@@ -159,10 +159,7 @@ int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
   for (++iterator; iterator != shape->end(); ++iterator) {
     Point current_point = *iterator;
 
-    int length = abs(current_point.x - last_processed_point.x);
-    if (length == 0) {
-      length = abs(current_point.x - last_processed_point.y);
-    }
+    int length = (int)current_point.distanceTo(last_processed_point);
     if (length < shortest_edge_length || shortest_edge_length == -1) {
       shortest_edge_length = length;
     }
@@ -171,14 +168,11 @@ int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
   }
 
   // process the edge of last point to the first point
-  int length = abs(first_point.x - last_processed_point.x);
-  if (length == 0) {
-    length = abs(first_point.y - last_processed_point.y);
-  }
+  int length = (int)first_point.distanceTo(last_processed_point);
   if (length < shortest_edge_length || shortest_edge_length == -1) {
     shortest_edge_length = length;
   }
-  
+
   if (shortest_edge_length == 0) {
     shortest_edge_length = -1;
   }
