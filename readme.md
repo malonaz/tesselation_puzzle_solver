@@ -4,6 +4,7 @@ Tools needed to be installed for development environment:
 - `gcov`
 - `lcov`
 - `cppcheck`
+- `opencv2`
 
 # Testing
 
