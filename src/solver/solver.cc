@@ -67,7 +67,7 @@ ListOfShapeMatrices* combinations(ShapeMatrix* temp, int& num_orientations) {
 bool recursiveSolver (PuzzleBoard* board,
     ListOfShapeMatrices* const pieces,
     unsigned int currentIndex) {
-  if (board->getRemainingArea() == 0 && currentIndex == pieces->size()) {
+  if (board->getRemainingArea() == 0 || currentIndex >= pieces->size()) {
     //the board is complete, and no more remaining pieces
     return true;
   }
@@ -76,13 +76,7 @@ bool recursiveSolver (PuzzleBoard* board,
   int num_orientations = 0;
   ListOfShapeMatrices* shapesList = combinations(temp, num_orientations);
   int nextIndex = currentIndex + 1;
-/*
-1) ShapeMatrix** orientation_array =
 
-FUNCITON WILL BE -> ShapeMatrix* combinations(temp, num_orientations);
-2) int num_orientations (should range between 1-8);
-
-*/
   for (int r = 0; r < board->getHeight(); r++) {
     for (int c = 0; c < board->getWidth(); c++) {
       for (int counteri = 0; counteri < num_orientations; counteri++) {
@@ -91,7 +85,7 @@ FUNCITON WILL BE -> ShapeMatrix* combinations(temp, num_orientations);
           if (recursiveSolver(board, pieces, nextIndex)) {
             return true;
           }
-          board->removePiece(nextIndex); //reversing
+          board->removePiece(c, r, nextIndex, r_temp); // revert
         }
       }
     }

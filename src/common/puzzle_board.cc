@@ -57,12 +57,11 @@ bool PuzzleBoard::placePiece(int x, int y, int idx, ShapeMatrix* piece) {
   if (x < 0 || x >= container_width) {
     return false;
   }
-  if (y+piece_height > container_height) {
+  if (y + piece_height > container_height) {
     return false;
   }
-  if (x+piece_width > container_width) {
+  if (x + piece_width > container_width) {
     return false;
-
   }
 
   for (int i = 0; i < piece_height; i++) {
@@ -92,14 +91,31 @@ bool PuzzleBoard::placePiece(int x, int y, int idx, ShapeMatrix* piece) {
   return true;
 }
 
-bool PuzzleBoard::removePiece(int indexToRemove) {
+bool PuzzleBoard::removePiece(int x, int y, int indexToRemove, ShapeMatrix* piece) {
+  int piece_height = piece->getHeight();
+  int piece_width = piece->getWidth();
   int container_height = this->container->getHeight();
   int container_width = this->container->getWidth();
 
-  for (int i = 0; i < container_height; i++){
-    for (int j = 0; j < container_width; j++){
-      if (this->current_board[i][j] == indexToRemove) {
-        this->current_board[i][j] = 0;
+  if (y < 0 || y >= container_height) {
+    return false;
+  }
+  if (x < 0 || x >= container_width) {
+    return false;
+  }
+  if (y + piece_height > container_height) {
+    return false;
+  }
+  if (x + piece_width > container_width) {
+    return false;
+  }
+
+  for (int i = 0; i < piece_height; i++) {
+    for (int j = 0; j < piece_width; j++) {
+      int board_y = y + i;
+      int board_x = x + j;
+      if (this->current_board[board_y][board_x] == indexToRemove) {
+        this->current_board[board_y][board_x] = 0;
         ++this->remainingArea;
       }
     }
