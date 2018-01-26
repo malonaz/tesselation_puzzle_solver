@@ -3,7 +3,7 @@
 
 #include <ostream>
 
-using ostream;
+using std::ostream;
 
 /**
  * Point. This structure represents a point in the Cartesian coordinate graph.
