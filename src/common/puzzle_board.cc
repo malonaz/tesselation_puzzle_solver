@@ -132,9 +132,65 @@ int PuzzleBoard::getRemainingArea() const {
 }
 
 void PuzzleBoard::printBoard() const {
-  for (int i = 0; i < this->container->getHeight(); i++) {
-    for (int j = 0; j < this->container->getWidth(); j++) {
-      cout << current_board[i][j] << '\t';
+  int width = this->container->getWidth();
+  int height = this->container->getHeight();
+  cout << "-- [ rows: " << height << ", cols: " << width << " ] --" << endl;
+  cout << "+";
+  for (int c = 0; c < width; ++c) {
+    if (c < width - 1
+        && this->current_board[0][c] == this->current_board[0][c + 1]) {
+      cout <<  "----";
+    } else {
+      cout <<  "---+";
+    }
+  }
+  cout << endl;
+  for (int r = 0; r < height; ++r) {
+    cout << "| ";
+    for (int c = 0; c < width; ++c) {
+      int current_num = this->current_board[r][c];
+      cout << current_num << " ";
+      if (c < width - 1
+          && this->current_board[r][c + 1] == current_num) {
+        cout << "  ";
+      } else {
+        cout << "| ";
+      }
+    }
+    cout << endl;
+    cout << "+";
+    for (int c = 0; c < width; ++c) {
+      int current_num = this->current_board[r][c];
+      if (r < height - 1 && c < width - 1) {
+        if (this->current_board[r + 1][c + 1] == current_num
+            && this->current_board[r + 1][c] == current_num
+            && this->current_board[r][c + 1] == current_num) {
+          cout << "    ";
+        } else if (this->current_board[r + 1][c] == current_num
+            && this->current_board[r][c + 1] == current_num) {
+              cout << "   +";
+        } else if (this->current_board[r + 1][c] == current_num) {
+          cout << "   |";
+        } else if (this->current_board[r][c + 1] == current_num) {
+          cout << "----";
+        } else {
+          cout << "---+";
+        }
+      } else if (r < height - 1 && c == width - 1) {
+        if (this->current_board[r + 1][c] == current_num) {
+          cout << "   |";
+        } else {
+          cout << "---+";
+        }
+      } else if(r == height - 1 && c < width - 1) {
+        if (this->current_board[r][c + 1] == current_num) {
+          cout << "----";
+        } else {
+          cout << "---+";
+        }
+      } else {
+        cout << "---+";
+      }
     }
     cout << endl;
   }
