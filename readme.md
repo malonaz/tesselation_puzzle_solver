@@ -1,4 +1,4 @@
-Tools needed to be installed for development environment:
+Tools / Dependencies needed to be installed for development environment:
 
 - `g++`
 - `gcov`
