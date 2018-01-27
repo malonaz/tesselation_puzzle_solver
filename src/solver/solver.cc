@@ -68,18 +68,24 @@ ListOfShapeMatrices* combinations(ShapeMatrix* temp) {
 }
 
 /* function to get empty area */
-int getAdjacentEmptyArea(int r, int c, int height, int width, int** copiedBoard){
-  if (r >= 0 && r < height && c >= 0 && c < width) {
+int getAdjacentEmptyArea(uint r, uint c, uint height, uint width, int** copiedBoard) {
+  if (r < height && c < width) {
     if (copiedBoard[r][c] == 0) {
       copiedBoard[r][c] = -1;
-      return 1 + getAdjacentEmptyArea(r, c + 1, height, width, copiedBoard) + getAdjacentEmptyArea(r, c - 1, height, width,copiedBoard) +getAdjacentEmptyArea(r + 1, c,height, width, copiedBoard) + getAdjacentEmptyArea(r - 1, c,height, width, copiedBoard);
+      return 1 + getAdjacentEmptyArea(r, c + 1, height, width, copiedBoard)
+        + getAdjacentEmptyArea(r, c - 1, height, width,copiedBoard)
+        + getAdjacentEmptyArea(r + 1, c,height, width, copiedBoard)
+        + getAdjacentEmptyArea(r - 1, c,height, width, copiedBoard);
     }
   }
   return 0;
 }
 
 /* function to generate all possible area combinations from remaining pieces */
-void generatePossibleAreas(int* answerArray, long int maxCombinations, ListOfShapeMatrices* pieces, uint currentIndex) {
+void generatePossibleAreas(int* answerArray,
+    long int maxCombinations,
+    ListOfShapeMatrices* pieces,
+    uint currentIndex) {
   int sizeArray = pieces->size() - currentIndex;
   int* generativeArray = new int[sizeArray]();
   for (long int sequencei = 0; sequencei < maxCombinations; sequencei++) {
@@ -105,11 +111,11 @@ void generatePossibleAreas(int* answerArray, long int maxCombinations, ListOfSha
 /* helper function to copy current state of board into 2D array */
 int** copyBoard(PuzzleBoard* board) {
   int** copiedBoard = new int*[board->getHeight()];
-  for (int i = 0; i < board->getHeight(); i++){
+  for (uint i = 0; i < board->getHeight(); i++){
       copiedBoard[i] = new int[board->getWidth()];
   }
-  for (int i = 0; i < board->getHeight(); i++){
-    for (int j = 0; j < board->getWidth(); j++ ){
+  for (uint i = 0; i < board->getHeight(); i++){
+    for (uint j = 0; j < board->getWidth(); j++ ){
       copiedBoard[i][j]= (board->getCurrentBoard())[i][j];
     }
   }
@@ -117,8 +123,8 @@ int** copyBoard(PuzzleBoard* board) {
 }
 
 /* helper function to delete dynamically allocated 2D array */
-void deleteCopy(PuzzleBoard* board, int** copyBoard){
-  for (int i = 0; i < board->getHeight(); i++){
+void deleteCopy(PuzzleBoard* board, int** copyBoard) {
+  for (uint i = 0; i < board->getHeight(); i++){
     delete[] copyBoard[i];
   }
   delete[] copyBoard;
@@ -128,16 +134,16 @@ void deleteCopy(PuzzleBoard* board, int** copyBoard){
 bool solvableConfig(PuzzleBoard* board,
     ListOfShapeMatrices* const pieces,
     uint currentIndex) {
-  int b_height = board->getHeight();
-  int b_width = board->getWidth();
+  uint b_height = board->getHeight();
+  uint b_width = board->getWidth();
   //preparation to generate an array all possible area combinations.
   int numRemainingPieces = pieces->size() - currentIndex;
   long int maxCombinations = pow(2, numRemainingPieces);
   int* answerArray = new int[maxCombinations]();
   generatePossibleAreas(answerArray, maxCombinations, pieces, currentIndex);
 
-  for (int r = 0; r < b_height; r++) {
-    for (int c = 0; c < b_width; c++) {
+  for (uint r = 0; r < b_height; r++) {
+    for (uint c = 0; c < b_width; c++) {
       int** copiedBoard = copyBoard(board);
 
       //GETTING ADJACENT AREA OF CURRENT SLOT
