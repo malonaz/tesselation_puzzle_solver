@@ -10,16 +10,16 @@ class PuzzleBoard {
 private:
   ShapeMatrix* container;
   int** current_board;
-  int remainingArea;
+  uint remainingArea;
 
 public:
   PuzzleBoard(ShapeMatrix* shape);
 
   PuzzleBoard(const PuzzleBoard &copy);
 
-  int getHeight() const;
+  uint getHeight() const;
 
-  int getWidth() const;
+  uint getWidth() const;
 
   bool placePiece(int x, int y, int idx, ShapeMatrix* piece);
 
@@ -27,7 +27,7 @@ public:
 
   int** getCurrentBoard() const;
 
-  int getRemainingArea() const;
+  uint getRemainingArea() const;
 
   void printBoard() const;
 

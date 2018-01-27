@@ -40,11 +40,11 @@ PuzzleBoard::PuzzleBoard(const PuzzleBoard &copy):
   }
 }
 
-int PuzzleBoard::getHeight() const {
+uint PuzzleBoard::getHeight() const {
   return this->container->getHeight();
 }
 
-int PuzzleBoard::getWidth() const {
+uint PuzzleBoard::getWidth() const {
   return this->container->getWidth();
 }
 
@@ -132,7 +132,7 @@ int** PuzzleBoard::getCurrentBoard() const {
   return this->current_board;
 }
 
-int PuzzleBoard::getRemainingArea() const {
+uint PuzzleBoard::getRemainingArea() const {
   return this->remainingArea;
 }
 
