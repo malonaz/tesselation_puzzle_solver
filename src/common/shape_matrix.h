@@ -33,13 +33,13 @@ public:
 
   ShapeMatrix(const ShapeMatrix &copy);
 
-  void set(int index, bool value);
+  void set(uint index, bool value);
 
-  bool get(int index) const;
+  bool get(uint index) const;
 
-  void set(int row, int col, bool value);
+  void set(uint row, uint col, bool value);
 
-  bool get(int row, int col) const;
+  bool get(uint row, uint col) const;
 
   uint getWidth() const;
 

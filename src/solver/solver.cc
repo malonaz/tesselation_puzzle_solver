@@ -41,9 +41,9 @@ ListOfShapeMatrices* combinations(ShapeMatrix* temp, int& num_orientations) {
   ListOfShapeMatrices* combi = new ListOfShapeMatrices();
   ShapeMatrix* r_temp = temp;
 
-  for (int i = 0; i < 8; i++) {
+  for (uint i = 0; i < 8; i++) {
     bool doAddTheShape = true;
-    for (int j = 0; j < combi->size(); j++) {
+    for (uint j = 0; j < combi->size(); j++) {
       if (*r_temp == *((*combi)[j])) {
         doAddTheShape = false;
         break;
@@ -76,9 +76,9 @@ bool recursiveSolver (PuzzleBoard* board,
   ListOfShapeMatrices* shapesList = combinations(temp, num_orientations);
   int nextIndex = currentIndex + 1;
 
-  for (int r = 0; r < board->getHeight(); r++) {
-    for (int c = 0; c < board->getWidth(); c++) {
-      for (int counteri = 0; counteri < num_orientations; counteri++) {
+  for (uint r = 0; r < board->getHeight(); r++) {
+    for (uint c = 0; c < board->getWidth(); c++) {
+      for (uint counteri = 0; counteri < num_orientations; counteri++) {
         ShapeMatrix* r_temp = (*shapesList)[counteri];
         if (board->placePiece(c, r, nextIndex, r_temp)) {
           if (recursiveSolver(board, pieces, nextIndex)) {

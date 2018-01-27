@@ -28,7 +28,7 @@ ShapeMatrix::ShapeMatrix(const ShapeMatrix &copy):
   }
 } // ShapeMatrix::ShapeMatrix(ShapeMatrix&)
 
-void ShapeMatrix::set(int index, bool value) {
+void ShapeMatrix::set(uint index, bool value) {
   assert(index >= 0 && index < (this->width * this->height));
   if (this->shape[index] == value) {
     return;
@@ -41,18 +41,18 @@ void ShapeMatrix::set(int index, bool value) {
   this->shape[index] = value;
 } // ShapeMatrix::set(int, bool)
 
-void ShapeMatrix::set(int row, int col, bool value) {
+void ShapeMatrix::set(uint row, uint col, bool value) {
   assert(row >= 0 && row < this->height);
   assert(col >= 0 && col < this->width);
   this->set(row * this->width + col, value);
 } // ShapeMatrix::set(int, int, bool)
 
-bool ShapeMatrix::get(int index) const {
+bool ShapeMatrix::get(uint index) const {
   assert(index >= 0 && index < (this->width * this->height));
   return this->shape[index];
 } // ShapeMatrix::get(int)
 
-bool ShapeMatrix::get(int row, int col) const {
+bool ShapeMatrix::get(uint row, uint col) const {
   assert(row >= 0 && row < this->height);
   assert(col >= 0 && col < this->width);
   return this->shape[row * this->width + col];
