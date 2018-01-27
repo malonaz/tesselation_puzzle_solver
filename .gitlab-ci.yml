@@ -16,16 +16,21 @@ opencv-build:
     - bash .gitlab_build_files/build_opencv_debian_pkg.sh
   artifacts:
     paths:
-    - i3d-opencv_*_amd64.deb
+      - i3d-opencv_*_amd64.deb
   tags:
-    - linux,debian-jessie
+    - linux
 
 test-build:
   stage: build
   script:
     # run the tests..
     - make test
+  tags:
+    - linux
     
-test:
+runtest:
+  stage: test
   script:
     - bin/test
+  tags:
+    - linux
