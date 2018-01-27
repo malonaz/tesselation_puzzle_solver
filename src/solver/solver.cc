@@ -63,6 +63,21 @@ ListOfShapeMatrices* combinations(ShapeMatrix* temp, int& num_orientations) {
   return combi;
 }
 
+void printBitmask(uint64 bitmask[64], uint height) {
+  for (uint i = 0; i < height; ++i) {
+    int num = bitmask[i];
+    for (int j = 0; j < 64; ++i) {
+      cout << ((num & 1) == 0 ? '0' : '1') << ' ';
+      num = num >> 1;
+      if (num == 0) {
+        break;
+      }
+    }
+    cout << endl;
+  }
+  cout << "---" << endl;
+}
+
 bool recursiveSolver (PuzzleBoard* board,
     ListOfShapeMatrices* const pieces,
     uint currentIndex) {
@@ -74,17 +89,34 @@ bool recursiveSolver (PuzzleBoard* board,
   ShapeMatrix* temp = (*pieces)[currentIndex];
   int num_orientations = 0;
   ListOfShapeMatrices* shapesList = combinations(temp, num_orientations);
-  int nextIndex = currentIndex + 1;
-
-  for (int r = 0; r < board->getHeight(); r++) {
-    for (int c = 0; c < board->getWidth(); c++) {
-      for (int counteri = 0; counteri < num_orientations; counteri++) {
-        ShapeMatrix* r_temp = (*shapesList)[counteri];
-        if (board->placePiece(c, r, nextIndex, r_temp)) {
+  uint nextIndex = currentIndex + 1;
+  uint boardWidth = board->getWidth();
+  uint boardHeight = board->getHeight();
+  
+  for (uint counteri = 0; counteri < num_orientations; counteri++) {
+    ShapeMatrix* r_temp = (*shapesList)[counteri];
+    uint64 bitmask[64];
+    for(uint i = 0; i < boardHeight; ++i) {
+      bitmask[i] = 0;
+    }
+    uint pieceWidth = r_temp->getWidth();
+    uint pieceHeight = r_temp->getHeight();
+    
+    for (uint r = 0; r < pieceHeight; r++) {
+      for (uint c = 0; c < pieceWidth; c++) {
+        if (r_temp->get(r, c)) {
+          bitmask[r] = (bitmask[r] | (1 << c));
+        }
+      }
+    }
+    
+    for (uint r = 0; r < boardHeight - pieceHeight + 1; r++) {
+      for (uint c = 0; c < boardWidth - pieceWidth + 1; c++) {
+        if (board->placePiece(c, r, nextIndex, bitmask, r_temp)) {
           if (recursiveSolver(board, pieces, nextIndex)) {
             return true;
           }
-          board->removePiece(c, r, nextIndex, r_temp); // revert
+          board->removePiece(c, r, bitmask, r_temp); // revert
         }
       }
     }
@@ -98,8 +130,8 @@ bool recursiveSolver (PuzzleBoard* board,
 int puzzleSolver(ListOfShapeMatrices* const matrices) {
   int returnCode = 0;
   ListOfShapeMatrices shapes;
-  int containerArea =0;
-  int totalPieceArea  =0;
+  int containerArea = 0;
+  int totalPieceArea = 0;
   PuzzleBoard* board = createBoard(matrices, &shapes,
       containerArea, totalPieceArea);
   if (totalPieceArea > containerArea) { // case of undersized container
