@@ -37,12 +37,12 @@ PuzzleBoard* createBoard(ListOfShapeMatrices* const matrices,
 }
 
 ListOfShapeMatrices* combinations(ShapeMatrix* temp, int& num_orientations) {
-  ListOfShapeMatrices* combi = new ListOfShapeMatrices;
+  ListOfShapeMatrices* combi = new ListOfShapeMatrices();
   ShapeMatrix* r_temp = temp;
 
   for (int i = 0; i < 8; i++) {
     bool doAddTheShape = true;
-    for (int j = 0; j < num_orientations; j++) {
+    for (int j = 0; j < combi->size(); j++) {
       if (*r_temp == *((*combi)[j])) {
         doAddTheShape = false;
         break;
@@ -59,7 +59,6 @@ ListOfShapeMatrices* combinations(ShapeMatrix* temp, int& num_orientations) {
       r_temp = r_temp->mirror();
     }
   }
-
   num_orientations = combi->size();
   return combi;
 }
