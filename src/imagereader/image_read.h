@@ -3,7 +3,7 @@
 #include "common/types.h"
 
 void find_coordinates(const char* input,ListOfShapes* const list);
-void debug_coordinates(const char* filename, ListOfShapes* const list);
+void debug_coordinates(const char* filename, const ListOfShapes* const list);
 #endif
 
 //ordering points clockwise
