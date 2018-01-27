@@ -144,9 +144,9 @@ void PuzzleBoard::printBoard() const {
   for (int c = 0; c < width; ++c) {
     if (c < width - 1
         && this->current_board[0][c] == this->current_board[0][c + 1]) {
-      cout <<  "----";
+      cout <<  "-----";
     } else {
-      cout <<  "---+";
+      cout <<  "----+";
     }
   }
   cout << endl;
@@ -154,6 +154,9 @@ void PuzzleBoard::printBoard() const {
     cout << "| ";
     for (int c = 0; c < width; ++c) {
       int current_num = this->current_board[r][c];
+      if (current_num<10) {
+        cout<<" ";
+      }
       cout << current_num << " ";
       if (c < width - 1
           && this->current_board[r][c + 1] == current_num) {
@@ -170,31 +173,31 @@ void PuzzleBoard::printBoard() const {
         if (this->current_board[r + 1][c + 1] == current_num
             && this->current_board[r + 1][c] == current_num
             && this->current_board[r][c + 1] == current_num) {
-          cout << "    ";
+          cout << "     ";
         } else if (this->current_board[r + 1][c] == current_num
             && this->current_board[r][c + 1] == current_num) {
-              cout << "   +";
+              cout << "    +";
         } else if (this->current_board[r + 1][c] == current_num) {
-          cout << "   |";
+          cout << "    |";
         } else if (this->current_board[r][c + 1] == current_num) {
-          cout << "----";
+          cout << "-----";
         } else {
-          cout << "---+";
+          cout << "----+";
         }
       } else if (r < height - 1 && c == width - 1) {
         if (this->current_board[r + 1][c] == current_num) {
-          cout << "   |";
+          cout << "    |";
         } else {
-          cout << "---+";
+          cout << "----+";
         }
       } else if(r == height - 1 && c < width - 1) {
         if (this->current_board[r][c + 1] == current_num) {
-          cout << "----";
+          cout << "-----";
         } else {
-          cout << "---+";
+          cout << "----+";
         }
       } else {
-        cout << "---+";
+        cout << "----+";
       }
     }
     cout << endl;
