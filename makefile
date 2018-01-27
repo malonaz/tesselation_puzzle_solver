@@ -29,15 +29,14 @@ SOLVER_OBJECTS = $(OBJDIR)/solver/solver.o
 OBJECTS = $(COMMON_OBJECTS)\
 	$(DISCRETIZER_OBJECTS)\
 	$(PUZZLE_OBJECTS)\
-	$(SOLVER_OBJECTS)\
-	$(IMAGE_READER_OBJECTS)
+	$(SOLVER_OBJECTS)
 
 CXX = g++
 CXXFLAGS = -Wall -g -MMD -std=c++11 -I$(SRCDIR)/
 
 main: $(BINDIR)/$(TARGET)
 
-$(BINDIR)/$(TARGET): $(MAIN_OBJECT) $(OBJECTS)
+$(BINDIR)/$(TARGET): $(MAIN_OBJECT) $(IMAGE_READER_OBJECTS) $(OBJECTS)
 	@echo "\tLinking \"$@\""
 	@mkdir -p $(OBJDIR) $(BINDIR)
 	@$(CXX) $(CXXFLAGS) -fprofile-arcs $^ -o $@ $(OPENCV_LIBFLAGS)
@@ -52,7 +51,7 @@ $(MAIN_OBJECT): $(OBJDIR)/%.o: $(SRCDIR)/%.cc
 $(IMAGE_READER_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 	@echo "\tCompiling \"$@\""
 	@mkdir -p `dirname $@`
-	@$(CXX) $(CXXFLAGS) $(OPENCV_CXXFLAGS) -Weffc++ --coverage -c $< -o $@
+	@$(CXX) $(CXXFLAGS) $(OPENCV_CXXFLAGS) -Wall --coverage -c $< -o $@
 	@echo "[Done]\tCompiling \"$@\""
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
