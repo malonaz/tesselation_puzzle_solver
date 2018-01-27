@@ -21,6 +21,12 @@ Steps:
 2) translate the points into horizontal edges only
 */
 
+/**
+  Get the width and height of a shape defined by a list of coordinates.
+  \param shape The list of coordinates that define the shape.
+  \param width The width of the shape returned by reference.
+  \param height The height of the same returned by reference.
+*/
 void shape_get_size(const ListOfPoints* const shape, uint& width, uint& height) {
   int max_x = 0;
   int max_y = 0;
@@ -40,6 +46,15 @@ void shape_get_size(const ListOfPoints* const shape, uint& width, uint& height) 
   height = (uint)(max_y - min_y);
 } // shape_get_size(ListOfPoints*, uint&, uint&)
 
+/**
+  Filter and process an edge, defined by two points, of a shape.
+  If the edge is horizontal, the edge gets added into horizontal_edges map.
+  \param horizontal_edges The mapping of y-coordinate to the list of horizontal edges.
+    If the incoming edge defined by point1 and point2 is horizontal, it gets
+    added to this map.
+  \param point1 The first point of the edge to process
+  \param point2 The second point of the edge to process
+*/
 void shape_process_edge(map<uint, ListOfEdges*> &horizontal_edges,
     Point point1, Point point2) {
   if (point1.y != point2.y) {
