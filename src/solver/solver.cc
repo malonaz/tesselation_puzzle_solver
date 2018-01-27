@@ -78,8 +78,8 @@ int getAdjacentEmptyArea(int r, int c, int height, int width, int** copiedBoard)
 /* function to generate all possible area combinations from remaining pieces */
 void generatePossibleAreas(int* answerArray, long int maxCombinations, ListOfShapeMatrices* pieces, uint currentIndex){
   int sizeArray = pieces->size()-currentIndex;
-  int generativeArray [sizeArray]= {0};
   for (long int sequencei = 0; sequencei <maxCombinations; sequencei++){
+  int* generativeArray = new int[sizeArray]();
     int answer=0;
     long int copyi = sequencei;
     for (int countj = sizeArray-1; countj>= 0; countj--) {
@@ -96,6 +96,7 @@ void generatePossibleAreas(int* answerArray, long int maxCombinations, ListOfSha
       generativeArray[countl] =0;
     }
   }
+  delete[] generativeArray;
 }
 
 /* helper function to copy current state of board into 2D array */
@@ -129,7 +130,7 @@ bool solvableConfig(PuzzleBoard* board,
   //preparation to generate an array all possible area combinations.
   int numRemainingPieces = pieces->size() - currentIndex;
   long int maxCombinations = pow(2, numRemainingPieces);
-  int answerArray[maxCombinations]={0};
+  int* answerArray = new int[maxCombinations]();
   generatePossibleAreas(answerArray, maxCombinations, pieces, currentIndex);
 
   for (int r = 0; r < b_height; r++) {
@@ -154,11 +155,13 @@ bool solvableConfig(PuzzleBoard* board,
       }
       if (areaImpossible){
         deleteCopy(board, copiedBoard);
+        delete[] answerArray;
         return false;
       }
       deleteCopy(board, copiedBoard);
     }
   }
+  delete[] answerArray;
   return true;
 }
 
