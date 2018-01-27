@@ -2,11 +2,13 @@
 #define APS_COMMON_PUZZLE_BOARD_H_
 
 #include "shape_matrix.h"
+#include "types.h"
 
 class PuzzleBoard {
 private:
   ShapeMatrix* container;
   int** current_board;
+  uint64 bitset[64];
   int remainingArea;
 
 public:
@@ -14,17 +16,17 @@ public:
 
   PuzzleBoard(const PuzzleBoard &copy);
 
-  int getHeight() const;
+  uint getHeight() const;
 
-  int getWidth() const;
+  uint getWidth() const;
 
-  bool placePiece(int x, int y, int idx, ShapeMatrix* piece);
+  bool placePiece(int x, int y, uint idx, uint64 mask[64], ShapeMatrix* piece);
 
-  bool removePiece(int x, int y, int indexToRemove, ShapeMatrix* piece);
+  bool removePiece(int x, int y, uint64 mask[64], ShapeMatrix* piece);
 
   int** getCurrentBoard() const;
 
-  int getRemainingArea() const;
+  uint getRemainingArea() const;
 
   void printBoard() const;
 

@@ -21,6 +21,7 @@ PuzzleBoard::PuzzleBoard(ShapeMatrix* shape):
     for (int j = 0; j < width; j++) {
       current_board[i][j] = 0;
     }
+    this->bitset[i] = 0;
   }
 }
 
@@ -36,94 +37,39 @@ PuzzleBoard::PuzzleBoard(const PuzzleBoard &copy):
     for (int j = 0; j < width; j++) {
       current_board[i][j] = copy.current_board[i][j];
     }
+    this->bitset[i] = copy.bitset[i];
   }
 }
 
-int PuzzleBoard::getHeight() const {
+uint PuzzleBoard::getHeight() const {
   return this->container->getHeight();
 }
 
-int PuzzleBoard::getWidth() const {
+uint PuzzleBoard::getWidth() const {
   return this->container->getWidth();
 }
 
-bool PuzzleBoard::placePiece(int x, int y, int idx, ShapeMatrix* piece) {
-  int piece_height = piece->getHeight();
-  int piece_width = piece->getWidth();
-  int container_height = this->container->getHeight();
-  int container_width = this->container->getWidth();
-  if (idx <= 0) {
-    return false;
-  }
-  if (y < 0 || y >= container_height) {
-    return false;
-  }
-  if (x < 0 || x >= container_width) {
-    return false;
-  }
-  if (y + piece_height > container_height) {
-    return false;
-  }
-  if (x + piece_width > container_width) {
-    return false;
-  }
-
-  for (int i = 0; i < piece_height; i++) {
-    for (int j = 0; j < piece_width; j++) {
-      int board_y = y + i;
-      int board_x = x + j;
-      if (!piece->get(i, j)){
-        continue;
-      }
-      if (!this->container->get(board_y, board_x)
-          || this->current_board[board_y][board_x] > 0) {
-        return false;
-      }
-
+bool PuzzleBoard::placePiece(int x, int y, uint idx, uint64 bitmask[64], ShapeMatrix* piece) {
+  for (uint i = y; i < this->container->getHeight() && i < piece->getHeight() + y; ++i) {
+    if ((this->bitset[i] & (bitmask[i - y] << x)) != 0) {
+      return false;
     }
   }
-  for (int i = 0; i < piece_height; i++) {
-    for (int j = 0; j < piece_width; j++) {
-      int board_y = y + i;
-      int board_x = x + j;
-      if (piece->get(i, j)) {
-        this->current_board[board_y][board_x] = idx;
-      }
-    }
+  for (uint i = y; i < this->container->getHeight() && i < piece->getHeight() + y; ++i) {
+    //this->remainingArea -= __builtin_popcount(bitmask[i - y] << x);
+    this->bitset[i] |= (bitmask[i - y] << x);
   }
   this->remainingArea -= piece->getShapeArea();
   return true;
 }
 
-bool PuzzleBoard::removePiece(int x, int y, int indexToRemove, ShapeMatrix* piece) {
-  int piece_height = piece->getHeight();
-  int piece_width = piece->getWidth();
-  int container_height = this->container->getHeight();
-  int container_width = this->container->getWidth();
-
-  if (y < 0 || y >= container_height) {
-    return false;
+bool PuzzleBoard::removePiece(int x, int y, uint64 bitmask[64], ShapeMatrix* piece) {
+  for (uint i = y; i < this->container->getHeight() && i < piece->getHeight() + y; ++i) {
+    //this->remainingArea += __builtin_popcount(bitmask[i - y] << x);
+    this->bitset[i] ^= (bitmask[i - y] << x);
   }
-  if (x < 0 || x >= container_width) {
-    return false;
-  }
-  if (y + piece_height > container_height) {
-    return false;
-  }
-  if (x + piece_width > container_width) {
-    return false;
-  }
-
-  for (int i = 0; i < piece_height; i++) {
-    for (int j = 0; j < piece_width; j++) {
-      int board_y = y + i;
-      int board_x = x + j;
-      if (this->current_board[board_y][board_x] == indexToRemove) {
-        this->current_board[board_y][board_x] = 0;
-        ++this->remainingArea;
-      }
-    }
-  }
+  this->remainingArea += piece->getShapeArea();
+  cout << "Remaining area: " << this->remainingArea << endl;
   return true;
 }
 
@@ -131,7 +77,7 @@ int** PuzzleBoard::getCurrentBoard() const {
   return this->current_board;
 }
 
-int PuzzleBoard::getRemainingArea() const {
+uint PuzzleBoard::getRemainingArea() const {
   return this->remainingArea;
 }
 
@@ -222,6 +168,7 @@ PuzzleBoard& PuzzleBoard::operator=(const PuzzleBoard& rhs) {
     for (int j = 0; j < width; j++) {
       current_board[i][j] = rhs.current_board[i][j];
     }
+    this->bitset[i] = rhs.bitset[i];
   }
 
 
