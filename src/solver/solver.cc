@@ -39,7 +39,7 @@ PuzzleBoard* createBoard(ListOfShapeMatrices* const matrices,
 
 ListOfShapeMatrices* combinations(ShapeMatrix* temp, int& num_orientations) {
   ListOfShapeMatrices* combi = new ListOfShapeMatrices();
-  ShapeMatrix* r_temp = temp;
+  ShapeMatrix* r_temp = new ShapeMatrix(*temp);
 
   for (int i = 0; i < 8; i++) {
     bool doAddTheShape = true;
