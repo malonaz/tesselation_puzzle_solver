@@ -50,11 +50,10 @@ ListOfShapeMatrices* combinations(ShapeMatrix* temp, int& num_orientations) {
       }
     } //rotate and check
 
-    if (!doAddTheShape) {
-      continue;
+    if (doAddTheShape) {
+      combi->push_back(r_temp);
     }
 
-    combi->push_back(r_temp);
     r_temp = r_temp->rotate();
     if (i == 3) {
       r_temp = r_temp->mirror();
