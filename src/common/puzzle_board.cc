@@ -1,7 +1,11 @@
+
+#include "puzzle_board.h"
+
 #include <cstddef>
 #include <iostream>
-#include "puzzle_board.h"
+
 #include "shape_matrix.h"
+#include "types.h"
 
 using namespace std;
 
@@ -48,7 +52,7 @@ bool PuzzleBoard::placePiece(int x, int y, int idx, ShapeMatrix* piece) {
   int piece_width = piece->getWidth();
   int container_height = this->container->getHeight();
   int container_width = this->container->getWidth();
-  if(idx <= 0){
+  if (idx <= 0) {
     return false;
   }
   if (y < 0 || y >= container_height) {
