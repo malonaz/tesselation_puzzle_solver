@@ -1,6 +1,7 @@
 include ./dep/googletest/make/Makefile
 
 TESTS = $(TESTDIR)/common/shape_matrix_test.o \
+	$(TESTDIR)/common/point_test.o \
 	$(TESTDIR)/discretizer/shape_translate_test.o \
 	$(TESTDIR)/discretizer/shape_rotate_test.o
 
