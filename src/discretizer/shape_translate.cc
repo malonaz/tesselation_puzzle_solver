@@ -21,6 +21,12 @@ Steps:
 2) translate the points into horizontal edges only
 */
 
+/**
+  Get the width and height of a shape defined by a list of coordinates.
+  \param shape The list of coordinates that define the shape.
+  \param width The width of the shape returned by reference.
+  \param height The height of the same returned by reference.
+*/
 void shape_get_size(const ListOfPoints* const shape, uint& width, uint& height) {
   int max_x = 0;
   int max_y = 0;
