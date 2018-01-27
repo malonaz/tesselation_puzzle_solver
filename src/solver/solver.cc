@@ -66,7 +66,7 @@ ListOfShapeMatrices* combinations(ShapeMatrix* temp, int& num_orientations) {
 
 bool recursiveSolver (PuzzleBoard* board,
     ListOfShapeMatrices* const pieces,
-    unsigned int currentIndex) {
+    uint currentIndex) {
   if (board->getRemainingArea() == 0 || currentIndex >= pieces->size()) {
     //the board is complete, and no more remaining pieces
     return true;
@@ -104,7 +104,7 @@ int puzzleSolver(ListOfShapeMatrices* const matrices) {
   if (totalPieceArea > containerArea) { // case of undersized container
     return UNDERSIZED;
   }
-  if (totalPieceArea < containerArea){ // case of oversized container
+  if (totalPieceArea < containerArea) { // case of oversized container
     return OVERSIZED;
   }
   // if puzzle pieces area == container area
@@ -112,7 +112,7 @@ int puzzleSolver(ListOfShapeMatrices* const matrices) {
 
   if (success) {
     returnCode = SOLVED;
-    cout<<endl;
+    // cout << endl;
     board->printBoard();
   } else {
     returnCode = UNSOLVED;
