@@ -1,10 +1,31 @@
-runtests:
-  before_script:
-    - sudo apt-get install -yq libopencv-dev
+stages:
+  - dependencies
+  - build
+  - test
+
+opencv-build:
+  stage: dependencies
   script:
-    # compile it up
-    - export ARCH=x86_64
-    - make
+    - export I3D_OPENCV_VERSION=2.4.13
+    - wget --quiet https://github.com/opencv/opencv/archive/$I3D_OPENCV_VERSION.tar.gz
+    - mkdir opencv-source opencv-build opencv-install
+    - tar xvfz $I3D_OPENCV_VERSION.tar.gz -C opencv-source --strip-components=1
+    - cmake -Bopencv-build -Hopencv-source -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_DOCS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_JPEG=ON -DBUILD_PNG=ON -DBUILD_TIFF=ON -DBUILD_opencv_gpu=OFF -DWITH_FFMPEG=OFF
+    - make -j$(nproc) -C opencv-build
+    - make -C opencv-build install DESTDIR=../opencv-install
+    - bash .gitlab_build_files/build_opencv_debian_pkg.sh
+  artifacts:
+    paths:
+    - i3d-opencv_*_amd64.deb
+  tags:
+    - linux,debian-jessie
+
+test-build:
+  stage: build
+  script:
     # run the tests..
     - make test
+    
+test:
+  script:
     - bin/test
