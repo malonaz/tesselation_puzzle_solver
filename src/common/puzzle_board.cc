@@ -69,7 +69,6 @@ bool PuzzleBoard::removePiece(int x, int y, uint64 bitmask[64], ShapeMatrix* pie
     this->bitset[i] ^= (bitmask[i - y] << x);
   }
   this->remainingArea += piece->getShapeArea();
-  cout << "Remaining area: " << this->remainingArea << endl;
   return true;
 }
 
