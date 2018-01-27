@@ -60,6 +60,7 @@ void find_coordinates(const char* input, ListOfShapes* const list){
 }
 
 void debug_coordinates(const char* filename, ListOfShapes* const list){
+  Mat src;
   src = imread(filename);
   if(src.empty()){
     std::cout << "Could not open or find image!\n" << std::endl;
