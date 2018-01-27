@@ -59,19 +59,18 @@ void find_coordinates(const char* input, ListOfShapes* const list){
   }
 }
 
-  Mat src;
-  src = imread(filename);
 void debug_coordinates(const char* filename, const ListOfShapes* const list){
+  Mat src = imread(filename);
   if(src.empty()){
-    std::cout << "Could not open or find image!\n" << std::endl;
+    cout << "Could not open or find image!\n" << endl;
   }
   /*****prints out the corners*****/
   for (uint i = 0; i < list->size(); i++) {
     ListOfPoints* shapeList = (*list)[i];
     for (uint j = 0; j < shapeList->size(); j++) {
-      circle( src, (*shapeList)[j], 5, Scalar(255), 2, 8, 0 );
+      Point p = (*shapeList)[j];
+      circle( src, cv::Point(p.x, p.y), 5, Scalar(255), 2, 8, 0 );
     }
-    delete shapeList;
   }
   namedWindow( "Debug window", WINDOW_AUTOSIZE );
   imshow( "Debug window", src);
@@ -79,12 +78,12 @@ void debug_coordinates(const char* filename, const ListOfShapes* const list){
   
   /*****prints out coordinates of corners*****/
   for (uint i = 0; i < list->size(); i++) {
-    std::cout << "Shape " << i << " : ";
+    cout << "Shape " << i << ": " << endl;
     ListOfPoints* shapeList = (*list)[i];
     for (uint j = 0; j < shapeList->size(); j++) {
-      std::cout << "(" << (*shapeList)[j].x << ", " << (*shapeList)[j].y << ")   ";
+      Point p = (*shapeList)[j];
+      cout << "\t(" << p.x << ", " << p.y << ")" << endl;
     }
-    std::cout << std::endl;
-    delete shapeList;
+    cout << endl;
   }
 }
