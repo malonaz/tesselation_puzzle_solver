@@ -2,6 +2,9 @@
 #define APS_COMMON_PUZZLE_BOARD_H_
 
 #include "shape_matrix.h"
+#include <fstream>
+#include <iostream>
+
 
 class PuzzleBoard {
 private:
@@ -27,6 +30,8 @@ public:
   int getRemainingArea() const;
 
   void printBoard() const;
+
+  void printBoard(std::ostream& os) const;
 
   PuzzleBoard& operator=(const PuzzleBoard& rhs);
 

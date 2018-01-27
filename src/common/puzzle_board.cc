@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <iostream>
+#include <fstream>
 
 #include "shape_matrix.h"
 #include "types.h"
@@ -199,6 +200,75 @@ void PuzzleBoard::printBoard() const {
     cout << endl;
   }
 }
+
+
+
+void PuzzleBoard::printBoard(ostream& os) const {
+  int width = this->container->getWidth();
+  int height = this->container->getHeight();
+  os << "-- [ rows: " << height << ", cols: " << width << " ] --" << endl;
+  os << "+";
+  for (int c = 0; c < width; ++c) {
+    if (c < width - 1
+        && this->current_board[0][c] == this->current_board[0][c + 1]) {
+      os <<  "----";
+    } else {
+      os <<  "---+";
+    }
+  }
+  os << endl;
+  for (int r = 0; r < height; ++r) {
+    os << "| ";
+    for (int c = 0; c < width; ++c) {
+      int current_num = this->current_board[r][c];
+      os << current_num << " ";
+      if (c < width - 1
+          && this->current_board[r][c + 1] == current_num) {
+        os << "  ";
+      } else {
+        os << "| ";
+      }
+    }
+    os << endl;
+    os << "+";
+    for (int c = 0; c < width; ++c) {
+      int current_num = this->current_board[r][c];
+      if (r < height - 1 && c < width - 1) {
+        if (this->current_board[r + 1][c + 1] == current_num
+            && this->current_board[r + 1][c] == current_num
+            && this->current_board[r][c + 1] == current_num) {
+          os << "    ";
+        } else if (this->current_board[r + 1][c] == current_num
+            && this->current_board[r][c + 1] == current_num) {
+              os << "   +";
+        } else if (this->current_board[r + 1][c] == current_num) {
+          os << "   |";
+        } else if (this->current_board[r][c + 1] == current_num) {
+          os << "----";
+        } else {
+          os << "---+";
+        }
+      } else if (r < height - 1 && c == width - 1) {
+        if (this->current_board[r + 1][c] == current_num) {
+          os << "   |";
+        } else {
+          os << "---+";
+        }
+      } else if(r == height - 1 && c < width - 1) {
+        if (this->current_board[r][c + 1] == current_num) {
+          os << "----";
+        } else {
+          os << "---+";
+        }
+      } else {
+        os << "---+";
+      }
+    }
+    os << endl;
+  }
+}
+
+
 
 PuzzleBoard& PuzzleBoard::operator=(const PuzzleBoard& rhs) {
   if (this == &rhs) {
