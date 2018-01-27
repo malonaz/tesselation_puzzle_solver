@@ -38,20 +38,24 @@ PuzzleBoard* createBoard(ListOfShapeMatrices* const matrices,
   return board;
 }
 
+bool isShapeMatrixInList(const ShapeMatrix* const shape,
+    const ListOfShapeMatrices* const list) {
+  bool result = false;
+  for (uint j = 0; j < list->size(); j++) {
+    if (*shape == *((*list)[j])) {
+      result = true;
+      break;
+    }
+  }
+  return result;
+}
+
 ListOfShapeMatrices* combinations(ShapeMatrix* temp, int& num_orientations) {
   ListOfShapeMatrices* combi = new ListOfShapeMatrices();
   ShapeMatrix* r_temp = temp;
 
   for (uint i = 0; i < 8; i++) {
-    bool doAddTheShape = true;
-    for (uint j = 0; j < combi->size(); j++) {
-      if (*r_temp == *((*combi)[j])) {
-        doAddTheShape = false;
-        break;
-      }
-    } //rotate and check
-
-    if (doAddTheShape) {
+    if (!isShapeMatrixInList(r_temp, combi)) {
       combi->push_back(r_temp);
     }
 
