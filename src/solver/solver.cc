@@ -1,7 +1,8 @@
 #include <iostream>
 #include <vector>
-#include "common/shape_matrix.h"
+#include "common/memory.h"
 #include "common/puzzle_board.h"
+#include "common/shape_matrix.h"
 #include "common/shape_matrix_io.h"
 #include "common/types.h"
 #include "solver.h"
@@ -89,6 +90,8 @@ bool recursiveSolver (PuzzleBoard* board,
       }
     }
   }
+  cleanup_list(shapesList);
+  delete shapesList;
 
   return false;
 }
