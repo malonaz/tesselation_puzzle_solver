@@ -1,6 +1,8 @@
 #ifndef APS_COMMON_SHAPE_MATRIX_H_
 #define APS_COMMON_SHAPE_MATRIX_H_
 
+typedef unsigned int uint;
+
 /**
   Describes the shape detected in the image as an discrete logocal matrix
 */
@@ -9,17 +11,17 @@ private:
   /**
     The width of the matrix
   */
-  int width;
+  uint width;
 
   /** 
     The height of the matrix
   */
-  int height;
+  uint height;
 
   /**
     The area that the shape occupies out of the matrix
   */
-  int shapeArea;
+  uint shapeArea;
 
   /**
     The logical matrix that represent
@@ -39,13 +41,13 @@ public:
 
   bool get(int row, int col) const;
 
-  int getWidth() const;
+  uint getWidth() const;
 
-  int getHeight() const;
+  uint getHeight() const;
 
-  int getShapeArea() const;
+  uint getShapeArea() const;
 
-  int getMatrixArea() const;
+  uint getMatrixArea() const;
 
   /**
     Creates a new copy of the shape matrix that is rotated clockwise by

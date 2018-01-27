@@ -3,6 +3,8 @@
 #include <cassert>
 #include <cstddef>
 
+#include "types.h"
+
 ShapeMatrix::ShapeMatrix(int width, int height):
     width(width), height(height),
     shapeArea(0), shape(NULL) {
@@ -56,19 +58,19 @@ bool ShapeMatrix::get(int row, int col) const {
   return this->shape[row * this->width + col];
 } // ShapeMatrix::get(int, int)
 
-int ShapeMatrix::getWidth() const {
+uint ShapeMatrix::getWidth() const {
   return this->width;
 } // ShapeMatrix::getWidth()
 
-int ShapeMatrix::getHeight() const {
+uint ShapeMatrix::getHeight() const {
   return this->height;
 } // ShapeMatrix::getHeight()
 
-int ShapeMatrix::getShapeArea() const {
+uint ShapeMatrix::getShapeArea() const {
   return this->shapeArea;
 } // ShapeMatrix::getShapeArea()
 
-int ShapeMatrix::getMatrixArea() const {
+uint ShapeMatrix::getMatrixArea() const {
   return this->width * this->height;
 } // ShapeMatrix::getMatrixArea()
 
