@@ -1,12 +1,17 @@
+#include "image_read.h"
+
 #include <cmath>
 #include <iostream>
-#include <string>
 #include <vector>
+
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "common/types.h"
-using namespace std;
+
+using std::cout;
+using std::endl;
+
 using cv::resize;
 using cv::cvtColor;
 using cv::findContours;
@@ -21,10 +26,22 @@ using cv::ADAPTIVE_THRESH_GAUSSIAN_C;
 using cv::THRESH_BINARY_INV;
 using cv::arcLength;
 using cv::contourArea;
+using cv::WINDOW_AUTOSIZE;
+using cv::waitKey;
+using cv::Scalar;
+using cv::circle;
 using cv::Size;
 
-void find_coordinates(const char* input, ListOfShapes* const list){
+#define ADAPTIVE_THRESHOLD_VALUE 100
 
+void scaleDownImage(Mat& source, Mat& target, double width) {
+  double scale = width / source.size().width;
+  Size size(scale * source.size().width, scale * source.size().height);
+  resize(source, target, size);
+}
+
+void find_coordinates(const char* input, ListOfShapes* const list){
+  
   Mat src, src_gray;
 
   src = imread(input);
@@ -34,10 +51,10 @@ void find_coordinates(const char* input, ListOfShapes* const list){
   }
   Mat src_processed;
 
-  double scale = 800.0 / src.size().width;
-  resize(src, src_processed, Size(scale * src.size().width, scale * src.size().height));
+  scaleDownImage(src, src_processed, 800);
   cvtColor(src_processed, src_gray, COLOR_BGR2GRAY);
-  adaptiveThreshold(src_gray, src_gray, 100, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 11, 2);
+  adaptiveThreshold(src_gray, src_gray, ADAPTIVE_THRESHOLD_VALUE,
+    ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 11, 2);
 
   vector< vector<cv::Point> > contours;
   findContours(src_gray, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
@@ -64,6 +81,7 @@ void debug_coordinates(const char* filename, const ListOfShapes* const list){
   if(src.empty()){
     cout << "Could not open or find image!\n" << endl;
   }
+  scaleDownImage(src, src_processed, 800);
   /*****prints out the corners*****/
   for (uint i = 0; i < list->size(); i++) {
     ListOfPoints* shapeList = (*list)[i];
