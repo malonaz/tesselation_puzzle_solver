@@ -1,17 +1,6 @@
-stages:
-  - build
-  - test
-
-test-build:
-  stage: build
-  script:
-    # run the tests..
+runtests:
+  before_script:
     - make test
-  tags:
-    - linux
-    
-runtest:
-  stage: test
   script:
     - bin/test
   tags:
