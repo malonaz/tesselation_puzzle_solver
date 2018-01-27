@@ -78,8 +78,8 @@ ShapeMatrix* ShapeMatrix::rotate() const {
   ShapeMatrix* rotated = new ShapeMatrix(this->height, this->width);
   rotated->shapeArea = this->shapeArea;
 
-  for(int i = 0;  i < rotated->height; i++){
-    for(int j = 0; j < rotated->width; j++){
+  for(uint i = 0;  i < rotated->height; i++){
+    for(uint j = 0; j < rotated->width; j++){
       rotated->shape[i * rotated->width + j] =
         this->shape[(this->height - j - 1) * this->width + i];
     }
@@ -110,8 +110,8 @@ ShapeMatrix* ShapeMatrix::mirror() const {
   ShapeMatrix* result = new ShapeMatrix(width, height);
   int last_index = this->height - 1;
   // copy the matrix over but mirrored row-wise
-  for (int i = 0; i < this->height; ++i) {
-    for (int j = 0; j < this->width; ++j) {
+  for (uint i = 0; i < this->height; ++i) {
+    for (uint j = 0; j < this->width; ++j) {
       result->set(last_index - i, j, this->get(i, j));
     }
   }
