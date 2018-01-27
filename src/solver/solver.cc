@@ -50,7 +50,7 @@ bool isShapeMatrixInList(const ShapeMatrix* const shape,
   return result;
 }
 
-ListOfShapeMatrices* combinations(ShapeMatrix* temp, int& num_orientations) {
+ListOfShapeMatrices* combinations(ShapeMatrix* temp) {
   ListOfShapeMatrices* combi = new ListOfShapeMatrices();
   ShapeMatrix* r_temp = temp;
 
@@ -64,7 +64,6 @@ ListOfShapeMatrices* combinations(ShapeMatrix* temp, int& num_orientations) {
       r_temp = r_temp->mirror();
     }
   }
-  num_orientations = combi->size();
   return combi;
 }
 
@@ -183,13 +182,12 @@ bool recursiveSolver (PuzzleBoard* board,
     return false;
   }
   ShapeMatrix* temp = (*pieces)[currentIndex];
-  int num_orientations = 0;
-  ListOfShapeMatrices* shapesList = combinations(temp, num_orientations);
+  ListOfShapeMatrices* shapesList = combinations(temp);
   int nextIndex = currentIndex + 1;
 
   for (uint r = 0; r < board->getHeight(); r++) {
     for (uint c = 0; c < board->getWidth(); c++) {
-      for (uint counteri = 0; counteri < num_orientations; counteri++) {
+      for (uint counteri = 0; counteri < shapesList->size(); counteri++) {
         ShapeMatrix* r_temp = (*shapesList)[counteri];
         if (board->placePiece(c, r, nextIndex, r_temp)) {
           if (recursiveSolver(board, pieces, nextIndex,iterations)) {
