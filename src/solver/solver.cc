@@ -122,7 +122,6 @@ bool recursiveSolver (PuzzleBoard* board,
     }
   }
   cleanup_list(shapesList);
-  delete shapesList;
 
   return false;
 }
