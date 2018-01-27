@@ -81,18 +81,8 @@ void debug_coordinates(const char* filename, const ListOfShapes* const list){
   if(src.empty()){
     cout << "Could not open or find image!\n" << endl;
   }
-  scaleDownImage(src, src_processed, 800);
-  /*****prints out the corners*****/
-  for (uint i = 0; i < list->size(); i++) {
-    ListOfPoints* shapeList = (*list)[i];
-    for (uint j = 0; j < shapeList->size(); j++) {
-      Point p = (*shapeList)[j];
-      circle( src, cv::Point(p.x, p.y), 5, Scalar(255), 2, 8, 0 );
-    }
-  }
+  scaleDownImage(src, src, 800);
   namedWindow( "Debug window", WINDOW_AUTOSIZE );
-  imshow( "Debug window", src);
-  waitKey(0);
   
   /*****prints out coordinates of corners*****/
   for (uint i = 0; i < list->size(); i++) {
@@ -101,7 +91,11 @@ void debug_coordinates(const char* filename, const ListOfShapes* const list){
     for (uint j = 0; j < shapeList->size(); j++) {
       Point p = (*shapeList)[j];
       cout << "\t(" << p.x << ", " << p.y << ")" << endl;
+      circle( src, cv::Point(p.x, p.y), 5, Scalar(255), 2, 8, 0 );
     }
     cout << endl;
+    imshow( "Debug window", src);
+    waitKey(0);
   }
+  //waitKey(0);
 }
