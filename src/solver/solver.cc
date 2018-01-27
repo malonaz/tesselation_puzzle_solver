@@ -76,23 +76,23 @@ int getAdjacentEmptyArea(int r, int c, int height, int width, int** copiedBoard)
 }
 
 /* function to generate all possible area combinations from remaining pieces */
-void generatePossibleAreas(int* answerArray, long int maxCombinations, ListOfShapeMatrices* pieces, uint currentIndex){
-  int sizeArray = pieces->size()-currentIndex;
-  for (long int sequencei = 0; sequencei <maxCombinations; sequencei++){
+void generatePossibleAreas(int* answerArray, long int maxCombinations, ListOfShapeMatrices* pieces, uint currentIndex) {
+  int sizeArray = pieces->size() - currentIndex;
   int* generativeArray = new int[sizeArray]();
+  for (long int sequencei = 0; sequencei < maxCombinations; sequencei++) {
     int answer=0;
     long int copyi = sequencei;
-    for (int countj = sizeArray-1; countj>= 0; countj--) {
-      generativeArray[countj] = copyi%2;
-      copyi/=2;
+    for (int countj = sizeArray-1; countj >= 0; countj--) {
+      generativeArray[countj] = copyi % 2 ;
+      copyi /= 2;
     }
-    for (int countk = 0; countk<sizeArray; countk++) {
+    for (int countk = 0; countk < sizeArray; countk++) {
       if (generativeArray[countk]) {
-        answer+= (*pieces)[countk+currentIndex]->getShapeArea(); // size instead}
-        }
+        answer += (*pieces)[countk + currentIndex]->getShapeArea(); // size instead}
+      }
     }
-    answerArray[sequencei]=answer;
-    for (int countl = 0; countl<sizeArray; countl++) {
+    answerArray[sequencei] = answer;
+    for (int countl = 0; countl < sizeArray; countl++) {
       generativeArray[countl] =0;
     }
   }
@@ -100,7 +100,7 @@ void generatePossibleAreas(int* answerArray, long int maxCombinations, ListOfSha
 }
 
 /* helper function to copy current state of board into 2D array */
-int** copyBoard(PuzzleBoard* board){
+int** copyBoard(PuzzleBoard* board) {
   int** copiedBoard = new int*[board->getHeight()];
   for (int i = 0; i < board->getHeight(); i++){
       copiedBoard[i] = new int[board->getWidth()];
@@ -116,15 +116,15 @@ int** copyBoard(PuzzleBoard* board){
 /* helper function to delete dynamically allocated 2D array */
 void deleteCopy(PuzzleBoard* board, int** copyBoard){
   for (int i = 0; i < board->getHeight(); i++){
-    delete [] copyBoard[i];
+    delete[] copyBoard[i];
   }
-  delete [] copyBoard;
+  delete[] copyBoard;
 }
 
 /* function to check remaining area if the pieces can fit */
 bool solvableConfig(PuzzleBoard* board,
-  ListOfShapeMatrices* const pieces,
-  uint currentIndex){
+    ListOfShapeMatrices* const pieces,
+    uint currentIndex) {
   int b_height = board->getHeight();
   int b_width = board->getWidth();
   //preparation to generate an array all possible area combinations.
@@ -135,11 +135,10 @@ bool solvableConfig(PuzzleBoard* board,
 
   for (int r = 0; r < b_height; r++) {
     for (int c = 0; c < b_width; c++) {
-
       int** copiedBoard = copyBoard(board);
 
       //GETTING ADJACENT AREA OF CURRENT SLOT
-      int area = getAdjacentEmptyArea(r,c,b_height,b_width, copiedBoard);
+      int area = getAdjacentEmptyArea(r, c, b_height, b_width, copiedBoard);
       bool areaImpossible = true;
 
       //IF AREA IS ZERO, JUST BREAK OUT OF THIS FOR LOOP
@@ -147,13 +146,13 @@ bool solvableConfig(PuzzleBoard* board,
         break;
       } else {
         for (long int sequencei = 0; sequencei < maxCombinations; sequencei++) {
-          if (area==answerArray[sequencei]) {
+          if (area == answerArray[sequencei]) {
             areaImpossible = false;
             break; //BREAK OUT OF SEARCH LOOP IF POSSIBLE COMBINATION OF SHAPES FOUND
           }
         }
       }
-      if (areaImpossible){
+      if (areaImpossible) {
         deleteCopy(board, copiedBoard);
         delete[] answerArray;
         return false;
@@ -187,7 +186,7 @@ bool recursiveSolver (PuzzleBoard* board,
   for (uint r = 0; r < board->getHeight(); r++) {
     for (uint c = 0; c < board->getWidth(); c++) {
       for (uint counteri = 0; counteri < num_orientations; counteri++) {
-          ShapeMatrix* r_temp = (*shapesList)[counteri];
+        ShapeMatrix* r_temp = (*shapesList)[counteri];
         if (board->placePiece(c, r, nextIndex, r_temp)) {
           if (recursiveSolver(board, pieces, nextIndex,iterations)) {
             return true;
