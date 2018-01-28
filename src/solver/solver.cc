@@ -142,10 +142,10 @@ bool solvableConfig(PuzzleBoard* board,
   int* answerArray = new int[maxCombinations]();
   generatePossibleAreas(answerArray, maxCombinations, pieces, currentIndex);
 
+  int** copiedBoard = copyBoard(board);
+
   for (uint r = 0; r < b_height; r++) {
     for (uint c = 0; c < b_width; c++) {
-      int** copiedBoard = copyBoard(board);
-
       //GETTING ADJACENT AREA OF CURRENT SLOT
       int area = getAdjacentEmptyArea(r, c, b_height, b_width, copiedBoard);
       bool areaImpossible = true;
@@ -166,9 +166,10 @@ bool solvableConfig(PuzzleBoard* board,
         delete[] answerArray;
         return false;
       }
-      deleteCopy(board, copiedBoard);
     }
   }
+  deleteCopy(board, copiedBoard);
+
   delete[] answerArray;
   return true;
 }
