@@ -33,6 +33,8 @@ using cv::circle;
 using cv::Size;
 
 #define ADAPTIVE_THRESHOLD_VALUE 100
+#define SCALE_DOWN_IMAGE_WIDTH 800
+#define MIN_CONTOUR_AREA 1200
 
 void scaleDownImage(Mat& source, Mat& target, double width) {
   double scale = width / source.size().width;
@@ -51,10 +53,11 @@ void find_coordinates(const char* input, ListOfShapes* const list){
   }
   Mat src_processed;
 
-  scaleDownImage(src, src_processed, 800);
+  scaleDownImage(src, src_processed, SCALE_DOWN_IMAGE_WIDTH);
+  cv::bitwise_not(src_processed, src_processed);
   cvtColor(src_processed, src_gray, COLOR_BGR2GRAY);
   adaptiveThreshold(src_gray, src_gray, ADAPTIVE_THRESHOLD_VALUE,
-    ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 11, 2);
+    ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 13, 5);
 
   vector< vector<cv::Point> > contours;
   findContours(src_gray, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
@@ -62,7 +65,7 @@ void find_coordinates(const char* input, ListOfShapes* const list){
 
   for (unsigned int i = 0; i < contours.size(); ++i) {
     approxPolyDP(Mat(contours[i]), approx, arcLength(Mat(contours[i]), true) * 0.02, true);
-    if (fabs(contourArea(contours[i])) < 50 || approx.size() % 2 == 1) {
+    if (fabs(contourArea(contours[i])) < MIN_CONTOUR_AREA || approx.size() % 2 == 1) {
       continue;
     }
 
@@ -81,7 +84,7 @@ void debug_coordinates(const char* filename, const ListOfShapes* const list){
   if(src.empty()){
     cout << "Could not open or find image!\n" << endl;
   }
-  scaleDownImage(src, src, 800);
+  scaleDownImage(src, src, SCALE_DOWN_IMAGE_WIDTH);
   namedWindow( "Debug window", WINDOW_AUTOSIZE );
   
   /*****prints out coordinates of corners*****/
