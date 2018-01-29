@@ -5,7 +5,7 @@ BINDIR = bin
 TARGET = aps
 TESTTARGET = test
 TESTDIR = test
-DEMODIR = src/puzzle
+DEMODIR = src/demo
 COVDIR = coverage
 
 OPENCV_CXXFLAGS = $(shell pkg-config --cflags opencv)
