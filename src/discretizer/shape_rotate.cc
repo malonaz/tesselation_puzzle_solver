@@ -119,7 +119,7 @@ void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_
 
     if (current_quadrant == INVALID_QUADRANT){
       // shape is already rotated
-      rotated_shape_points = shape_points;
+      *rotated_shape_points = *shape_points;
       return;
     }
 
