@@ -110,12 +110,14 @@ void generatePossibleAreas(int* answerArray,
 
 /* helper function to copy current state of board into 2D array */
 int** copyBoard(PuzzleBoard* board) {
-  int** copiedBoard = new int*[board->getHeight()];
-  for (uint i = 0; i < board->getHeight(); i++){
-      copiedBoard[i] = new int[board->getWidth()];
+  int height = board->getHeight();
+  int width = board->getWidth();
+  int** copiedBoard = new int*[height];
+  for (uint i = 0; i < height; i++){
+      copiedBoard[i] = new int[width)];
   }
-  for (uint i = 0; i < board->getHeight(); i++){
-    for (uint j = 0; j < board->getWidth(); j++ ){
+  for (uint i = 0; i < height; i++){
+    for (uint j = 0; j < width); j++ ){
       copiedBoard[i][j]= (board->getCurrentBoard())[i][j];
     }
   }
@@ -188,12 +190,14 @@ bool recursiveSolver (PuzzleBoard* board,
   if (!solvableConfig(board, pieces, currentIndex)) {
     return false;
   }
+  int height = board->getHeight();
+  int width = board->getWidth();
   ShapeMatrix* temp = (*pieces)[currentIndex];
   ListOfShapeMatrices* shapesList = combinations(temp);
   int nextIndex = currentIndex + 1;
 
-  for (uint r = 0; r < board->getHeight(); r++) {
-    for (uint c = 0; c < board->getWidth(); c++) {
+  for (uint r = 0; r < height; r++) {
+    for (uint c = 0; c < width; c++) {
       for (uint counteri = 0; counteri < shapesList->size(); counteri++) {
         ShapeMatrix* r_temp = (*shapesList)[counteri];
         if (board->placePiece(c, r, nextIndex, r_temp)) {
