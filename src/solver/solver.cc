@@ -215,7 +215,7 @@ bool recursiveSolver (PuzzleBoard* board,
 
 
 int** puzzleSolver(ListOfShapeMatrices* const matrices, int& returnCode,
-      uint& board_height) {
+      uint& board_height, uint& board_width) {
   returnCode = 0;
   ListOfShapeMatrices shapes;
   int** board_solution = NULL;
@@ -237,13 +237,79 @@ int** puzzleSolver(ListOfShapeMatrices* const matrices, int& returnCode,
 
   if (success) {
     returnCode = SOLVED;
-    board_height = board->getHeight();
-    board_solution = copyBoard(board);
-    board->printBoard();
+    board_height = board->getHeight(); //returns height of board
+    board_width = board->getWidth(); // returns width of board
+    board_solution = copyBoard(board); // returns a 2D int array of board (w soln)
   } else {
     returnCode = UNSOLVED;
   }
   delete board;
-  cleanup_list(matrices);
   return board_solution;
+}
+
+
+void print_board(int** board, uint height, uint width) {
+  cout << "-- [ rows: " << height << ", cols: " << width << " ] --" << endl;
+  cout << "+";
+  for (uint c = 0; c < width; ++c) {
+    if (c < width - 1
+        && board[0][c] == board[0][c + 1]) {
+      cout <<  "-----";
+    } else {
+      cout <<  "----+";
+    }
+  }
+  cout << endl;
+  for (uint r = 0; r < height; ++r) {
+    cout << "| ";
+    for (uint c = 0; c < width; ++c) {
+      int current_num = board[r][c];
+      if (current_num<10) {
+        cout<<" ";
+      }
+      cout << current_num << " ";
+      if (c < width - 1
+          && board[r][c + 1] == current_num) {
+        cout << "  ";
+      } else {
+        cout << "| ";
+      }
+    }
+    cout << endl;
+    cout << "+";
+    for (uint c = 0; c < width; ++c) {
+      int current_num = board[r][c];
+      if (r < height - 1 && c < width - 1) {
+        if (board[r + 1][c + 1] == current_num
+            && board[r + 1][c] == current_num
+            && board[r][c + 1] == current_num) {
+          cout << "     ";
+        } else if (board[r + 1][c] == current_num
+            && board[r][c + 1] == current_num) {
+              cout << "    +";
+        } else if (board[r + 1][c] == current_num) {
+          cout << "    |";
+        } else if (board[r][c + 1] == current_num) {
+          cout << "-----";
+        } else {
+          cout << "----+";
+        }
+      } else if (r < height - 1 && c == width - 1) {
+        if (board[r + 1][c] == current_num) {
+          cout << "    |";
+        } else {
+          cout << "----+";
+        }
+      } else if(r == height - 1 && c < width - 1) {
+        if (board[r][c + 1] == current_num) {
+          cout << "-----";
+        } else {
+          cout << "----+";
+        }
+      } else {
+        cout << "----+";
+      }
+    }
+    cout << endl;
+  }
 }

@@ -28,3 +28,69 @@ void print_list_of_points(const ListOfPoints* const shape_points) {
 
  cout << endl;
 }
+
+void print_board(const int** board, uint height, uint width) {
+  cout << "-- [ rows: " << height << ", cols: " << width << " ] --" << endl;
+  cout << "+";
+  for (uint c = 0; c < width; ++c) {
+    if (c < width - 1
+        && board[0][c] == board[0][c + 1]) {
+      cout <<  "-----";
+    } else {
+      cout <<  "----+";
+    }
+  }
+  cout << endl;
+  for (uint r = 0; r < height; ++r) {
+    cout << "| ";
+    for (uint c = 0; c < width; ++c) {
+      int current_num = board[r][c];
+      if (current_num<10) {
+        cout<<" ";
+      }
+      cout << current_num << " ";
+      if (c < width - 1
+          && board[r][c + 1] == current_num) {
+        cout << "  ";
+      } else {
+        cout << "| ";
+      }
+    }
+    cout << endl;
+    cout << "+";
+    for (uint c = 0; c < width; ++c) {
+      int current_num = board[r][c];
+      if (r < height - 1 && c < width - 1) {
+        if (board[r + 1][c + 1] == current_num
+            && board[r + 1][c] == current_num
+            && board[r][c + 1] == current_num) {
+          cout << "     ";
+        } else if (board[r + 1][c] == current_num
+            && board[r][c + 1] == current_num) {
+              cout << "    +";
+        } else if (board[r + 1][c] == current_num) {
+          cout << "    |";
+        } else if (board[r][c + 1] == current_num) {
+          cout << "-----";
+        } else {
+          cout << "----+";
+        }
+      } else if (r < height - 1 && c == width - 1) {
+        if (board[r + 1][c] == current_num) {
+          cout << "    |";
+        } else {
+          cout << "----+";
+        }
+      } else if(r == height - 1 && c < width - 1) {
+        if (board[r][c + 1] == current_num) {
+          cout << "-----";
+        } else {
+          cout << "----+";
+        }
+      } else {
+        cout << "----+";
+      }
+    }
+    cout << endl;
+  }
+}

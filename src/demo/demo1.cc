@@ -56,7 +56,8 @@ int main(int argc, char** argv){ //  ./demo <input_filename>
   int solve_success = UNSOLVED;
   int** solution = NULL;
   uint board_height = 0;
-  solution = puzzleSolver(pieces, solve_success, board_height);
+  uint board_width = 0;
+  solution = puzzleSolver(pieces, solve_success, board_height, board_width);
 
   /* Return Message */
   switch (solve_success) {
@@ -82,6 +83,8 @@ int main(int argc, char** argv){ //  ./demo <input_filename>
   //delete rotated_puzzle_pieces;
   delete pieces;
   if (solve_success == SOLVED) {
+    //cout<< board_height << " , " << board_width <<endl;
+    print_board(solution, board_height, board_width);
     deleteCopy(board_height, solution);
   }
   return 0;
