@@ -2,7 +2,7 @@ DEMO_TARGET = demo
 
 demo: $(BINDIR)/$(DEMO_TARGET)
 
-DEMO_OBJECTS = $(OBJDIR)/puzzle/demo1.o
+DEMO_OBJECTS = $(OBJDIR)/demo/demo1.o
 
 $(DEMO_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 	@echo "\tCompiling \"$@\""
