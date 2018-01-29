@@ -1,8 +1,11 @@
-#include "imagereader/image_read.h"
-#include "discretizer/shape_rotate.h"
+
+#include "common/debugger.h"
 #include "common/memory.h"
 #include "common/types.h"
-int main(int argc, char** argv){
+#include "discretizer/shape_rotate.h"
+#include "imagereader/image_read.h"
+
+int main(int argc, char** argv) {
   ListOfShapes* list = new ListOfShapes();
   ListOfShapes* rotatedList = new ListOfShapes();
 
