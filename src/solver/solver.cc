@@ -123,8 +123,8 @@ int** copyBoard(PuzzleBoard* board) {
 }
 
 /* helper function to delete dynamically allocated 2D array */
-void deleteCopy(PuzzleBoard* board, int** copyBoard) {
-  for (uint i = 0; i < board->getHeight(); i++){
+void deleteCopy(uint height, int** copyBoard) {
+  for (uint i = 0; i < height; i++){
     delete[] copyBoard[i];
   }
   delete[] copyBoard;
@@ -162,13 +162,13 @@ bool solvableConfig(PuzzleBoard* board,
         }
       }
       if (areaImpossible) {
-        deleteCopy(board, copiedBoard);
+        deleteCopy(b_height, copiedBoard);
         delete[] answerArray;
         return false;
       }
     }
   }
-  deleteCopy(board, copiedBoard);
+  deleteCopy(b_height, copiedBoard);
 
   delete[] answerArray;
   return true;
