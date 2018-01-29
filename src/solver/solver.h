@@ -17,6 +17,11 @@ bool recursiveSolver (PuzzleBoard* board,
   ListOfShapeMatrices* const pieces,
   unsigned int currentIndex);
 
-int puzzleSolver(ListOfShapeMatrices* const matrices);
+int** copyBoard(PuzzleBoard* board);
+
+void deleteCopy(uint height, int** copyBoard);
+
+int** puzzleSolver(ListOfShapeMatrices* const matrices, int& returnCode,
+      uint& board_height);
 
 #endif

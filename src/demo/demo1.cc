@@ -53,8 +53,10 @@ int main(int argc, char** argv){ //  ./demo <input_filename>
   cout << "Solving Puzzle...." <<endl;
 
   /* SOLVER MODULE */
-  int solve_success = 0;
-  solve_success = puzzleSolver(pieces);
+  int solve_success = UNSOLVED;
+  int** solution = NULL;
+  uint board_height = 0;
+  solution = puzzleSolver(pieces, solve_success, board_height);
 
   /* Return Message */
   switch (solve_success) {
@@ -79,6 +81,8 @@ int main(int argc, char** argv){ //  ./demo <input_filename>
   delete puzzle_pieces;
   //delete rotated_puzzle_pieces;
   delete pieces;
-
+  if (solve_success == SOLVED) {
+    deleteCopy(board_height, solution);
+  }
   return 0;
 }
