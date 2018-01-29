@@ -190,8 +190,8 @@ bool recursiveSolver (PuzzleBoard* board,
   if (!solvableConfig(board, pieces, currentIndex)) {
     return false;
   }
-  int height = board->getHeight();
-  int width = board->getWidth();
+  uint height = board->getHeight();
+  uint width = board->getWidth();
   ShapeMatrix* temp = (*pieces)[currentIndex];
   ListOfShapeMatrices* shapesList = combinations(temp);
   int nextIndex = currentIndex + 1;
