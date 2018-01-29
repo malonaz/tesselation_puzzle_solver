@@ -110,14 +110,14 @@ void generatePossibleAreas(int* answerArray,
 
 /* helper function to copy current state of board into 2D array */
 int** copyBoard(PuzzleBoard* board) {
-  int height = board->getHeight();
-  int width = board->getWidth();
+  uint height = board->getHeight();
+  uint width = board->getWidth();
   int** copiedBoard = new int*[height];
   for (uint i = 0; i < height; i++){
-      copiedBoard[i] = new int[width)];
+      copiedBoard[i] = new int[width];
   }
   for (uint i = 0; i < height; i++){
-    for (uint j = 0; j < width); j++ ){
+    for (uint j = 0; j < width; j++ ){
       copiedBoard[i][j]= (board->getCurrentBoard())[i][j];
     }
   }
