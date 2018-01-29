@@ -52,7 +52,7 @@ bool isShapeMatrixInList(const ShapeMatrix* const shape,
 
 ListOfShapeMatrices* combinations(ShapeMatrix* temp) {
   ListOfShapeMatrices* combi = new ListOfShapeMatrices();
-  ShapeMatrix* r_temp = temp;
+  ShapeMatrix* r_temp = new ShapeMatrix(*temp);
 
   for (uint i = 0; i < 8; i++) {
     if (!isShapeMatrixInList(r_temp, combi)) {
@@ -209,8 +209,7 @@ bool recursiveSolver (PuzzleBoard* board,
       }
     }
   }
-  //cleanup_list(shapesList);
-  // delete shapesList;
+  cleanup_list(shapesList);
   return false;
 }
 
