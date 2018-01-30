@@ -2,7 +2,7 @@
 #define IMAGE_READ_H_
 #include "common/types.h"
 
-void find_coordinates(const char* input,ListOfShapes* const list);
+void find_coordinates(const char* input, ListOfShapes* const list);
 void debug_coordinates(const char* filename, const ListOfShapes* const list);
 #endif
 

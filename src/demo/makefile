@@ -10,7 +10,7 @@ $(DEMO_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 	@$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@
 	@echo "[Done]\tCompiling \"$@\""
 
-$(BINDIR)/$(DEMO_TARGET): $(OBJECTS) $(DEMO_OBJECTS)
+$(BINDIR)/$(DEMO_TARGET): $(OBJECTS) $(DEMO_OBJECTS) $(IMAGE_READER_OBJECTS)
 	@echo "\tLinking \"$@\""
 	@mkdir -p bin
 	@$(CXX) $(CPPFLAGS)\
