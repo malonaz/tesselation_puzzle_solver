@@ -11,6 +11,7 @@
 
 using std::round;
 
+
 // used to keep track of direction of segment w.r to x-y axis.
 enum Direction {NORTH, EAST, SOUTH, WEST};
 
@@ -18,7 +19,7 @@ enum Direction {NORTH, EAST, SOUTH, WEST};
 enum Quadrant {I = 1, II = 2, III = 3, IV = 4, INVALID_QUADRANT};
 
 // used as threshold to decide if two points are equal
-#define DELTA 0.10
+#define PERCENT_THRESHOLD 10
 
 
 /**
@@ -67,27 +68,6 @@ bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant) {
   return current_quadrant > previous_quadrant;
 }
 
-/**
- * Helper function which returns the average side length of the given shape.
- */
-int average_side_length(ListOfPoints* const shape_points){
-  // used to store max side length
-  uint total_side_length = 0;
-
-  for (uint i = 0; i < shape_points->size(); i++){
-    // get start and end of current side
-    Point start = shape_points->at(i);
-    Point end = i == shape_points->size() - 1? shape_points->at(0): shape_points->at(i + 1);
-
-    int current_side_length = start.distanceTo(end);
-
-    total_side_length += current_side_length;
-  }
-
-  uint num_sides = shape_points->size();
-  
-  return total_side_length/num_sides;
-}
 
 
 /**
@@ -139,6 +119,75 @@ ListOfPoints fix_nearly_rotated_shape(ListOfPoints* const shape_points) {
 }
 
 
+/**
+ * Helper function which returns the average side length of the given shape.
+ */
+int average_side_length(ListOfPoints* const shape_points){
+  // used to store max side length
+  uint total_side_length = 0;
+
+  for (uint i = 0; i < shape_points->size(); i++){
+    // get start and end of current side
+    Point start = shape_points->at(i);
+    Point end = i == shape_points->size() - 1? shape_points->at(0): shape_points->at(i + 1);
+
+    int current_side_length = start.distanceTo(end);
+
+    total_side_length += current_side_length;
+  }
+
+  uint num_sides = shape_points->size();
+  
+  return total_side_length/num_sides;
+}
+
+/**
+ * Helper function which sets x equal to the the first integer in array that
+ * is within delta of x. Otherwise, adds x to array.
+ */
+void align_integer(std::vector<int> &array, int delta, int &x){
+
+  for (uint i = 0; i < array.size(); i++){
+    if (std::abs(array[i] - x) < delta){
+      // set x equal to the integer
+      x = array[i];
+      return;
+    }
+  }
+
+  // no match. add x to array
+  array.push_back(x);
+  
+}
+
+
+
+/**
+ * Helper function which corrects points that should be on the same line but 
+ * are off within given fraction of average side length;
+ */
+void align_points(ListOfPoints* shape_points, float percent_of_side_length){
+  // compute your delta
+  int delta = (percent_of_side_length * average_side_length(shape_points))/100;
+
+  std::cout << delta << std::endl;
+
+  // used to save processed x and y coordinates;
+  std::vector<int> processed_xs;
+  std::vector<int> processed_ys;
+  
+  for (uint i = 0; i < shape_points->size(); i++){
+
+    // align point x
+    align_integer(processed_xs, delta, shape_points->at(i).x);
+
+    // align point y
+    align_integer(processed_ys, delta, shape_points->at(i).y);
+    
+  }
+  
+}
+
 
 /**
  * Helper function which rotates the given shape's coordinates so that all sides
@@ -178,9 +227,11 @@ void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_
     Quadrant current_quadrant = get_quadrant(end.x - start.x, end.y - start.y);
 
     if (current_quadrant == INVALID_QUADRANT){
-      // shape is already rotated
+      // shape is already rotated. only needs a bit of fix
       *rotated_shape_points = fix_nearly_rotated_shape(shape_points);
 
+      // now align points if needed
+      align_points(rotated_shape_points, PERCENT_THRESHOLD); 
       return;
     }
 
@@ -219,6 +270,9 @@ void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_
     // save previous quadrant
     previous_quadrant = current_quadrant;
   }
+
+  // align points if needed
+  align_points(rotated_shape_points, PERCENT_THRESHOLD); 
 }
 
 
