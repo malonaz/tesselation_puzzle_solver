@@ -10,7 +10,7 @@
 #include "shape_translate.h"
 
 using std::round;
-
+using std::abs;
 
 // used to keep track of direction of segment w.r to x-y axis.
 enum Direction {NORTH, EAST, SOUTH, WEST};
@@ -19,14 +19,14 @@ enum Direction {NORTH, EAST, SOUTH, WEST};
 enum Quadrant {I = 1, II = 2, III = 3, IV = 4, INVALID_QUADRANT};
 
 // used as threshold to decide if two points are equal
-#define PERCENT_THRESHOLD 10
+#define PERCENT_THRESHOLD 0.05
 
 
 /**
  * Helper function which returns the Quadrant where (x, y) lies relative to the origin
  */
-Quadrant get_quadrant(int x, int y){
-  if (x == 0 || y == 0)
+Quadrant get_quadrant(int x, int y, int delta){
+  if (abs(x) < delta || abs(y) < delta)
     return INVALID_QUADRANT;
 
   if (x > 0){
@@ -53,8 +53,8 @@ Quadrant get_quadrant(int x, int y){
 bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant) {
   // assert quadrants are not equal
   //assert (previous_quadrant != current_quadrant);
-  if (previous_quadrant == current_quadrant)
-    std::cout << previous_quadrant << "-->" << current_quadrant << std::endl;
+
+  
   // 1st corner case
   if (previous_quadrant == IV && current_quadrant == I) {
     return true;
@@ -74,6 +74,7 @@ bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant) {
  * Helper function which, given a nearly_rotated_shape, rotates it completely and returns it.
  */
 ListOfPoints fix_nearly_rotated_shape(ListOfPoints* const shape_points) {
+  
   // gather information about the first side
   Point start = shape_points->at(0);
   Point end = shape_points->at(1);
@@ -83,7 +84,7 @@ ListOfPoints fix_nearly_rotated_shape(ListOfPoints* const shape_points) {
   int y_shift = start.y;
   
   // is the first segment horizontal
-  bool current_segment_horizontal = std::abs(end.x - start.x) > std::abs(end.y - start.y);
+  bool current_segment_horizontal = abs(end.x - start.x) > abs(end.y - start.y);
 
   // used to store the rotated shape
   ListOfPoints rotated_shape_points;
@@ -148,7 +149,7 @@ int average_side_length(ListOfPoints* const shape_points){
 void align_integer(std::vector<int> &array, int delta, int &x){
 
   for (uint i = 0; i < array.size(); i++){
-    if (std::abs(array[i] - x) < delta){
+    if (abs(array[i] - x) < delta){
       // set x equal to the integer
       x = array[i];
       return;
@@ -164,13 +165,9 @@ void align_integer(std::vector<int> &array, int delta, int &x){
 
 /**
  * Helper function which corrects points that should be on the same line but 
- * are off within given fraction of average side length;
+ * are off within the given delta
  */
-void align_points(ListOfPoints* shape_points, float percent_of_side_length){
-  // compute your delta
-  int delta = (percent_of_side_length * average_side_length(shape_points))/100;
-
-  std::cout << delta << std::endl;
+void align_points(ListOfPoints* shape_points, int delta){
 
   // used to save processed x and y coordinates;
   std::vector<int> processed_xs;
@@ -200,6 +197,9 @@ void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_
   assert(shape_points->size() >= 4);
   assert(shape_points->size() % 2 == 0);
 
+  // gather your delta for this shape
+  int delta = PERCENT_THRESHOLD * average_side_length(shape_points);
+
   // gather information about first side
   Point start = shape_points->at(0);
   Point end = shape_points->at(1);
@@ -212,7 +212,7 @@ void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_
   rotated_shape_points->push_back(Point(length, 0));
 
   // set previous quadrant to the first side's quadrant, and previous direction to East
-  Quadrant previous_quadrant = get_quadrant(end.x - start.x, end.y - start.y);
+  Quadrant previous_quadrant = get_quadrant(end.x - start.x, end.y - start.y, delta);
   Direction previous_direction = EAST;
 
   // save the endpoint of the first side. This is the point we are moving from next
@@ -224,14 +224,14 @@ void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_
     end = (*shape_points)[i + 1];
 
     // get quadrant
-    Quadrant current_quadrant = get_quadrant(end.x - start.x, end.y - start.y);
+    Quadrant current_quadrant = get_quadrant(end.x - start.x, end.y - start.y, delta);
 
     if (current_quadrant == INVALID_QUADRANT){
       // shape is already rotated. only needs a bit of fix
       *rotated_shape_points = fix_nearly_rotated_shape(shape_points);
 
       // now align points if needed
-      align_points(rotated_shape_points, PERCENT_THRESHOLD); 
+      align_points(rotated_shape_points, delta); 
       return;
     }
 
@@ -272,7 +272,7 @@ void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_
   }
 
   // align points if needed
-  align_points(rotated_shape_points, PERCENT_THRESHOLD); 
+  align_points(rotated_shape_points, delta); 
 }
 
 
