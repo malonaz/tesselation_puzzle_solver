@@ -36,11 +36,9 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   /* SHAPE TRANSLATE MODULE */
   ListOfShapes* rotated_puzzle_pieces = new ListOfShapes();
   rotate_shapes(puzzle_pieces, rotated_puzzle_pieces);
-  
-  print_list_of_shapes(rotated_puzzle_pieces);
 
   cout << puzzle_pieces->size() << " Pieces rotated!" << endl;
-  
+
 
   cout << "Translating shape to Boolean Matrix...." <<endl;
   /* DISCRETIZER MODULE */
@@ -83,13 +81,13 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   }
 
 
-  cleanup_list(puzzle_pieces);
-  cleanup_list(rotated_puzzle_pieces);
-  cleanup_list(pieces);
+
   if (solve_success == SOLVED) {
-    //cout<< board_height << " , " << board_width <<endl;
     print_board(solution, board_height, board_width);
     deleteCopy(board_height, solution);
   }
+  cleanup_list(puzzle_pieces);
+  cleanup_list(rotated_puzzle_pieces);
+  cleanup_list(pieces);
   return 0;
 }
