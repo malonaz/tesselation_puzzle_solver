@@ -26,7 +26,7 @@ enum Quadrant {I = 1, II = 2, III = 3, IV = 4, INVALID_QUADRANT};
  * Helper function which returns the Quadrant where (x, y) lies relative to the origin
  */
 Quadrant get_quadrant(int x, int y, int delta){
-  if (abs(x) < delta || abs(y) < delta)
+  if (abs(x) <= delta || abs(y) <= delta)
     return INVALID_QUADRANT;
 
   if (x > 0){
