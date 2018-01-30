@@ -230,6 +230,24 @@ void shape_reduce(ListOfPoints* const shape, int unit_length) {
   }
 } // shape_reduce(ListOfPoints* shape, int)
 
+void shape_zero(ListOfPoints* const shape) {
+  ListOfPoints::iterator iterator;
+  iterator = shape->begin();
+  int min_x = (*iterator).x;
+  int min_y = (*iterator).y;
+  for (++iterator; iterator != shape->end(); ++iterator) {
+    Point current_point = *iterator;
+    min_x = min(current_point.x, min_x);
+    min_y = min(current_point.y, min_y);
+  }
+
+  for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
+    Point* current_point = &(*iterator);
+    current_point->x -= min_x;
+    current_point->y -= min_y;
+  }
+}
+
 bool shape_translate_all_shapes(const ListOfShapes* const shapes,
     ListOfShapeMatrices* const matrices) {
   assert(shapes != NULL);
@@ -243,6 +261,7 @@ bool shape_translate_all_shapes(const ListOfShapes* const shapes,
   for (it = shapes->begin(); it != shapes->end(); ++it) {
     ListOfPoints* shape = *it;
     shape_reduce(shape, unit_length);
+    shape_zero(shape);
     ShapeMatrix* matrix = NULL;
     shape_translate(shape, matrix);
     // we're ignoring shapes that cannot be produced from
