@@ -1,19 +1,21 @@
 #include <fstream>
 #include <iostream>
 #include "common/coordinates_io.h"
+#include "common/debugger.h"
+#include "common/memory.h"
+#include "common/point.h"
 #include "common/puzzle_board.h"
 #include "common/shape_matrix_io.h"
 #include "common/shape_matrix.h"
 #include "common/types.h"
-#include "common/point.h"
 #include "discretizer/shape_rotate.h"
 #include "discretizer/shape_translate.h"
 #include "solver/solver.h"
 
 using namespace std;
 
-int main(int argc, char** argv){ //  ./demo <input_filename>
-  if (argc != 2){
+int main(int argc, char** argv) { //  ./demo <input_filename>
+  if (argc != 2) {
     cout << "ERROR: There is not enough arguments! "<< endl;
     return 1;
   }
@@ -32,16 +34,18 @@ int main(int argc, char** argv){ //  ./demo <input_filename>
 
   cout<< "Rotating Pieces..." << endl;
   /* SHAPE TRANSLATE MODULE */
-  //ListOfShapes* rotated_puzzle_pieces = new ListOfShapes();
-  //rotate_shapes(puzzle_pieces, rotated_puzzle_pieces);
+  ListOfShapes* rotated_puzzle_pieces = new ListOfShapes();
+  rotate_shapes(puzzle_pieces, rotated_puzzle_pieces);
+  
+  print_list_of_shapes(rotated_puzzle_pieces);
 
   cout << puzzle_pieces->size() << " Pieces rotated!" << endl;
-
+  
 
   cout << "Translating shape to Boolean Matrix...." <<endl;
   /* DISCRETIZER MODULE */
   ListOfShapeMatrices* pieces = new ListOfShapeMatrices();
-  bool translate_success = shape_translate_all_shapes(puzzle_pieces, pieces);
+  bool translate_success = shape_translate_all_shapes(rotated_puzzle_pieces, pieces);
 
   if (translate_success == false){
     cout << "INTERNAL ERROR: SHAPE TRANSLATE FAIL" <<endl;
@@ -79,9 +83,9 @@ int main(int argc, char** argv){ //  ./demo <input_filename>
   }
 
 
-  delete puzzle_pieces;
-  //delete rotated_puzzle_pieces;
-  delete pieces;
+  cleanup_list(puzzle_pieces);
+  cleanup_list(rotated_puzzle_pieces);
+  cleanup_list(pieces);
   if (solve_success == SOLVED) {
     //cout<< board_height << " , " << board_width <<endl;
     print_board(solution, board_height, board_width);
