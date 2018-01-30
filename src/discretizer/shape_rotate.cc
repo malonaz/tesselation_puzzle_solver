@@ -149,7 +149,7 @@ int average_side_length(ListOfPoints* const shape_points){
 void align_integer(std::vector<int> &array, int delta, int &x){
 
   for (uint i = 0; i < array.size(); i++){
-    if (abs(array[i] - x) < delta){
+    if (abs(array[i] - x) <= delta){
       // set x equal to the integer
       x = array[i];
       return;
