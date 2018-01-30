@@ -29,6 +29,19 @@ void print_list_of_points(const ListOfPoints* const shape_points) {
  cout << endl;
 }
 
+void print_area(const ListOfShapeMatrices* const matrices) {
+  int matricesSize = (int)matrices->size();
+  int total = 0;
+  cout << "---- Area ----" << endl;
+  for (int i = 0; i < matricesSize; i++) {
+    int tempArea = (*matrices)[i]->getShapeArea();
+    total += tempArea;
+    cout << "Shape: " << i+1 <<", Area: "<< tempArea << endl;
+  }
+  cout << "Total Area: " << total << endl;
+  cout << "--------------" << endl;
+}
+
 void print_solution_board(int** const board, uint height, uint width) {
   cout << "-- [ rows: " << height << ", cols: " << width << " ] --" << endl;
   cout << "┌";
