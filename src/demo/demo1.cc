@@ -10,32 +10,38 @@
 #include "common/types.h"
 #include "discretizer/shape_rotate.h"
 #include "discretizer/shape_translate.h"
+#include "imagereader/image_read.h"
 #include "solver/solver.h"
 
 using namespace std;
 
 int main(int argc, char** argv) { //  ./demo <input_filename>
-  if (argc != 2) {
-    cout << "ERROR: There is not enough arguments! "<< endl;
-    return 1;
-  }
-
   /* READ FILE */
-  cout << " Reading file ....." <<endl;
   ListOfShapes* puzzle_pieces = new ListOfShapes();
-  bool file_read = read_coordinates_file(argv[1], puzzle_pieces);
 
+  const char* image_file = "demo_data/puzzle6.jpg";
+  const char* coordinate_file = "demo_data/puzzle2.txt";
+
+  find_coordinates(image_file, puzzle_pieces);
+  debug_coordinates(image_file, puzzle_pieces);
+
+  cleanup_list(puzzle_pieces);
+  puzzle_pieces = new ListOfShapes();
+
+  cout << " Reading file ....." <<endl;
+  bool file_read = read_coordinates_file(coordinate_file, puzzle_pieces);
   if (file_read == false){
     cout << "ERROR: FILE ERROR" << endl;
     return 1;
   }
-
   cout << "File Read Complete!" << endl;
 
   cout<< "Rotating Pieces..." << endl;
   /* SHAPE TRANSLATE MODULE */
   ListOfShapes* rotated_puzzle_pieces = new ListOfShapes();
   rotate_shapes(puzzle_pieces, rotated_puzzle_pieces);
+
+  print_list_of_shapes(rotated_puzzle_pieces);
 
   cout << puzzle_pieces->size() << " Pieces rotated!" << endl;
 
@@ -49,6 +55,8 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
     cout << "INTERNAL ERROR: SHAPE TRANSLATE FAIL" <<endl;
     return 1;
   }
+
+  print_area(pieces);
 
   cout << "Translation complete!" << endl;
 
