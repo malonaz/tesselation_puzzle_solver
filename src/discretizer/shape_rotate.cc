@@ -17,6 +17,10 @@ enum Direction {NORTH, EAST, SOUTH, WEST};
 // used to repesent the quadrants of a Cartesian coordinate graph
 enum Quadrant {I = 1, II = 2, III = 3, IV = 4, INVALID_QUADRANT};
 
+// used as threshold to decide if two points are equal
+#define DELTA 0.10
+
+
 /**
  * Helper function which returns the Quadrant where (x, y) lies relative to the origin
  */
@@ -61,6 +65,28 @@ bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant) {
   }
 
   return current_quadrant > previous_quadrant;
+}
+
+/**
+ * Helper function which returns the average side length of the given shape.
+ */
+int average_side_length(ListOfPoints* const shape_points){
+  // used to store max side length
+  uint total_side_length = 0;
+
+  for (uint i = 0; i < shape_points->size(); i++){
+    // get start and end of current side
+    Point start = shape_points->at(i);
+    Point end = i == shape_points->size() - 1? shape_points->at(0): shape_points->at(i + 1);
+
+    int current_side_length = start.distanceTo(end);
+
+    total_side_length += current_side_length;
+  }
+
+  uint num_sides = shape_points->size();
+  
+  return total_side_length/num_sides;
 }
 
 
@@ -120,7 +146,6 @@ ListOfPoints fix_nearly_rotated_shape(ListOfPoints* const shape_points) {
  */
 void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_points) {
   // size must be minimum 4 for a polygon with 90 degrees corners only & size must be even
-  std::cout << "rotating shape" << std::endl;
   assert(shape_points != NULL);
   assert(rotated_shape_points != NULL);
   assert(shape_points->size() >= 4);
@@ -146,7 +171,6 @@ void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_
 
   // point a, point b, (use statc for previous_direction)
   for (uint i = 1; i < shape_points->size() - 1; i++) {
-    std::cout << i << std::endl;
     start = (*shape_points)[i];
     end = (*shape_points)[i + 1];
 
@@ -154,7 +178,6 @@ void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_
     Quadrant current_quadrant = get_quadrant(end.x - start.x, end.y - start.y);
 
     if (current_quadrant == INVALID_QUADRANT){
-      std::cout << std::endl << start << "->" << end << std::endl;
       // shape is already rotated
       *rotated_shape_points = fix_nearly_rotated_shape(shape_points);
 
