@@ -29,87 +29,22 @@ void print_list_of_points(const ListOfPoints* const shape_points) {
  cout << endl;
 }
 
-void print_board(const int** board, uint height, uint width) {
-  cout << "-- [ rows: " << height << ", cols: " << width << " ] --" << endl;
-  cout << "+";
-  for (uint c = 0; c < width; ++c) {
-    if (c < width - 1
-        && board[0][c] == board[0][c + 1]) {
-      cout <<  "-----";
-    } else {
-      cout <<  "----+";
-    }
-  }
-  cout << endl;
-  for (uint r = 0; r < height; ++r) {
-    cout << "| ";
-    for (uint c = 0; c < width; ++c) {
-      int current_num = board[r][c];
-      if (current_num<10) {
-        cout<<" ";
-      }
-      cout << current_num << " ";
-      if (c < width - 1
-          && board[r][c + 1] == current_num) {
-        cout << "  ";
-      } else {
-        cout << "| ";
-      }
-    }
-    cout << endl;
-    cout << "+";
-    for (uint c = 0; c < width; ++c) {
-      int current_num = board[r][c];
-      if (r < height - 1 && c < width - 1) {
-        if (board[r + 1][c + 1] == current_num
-            && board[r + 1][c] == current_num
-            && board[r][c + 1] == current_num) {
-          cout << "     ";
-        } else if (board[r + 1][c] == current_num
-            && board[r][c + 1] == current_num) {
-              cout << "    +";
-        } else if (board[r + 1][c] == current_num) {
-          cout << "    |";
-        } else if (board[r][c + 1] == current_num) {
-          cout << "-----";
-        } else {
-          cout << "----+";
-        }
-      } else if (r < height - 1 && c == width - 1) {
-        if (board[r + 1][c] == current_num) {
-          cout << "    |";
-        } else {
-          cout << "----+";
-        }
-      } else if(r == height - 1 && c < width - 1) {
-        if (board[r][c + 1] == current_num) {
-          cout << "-----";
-        } else {
-          cout << "----+";
-        }
-      } else {
-        cout << "----+";
-      }
-    }
-    cout << endl;
-  }
-}
-
-
 void print_solution_board(int** const board, uint height, uint width) {
   cout << "-- [ rows: " << height << ", cols: " << width << " ] --" << endl;
-  cout << "+";
+  cout << "┌";
   for (uint c = 0; c < width; ++c) {
     if (c < width - 1
         && board[0][c] == board[0][c + 1]) {
-      cout <<  "-----";
+      cout <<  "─────";
+    } else if (c == width - 1) {
+      cout <<  "────┐";
     } else {
-      cout <<  "----+";
+      cout <<  "────┬";
     }
   }
   cout << endl;
   for (uint r = 0; r < height; ++r) {
-    cout << "| ";
+    cout << "│ ";
     for (uint c = 0; c < width; ++c) {
       int current_num = board[r][c];
       if (current_num<10) {
@@ -120,42 +55,91 @@ void print_solution_board(int** const board, uint height, uint width) {
           && board[r][c + 1] == current_num) {
         cout << "  ";
       } else {
-        cout << "| ";
+        cout << "│ ";
       }
     }
     cout << endl;
-    cout << "+";
+    if (r < height - 1) {
+      if (board[r][0] == board[r + 1][0]) {
+        cout << "│";
+      } else {
+        cout << "├";
+      }
+    } else {
+      cout << "└";
+    }
     for (uint c = 0; c < width; ++c) {
       int current_num = board[r][c];
       if (r < height - 1 && c < width - 1) {
         if (board[r + 1][c + 1] == current_num
             && board[r + 1][c] == current_num
             && board[r][c + 1] == current_num) {
+          // all four quadrants same
           cout << "     ";
-        } else if (board[r + 1][c] == current_num
+        } else if (board[r + 1][c + 1] == current_num
+            && board[r + 1][c] == current_num
+            && board[r][c + 1] != current_num) {
+          // only top-right corner is different
+          cout << "    └";
+        } else if (board[r + 1][c + 1] != current_num
+            && board[r + 1][c] == current_num
             && board[r][c + 1] == current_num) {
-              cout << "    +";
-        } else if (board[r + 1][c] == current_num) {
-          cout << "    |";
-        } else if (board[r][c + 1] == current_num) {
-          cout << "-----";
+          // only bottom-right corner is different
+          cout << "    ┌";
+        } else if (board[r + 1][c + 1] == current_num
+            && board[r + 1][c] != current_num
+            && board[r][c + 1] == current_num) {
+          // only bottom-left corner is different
+          cout << "────┐";
+        } else if (board[r + 1][c] == current_num
+            && board[r + 1][c + 1] == board[r][c + 1]) {
+          // both column-wise is the same
+          cout << "    │";
+        } else if (board[r][c + 1] == board[r + 1][c] &&
+            board[r + 1][c] == board[r + 1][c + 1] &&
+            board[r][c + 1] != current_num) {
+          // only current one different
+          cout << "────┘";
+        } else if (board[r + 1][c] == current_num
+            && board[r + 1][c + 1] != board[r][c + 1]) {
+          // only left column same
+          cout << "    ├";
+        } else if (board[r + 1][c] != current_num
+            && board[r + 1][c + 1] == board[r][c + 1]) {
+          // only left column same
+          cout << "────┤";
+        } else if (board[r][c + 1] == current_num &&
+            board[r + 1][c] == board[r + 1][c + 1]) {
+          // both row-wise is the same
+          cout << "─────";
+        } else if (board[r][c + 1] == current_num &&
+            board[r + 1][c] != board[r + 1][c + 1]) {
+          // only top row-wise is the same
+          cout << "────┬";
+        } else if (board[r + 1][c] == board[r + 1][c + 1]) {
+          // only bottom row-wise is the same
+          cout << "────┴";
         } else {
-          cout << "----+";
+          cout << "────┼";
         }
+
+      // last column
       } else if (r < height - 1 && c == width - 1) {
         if (board[r + 1][c] == current_num) {
-          cout << "    |";
+          cout << "    │";
         } else {
-          cout << "----+";
+          cout << "────┤";
         }
+
+      // last row
       } else if(r == height - 1 && c < width - 1) {
         if (board[r][c + 1] == current_num) {
-          cout << "-----";
+          cout << "─────";
         } else {
-          cout << "----+";
+          cout << "────┴";
         }
       } else {
-        cout << "----+";
+        cout << "────┘";
       }
     }
     cout << endl;
