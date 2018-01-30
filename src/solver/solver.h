@@ -24,6 +24,4 @@ void deleteCopy(uint height, int** copyBoard);
 int** puzzleSolver(ListOfShapeMatrices* const matrices, int& returnCode,
       uint& board_height, uint& board_width);
 
-void print_board(int** board, const uint height, const uint width);
-
 #endif

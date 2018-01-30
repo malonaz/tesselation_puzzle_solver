@@ -80,10 +80,8 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
       cout << "INTERNAL ERROR: SOLVER ERROR" << endl;
   }
 
-
-
   if (solve_success == SOLVED) {
-    print_board(solution, board_height, board_width);
+    print_solution_board(solution, board_height, board_width);
     deleteCopy(board_height, solution);
   }
   cleanup_list(puzzle_pieces);
