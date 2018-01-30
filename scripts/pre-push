@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # NOTE: Run the file 'script/install-git-hooks.sh' to install this hook.
 # This file is a pre-push hook that would run the tests before pushing
