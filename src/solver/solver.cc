@@ -31,8 +31,8 @@ PuzzleBoard* createBoard(ListOfShapeMatrices* const matrices,
     accumArea += tempArea;
     pieces->push_back((*matrices)[pushIdx]);
   }
-
-  PuzzleBoard* board = new PuzzleBoard((*matrices)[maxAreaIdx]);
+  ShapeMatrix* container = new ShapeMatrix(*(*matrices)[maxAreaIdx]);
+  PuzzleBoard* board = new PuzzleBoard(container);
   containerArea = maxArea; // return container area as a reference
   totalPieceArea = accumArea; // return total area of puzzle pieces
   return board;
