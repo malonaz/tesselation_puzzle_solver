@@ -1,6 +1,7 @@
 
 #include <cassert>
 #include <cmath>
+#include <iostream>
 
 #include "common/point.h"
 #include "common/shape_matrix.h"
@@ -46,8 +47,9 @@ Quadrant get_quadrant(int x, int y){
  */
 bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant) {
   // assert quadrants are not equal
-  assert (previous_quadrant != current_quadrant);
-
+  //assert (previous_quadrant != current_quadrant);
+  if (previous_quadrant == current_quadrant)
+    std::cout << previous_quadrant << "-->" << current_quadrant << std::endl;
   // 1st corner case
   if (previous_quadrant == IV && current_quadrant == I) {
     return true;
@@ -61,20 +63,72 @@ bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant) {
   return current_quadrant > previous_quadrant;
 }
 
+
+/**
+ * Helper function which, given a nearly_rotated_shape, rotates it completely and returns it.
+ */
+ListOfPoints fix_nearly_rotated_shape(ListOfPoints* const shape_points) {
+  // gather information about the first side
+  Point start = shape_points->at(0);
+  Point end = shape_points->at(1);
+
+  // find the shift of the first point. We will remove it from all points to center shape at origin
+  int x_shift = start.x;
+  int y_shift = start.y;
+  
+  // is the first segment horizontal
+  bool current_segment_horizontal = std::abs(end.x - start.x) > std::abs(end.y - start.y);
+
+  // used to store the rotated shape
+  ListOfPoints rotated_shape_points;
+
+  // push the (0, 0) point as usual
+  rotated_shape_points.push_back(Point(0, 0));
+  
+  for (uint i = 1; i < shape_points->size(); i++){
+    // get the previous and current points
+    Point previous_point = shape_points->at(i - 1);
+    Point current_point = shape_points->at(i);
+    
+    if (current_segment_horizontal)
+      // set y equal to previous point's y
+      current_point.y = previous_point.y;
+    
+    else // current segment is vertical
+      // set x equal to previous point's x
+      current_point.x = previous_point.x;
+    
+    // apply the shift of the first point
+    current_point.x -= x_shift;
+    current_point.y -= y_shift;
+
+    // push current point onto rotated shape
+    rotated_shape_points.push_back(current_point);
+
+    // if this segment is horizontal, the next one will be vertical & vice-versa
+    current_segment_horizontal = !current_segment_horizontal;
+  }
+  
+  return rotated_shape_points;
+}
+
+
+
 /**
  * Helper function which rotates the given shape's coordinates so that all sides
  * of the given shape are vertical or horizontal.
  */
 void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_points) {
   // size must be minimum 4 for a polygon with 90 degrees corners only & size must be even
+  std::cout << "rotating shape" << std::endl;
   assert(shape_points != NULL);
   assert(rotated_shape_points != NULL);
   assert(shape_points->size() >= 4);
   assert(shape_points->size() % 2 == 0);
 
   // gather information about first side
-  Point start = (*shape_points)[0];
-  Point end = (*shape_points)[1];
+  Point start = shape_points->at(0);
+  Point end = shape_points->at(1);
 
   // get distance rounded to nearest integer
   float length = round(start.distanceTo(end));
@@ -92,7 +146,7 @@ void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_
 
   // point a, point b, (use statc for previous_direction)
   for (uint i = 1; i < shape_points->size() - 1; i++) {
-
+    std::cout << i << std::endl;
     start = (*shape_points)[i];
     end = (*shape_points)[i + 1];
 
@@ -100,8 +154,10 @@ void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_
     Quadrant current_quadrant = get_quadrant(end.x - start.x, end.y - start.y);
 
     if (current_quadrant == INVALID_QUADRANT){
+      std::cout << std::endl << start << "->" << end << std::endl;
       // shape is already rotated
-      *rotated_shape_points = *shape_points;
+      *rotated_shape_points = fix_nearly_rotated_shape(shape_points);
+
       return;
     }
 
@@ -141,6 +197,8 @@ void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_
     previous_quadrant = current_quadrant;
   }
 }
+
+
 
 
 void rotate_shapes(const ListOfShapes* const shapes,
