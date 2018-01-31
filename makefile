@@ -23,14 +23,15 @@ COMMON_OBJECTS = $(OBJDIR)/common/shape_matrix_io.o \
 	$(OBJDIR)/common/debugger.o
 
 
-IMAGE_PROCESSOR_OBJECTS = $(OBJDIR)/image_processor/discretizer/shape_translate.o\
-		$(OBJDIR)/image_processor/imagereader/image_read.o\
+IMAGE_DISCRETIZOR_OBJECTS = $(OBJDIR)/image_processor/discretizer/shape_translate.o\
 		$(OBJDIR)/image_processor/discretizer/shape_rotate.o
+
+IMAGE_READER_OBJECTS = $(OBJDIR)/image_processor/imagereader/image_read.o\
 
 SOLVER_OBJECTS = $(OBJDIR)/solver/solver.o
 
 OBJECTS = $(COMMON_OBJECTS)\
-	$(IMAGE_PROCESSOR_OBJECTS)\
+	$(IMAGE_DISCRETIZOR_OBJECTS)\
 	$(SOLVER_OBJECTS)
 
 CXX = g++
@@ -38,7 +39,7 @@ CXXFLAGS = -Wall -g -MMD -std=c++11 -I$(SRCDIR)/
 
 main: $(BINDIR)/$(TARGET)
 
-$(BINDIR)/$(TARGET): $(MAIN_OBJECT) $(OBJECTS)
+$(BINDIR)/$(TARGET): $(MAIN_OBJECT) $(OBJECTS) $(IMAGE_READER_OBJECTS)
 	@echo "\tLinking \"$@\""
 	@mkdir -p $(OBJDIR) $(BINDIR)
 	@$(CXX) $(CXXFLAGS) -fprofile-arcs $^ -o $@ $(OPENCV_LIBFLAGS)
@@ -54,6 +55,12 @@ $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 	@echo "\tCompiling \"$@\""
 	@mkdir -p `dirname $@`
 	@$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@
+	@echo "[Done]\tCompiling \"$@\""
+
+$(IMAGE_READER_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
+	@echo "\tCompiling \"$@\""
+	@mkdir -p `dirname $@`
+	@$(CXX) $(CXXFLAGS) $(OPENCV_CXXFLAGS) -Wall --coverage -c $< -o $@
 	@echo "[Done]\tCompiling \"$@\""
 
 -include $(OBJECTS:.o=.d)

@@ -1,16 +1,16 @@
-IMAGE_PROCESS_TARGET = image_processor
+IMAGE_PROCESSOR_TARGET = image_processor
 
-image_processor: $(BINDIR)/$(IMAGE_PROCESS_TARGET)
+image_processor: $(BINDIR)/$(IMAGE_PROCESSOR_TARGET)
 
-IMAGE_PROCESS_OBJECT = $(OBJDIR)/image_processor/image_processor.o
+IMAGE_PROCESSOR_OBJECTS = $(OBJDIR)/image_processor/image_processor.o
 
-$(IMAGE_PROCESS_OBJECT): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
+$(IMAGE_PROCESSOR_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 	@echo "\tCompiling \"$@\""
 	@mkdir -p `dirname $@`
 	@$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@
 	@echo "[Done]\tCompiling \"$@\""
 
-$(BINDIR)/$(IMAGE_PROCESS_TARGET): $(OBJECTS) $(IMAGE_PROCESS_OBJECT)
+$(BINDIR)/$(IMAGE_PROCESSOR_TARGET): $(OBJECTS) $(IMAGE_PROCESSOR_OBJECTS) $(IMAGE_READER_OBJECTS)
 	@echo "\tLinking \"$@\""
 	@mkdir -p bin
 	@$(CXX) $(CPPFLAGS)\
