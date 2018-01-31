@@ -6,6 +6,8 @@ TARGET = aps
 TESTTARGET = test
 TESTDIR = test
 DEMODIR = src/demo
+IMAGE_PROCESSOR_DIR = src/image_processor
+SOLVER_DIR = src/solver
 COVDIR = coverage
 
 OPENCV_CXXFLAGS = $(shell pkg-config --cflags opencv)
@@ -20,16 +22,15 @@ COMMON_OBJECTS = $(OBJDIR)/common/shape_matrix_io.o \
 	$(OBJDIR)/common/coordinates_io.o \
 	$(OBJDIR)/common/debugger.o
 
-IMAGE_READER_OBJECTS = $(OBJDIR)/imagereader/image_read.o
 
-DISCRETIZER_OBJECTS = $(OBJDIR)/discretizer/shape_translate.o \
-			$(OBJDIR)/discretizer/shape_rotate.o
+IMAGE_PROCESSOR_OBJECTS = $(OBJDIR)/image_processor/discretizer/shape_translate.o\
+		$(OBJDIR)/image_processor/imagereader/image_read.o\
+		$(OBJDIR)/image_processor/discretizer/shape_rotate.o
 
 SOLVER_OBJECTS = $(OBJDIR)/solver/solver.o
 
 OBJECTS = $(COMMON_OBJECTS)\
-	$(DISCRETIZER_OBJECTS)\
-	$(PUZZLE_OBJECTS)\
+	$(IMAGE_PROCESSOR_OBJECTS)\
 	$(SOLVER_OBJECTS)
 
 CXX = g++
@@ -37,7 +38,7 @@ CXXFLAGS = -Wall -g -MMD -std=c++11 -I$(SRCDIR)/
 
 main: $(BINDIR)/$(TARGET)
 
-$(BINDIR)/$(TARGET): $(MAIN_OBJECT) $(IMAGE_READER_OBJECTS) $(OBJECTS)
+$(BINDIR)/$(TARGET): $(MAIN_OBJECT) $(OBJECTS)
 	@echo "\tLinking \"$@\""
 	@mkdir -p $(OBJDIR) $(BINDIR)
 	@$(CXX) $(CXXFLAGS) -fprofile-arcs $^ -o $@ $(OPENCV_LIBFLAGS)
@@ -47,12 +48,6 @@ $(MAIN_OBJECT): $(OBJDIR)/%.o: $(SRCDIR)/%.cc
 	@echo "\tCompiling \"$@\""
 	@mkdir -p $(OBJDIR) $(BINDIR)
 	@$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@
-	@echo "[Done]\tCompiling \"$@\""
-
-$(IMAGE_READER_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
-	@echo "\tCompiling \"$@\""
-	@mkdir -p `dirname $@`
-	@$(CXX) $(CXXFLAGS) $(OPENCV_CXXFLAGS) -Wall --coverage -c $< -o $@
 	@echo "[Done]\tCompiling \"$@\""
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
@@ -65,6 +60,8 @@ $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 
 include $(TESTDIR)/makefile
 include $(DEMODIR)/makefile
+include $(IMAGE_PROCESSOR_DIR)/makefile
+include $(SOLVER_DIR)/makefile
 
 check:
 	cppcheck --enable=all --check-config --suppress=missingIncludeSystem -I src src

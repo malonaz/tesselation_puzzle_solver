@@ -11,7 +11,7 @@
 #include "image_processor/discretizer/shape_rotate.h"
 #include "image_processor/discretizer/shape_translate.h"
 #include "image_processor/imagereader/image_read.h"
-#include "solver/solver.h"
+
 
 using namespace std;
 
@@ -57,41 +57,10 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   }
 
   print_area(pieces);
-
   cout << "Translation complete!" << endl;
+  const char* file_out = "src/image_processor/pieces.txt";
+  //shape_matrix_write(file_out, pieces);
 
-  cout << "Solving Puzzle...." <<endl;
-
-  /* SOLVER MODULE */
-  int solve_success = UNSOLVED;
-  int** solution = NULL;
-  uint board_height = 0;
-  uint board_width = 0;
-  solution = puzzleSolver(pieces, solve_success, board_height, board_width);
-
-  /* Return Message */
-  switch (solve_success) {
-    case SOLVED:
-      cout << endl;
-      cout << "Puzzle is solved !!" << endl;
-      break;
-    case UNDERSIZED:
-      cout << "Puzzle pieces cannot fit the container: potentially more pieces than required!!" << endl;
-      break;
-    case OVERSIZED:
-      cout << "Container not fully filled: potentially less pieces than required!!" << endl;
-      break;
-    case UNSOLVED:
-      cout << "Puzzle cannot be solved !!" << endl;
-      break;
-    default:
-      cout << "INTERNAL ERROR: SOLVER ERROR" << endl;
-  }
-
-  if (solve_success == SOLVED) {
-    print_solution_board(solution, board_height, board_width);
-    deleteCopy(board_height, solution);
-  }
   cleanup_list(puzzle_pieces);
   cleanup_list(rotated_puzzle_pieces);
   cleanup_list(pieces);

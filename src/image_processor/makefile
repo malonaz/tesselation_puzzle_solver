@@ -1,16 +1,16 @@
-DEMO_TARGET = demo
+IMAGE_PROCESS_TARGET = image_processor
 
-demo: $(BINDIR)/$(DEMO_TARGET)
+image_processor: $(BINDIR)/$(IMAGE_PROCESS_TARGET)
 
-DEMO_OBJECTS = $(OBJDIR)/demo/demo1.o
+IMAGE_PROCESS_OBJECT = $(OBJDIR)/image_processor/image_processor.o
 
-$(DEMO_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
+$(IMAGE_PROCESS_OBJECT): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 	@echo "\tCompiling \"$@\""
 	@mkdir -p `dirname $@`
 	@$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@
 	@echo "[Done]\tCompiling \"$@\""
 
-$(BINDIR)/$(DEMO_TARGET): $(OBJECTS) $(DEMO_OBJECTS) 
+$(BINDIR)/$(IMAGE_PROCESS_TARGET): $(OBJECTS) $(IMAGE_PROCESS_OBJECT)
 	@echo "\tLinking \"$@\""
 	@mkdir -p bin
 	@$(CXX) $(CPPFLAGS)\

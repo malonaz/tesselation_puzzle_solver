@@ -1,16 +1,16 @@
-DEMO_TARGET = demo
+SOLVER_MODULE_TARGET = solver_module
 
-demo: $(BINDIR)/$(DEMO_TARGET)
+solver_module: $(BINDIR)/$(SOLVER_MODULE_TARGET)
 
-DEMO_OBJECTS = $(OBJDIR)/demo/demo1.o
+SOLVER_MODULE_OBJECT = $(OBJDIR)/solver/solver_module.o
 
-$(DEMO_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
+$(SOLVER_MODULE_OBJECT): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 	@echo "\tCompiling \"$@\""
 	@mkdir -p `dirname $@`
 	@$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@
 	@echo "[Done]\tCompiling \"$@\""
 
-$(BINDIR)/$(DEMO_TARGET): $(OBJECTS) $(DEMO_OBJECTS) 
+$(BINDIR)/$(SOLVER_MODULE_TARGET): $(OBJECTS) $(SOLVER_MODULE_OBJECT)
 	@echo "\tLinking \"$@\""
 	@mkdir -p bin
 	@$(CXX) $(CPPFLAGS)\
