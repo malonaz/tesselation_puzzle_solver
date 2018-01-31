@@ -13,7 +13,6 @@ $(IMAGE_PROCESSOR_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 $(BINDIR)/$(IMAGE_PROCESSOR_TARGET): $(OBJECTS) $(IMAGE_PROCESSOR_OBJECTS) $(IMAGE_READER_OBJECTS)
 	@echo "\tLinking \"$@\""
 	@mkdir -p bin
-	@$(CXX) $(CPPFLAGS)\
-		$(TESTINCLUDES)\
+	$(CXX) $(CPPFLAGS)\
 		$(CXXFLAGS) -fprofile-arcs $^ -o $@ $(OPENCV_LIBFLAGS)
 	@echo "[Done]\tLinking \"$@\""
