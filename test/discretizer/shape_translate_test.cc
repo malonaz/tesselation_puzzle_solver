@@ -5,7 +5,7 @@
 #include "common/point.h"
 #include "common/shape_matrix.h"
 #include "common/types.h"
-#include "discretizer/shape_translate.h"
+#include "image_processor/discretizer/shape_translate.h"
 
 namespace {
 

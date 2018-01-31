@@ -2,12 +2,12 @@
 #include <gtest/gtest.h>
 #include "common/point.h"
 #include "common/types.h"
-#include "discretizer/shape_rotate.h"
+#include "image_processor/discretizer/shape_rotate.h"
 
 namespace {
 
 TEST(ShapeRotateTest, shape_rotate_fig1) {
-  
+
   ListOfPoints shape;
   shape.push_back(Point(0, 0));
   shape.push_back(Point(1, 1));
@@ -36,7 +36,7 @@ TEST(ShapeRotateTest, shape_rotate_fig2) {
   shape.push_back(Point(-2, -4));
   shape.push_back(Point(-4, -2));
   shape.push_back(Point(-1, 1));
-  
+
 
   ListOfShapes shapes;
   shapes.push_back(&shape);
@@ -61,7 +61,7 @@ TEST(ShapeRotateTest, already_rotated_shape) {
   shape.push_back(Point(4, 1));
   shape.push_back(Point(4, -2));
   shape.push_back(Point(0, -2));
-  
+
 
   ListOfShapes shapes;
   shapes.push_back(&shape);
@@ -77,5 +77,5 @@ TEST(ShapeRotateTest, already_rotated_shape) {
   EXPECT_TRUE((*rotated_shape)[5] == Point(0, -2));
 }
 
-  
+
 } // namespace
