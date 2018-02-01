@@ -1,12 +1,8 @@
 include ./dep/googletest/make/Makefile
 
-TESTS = $(TESTDIR)/common/shape_matrix_test.o \
-	$(TESTDIR)/common/point_test.o \
-	$(TESTDIR)/common/puzzle_board_test.o \
-	$(TESTDIR)/discretizer/shape_translate_test.o \
-	$(TESTDIR)/discretizer/shape_rotate_test.o
+TEST_OBJECTS = $(patsubst $(SRCDIR)/%.cc,$(OBJDIR)/%.o,$(shell find $(TESTDIR)/ -type f -name '*.cc'))
 
-test: $(BINDIR)/$(TESTTARGET)
+$(TESTTARGET): $(BINDIR)/$(TESTTARGET)
 
 $(TESTS) : %.o: %.cc
 	@echo "\tCompiling \"$@\""
@@ -15,7 +11,7 @@ $(TESTS) : %.o: %.cc
 		$(CXXFLAGS) -c $< -o $@
 	@echo "[Done]\tCompiling \"$@\""
 
-$(BINDIR)/$(TESTTARGET): $(COMMON_OBJECTS) $(DISCRETIZER_OBJECTS) $(SOLVER_OBJECTS) $(TESTS) gtest_main.a
+$(BINDIR)/$(TESTTARGET): $(COMMON_OBJECTS) $(DISCRETIZER_OBJECTS) $(SOLVER_OBJECTS) $(TEST_OBJECTS) gtest_main.a
 	@echo "\tLinking \"$@\""
 	@mkdir -p bin
 	@$(CXX) $(CPPFLAGS)\
