@@ -1,10 +1,10 @@
 include ./dep/googletest/make/Makefile
 
-TEST_OBJECTS = $(patsubst $(SRCDIR)/%.cc,$(OBJDIR)/%.o,$(shell find $(TESTDIR)/ -type f -name '*.cc'))
+TEST_OBJECTS = $(patsubst $(TESTDIR)/%.cc,$(OBJDIR)/%.o,$(shell find $(TESTDIR)/ -type f -name '*.cc'))
 
 $(TESTTARGET): $(BINDIR)/$(TESTTARGET)
 
-$(TESTS) : %.o: %.cc
+$(TEST_OBJECTS): $(OBJDIR)/%.o : $(TESTDIR)/%.cc
 	@echo "\tCompiling \"$@\""
 	@$(CXX) $(CPPFLAGS)\
 		$(TESTINCLUDES)\
