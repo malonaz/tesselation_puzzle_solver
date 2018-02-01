@@ -19,7 +19,7 @@ $(BINDIR)/$(TESTTARGET): $(COMMON_OBJECTS) $(DISCRETIZER_OBJECTS) $(SOLVER_OBJEC
 		$(CXXFLAGS) -fprofile-arcs $^ -o $@ -lpthread $(OPENCV_LIBFLAGS)
 	@echo "[Done]\tLinking \"$@\""
 
-coverage: test
+coverage: clean test
 	./bin/test
 	@mkdir -p $(COVDIR)
 	@find $(SRCDIR) -name '*.cc' -exec cp {} $(COVDIR) \;
