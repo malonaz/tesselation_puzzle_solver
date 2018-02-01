@@ -6,7 +6,6 @@ TARGET = aps
 TESTTARGET = test
 DEMOTARGET = demo
 TESTDIR = test
-DEMODIR = src/demo
 IMAGE_PROCESSOR_DIR = src/image_processor
 SOLVER_DIR = src/solver
 COVDIR = coverage
@@ -18,7 +17,7 @@ OPENCV_LIBFLAGS = $(shell pkg-config --cflags --libs opencv)
 CXX = g++
 CXXFLAGS = -Wall -g -MMD -std=c++11 -I$(SRCDIR)/
 
-all: $(DEMOTARGET) $(BINDIR)/$(TESTTARGET)
+all: $(DEMOTARGET) $(TESTTARGET)
 
 -include $(OBJECTS:.o=.d)
 
