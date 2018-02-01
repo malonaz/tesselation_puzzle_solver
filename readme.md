@@ -6,6 +6,20 @@ Tools / Dependencies needed to be installed for development environment:
 - `cppcheck`
 - `opencv2`
 
+# Programs
+
+To make all the programs provided by this repository, run `make` on the root directory of the repository. The list of programs available are:
+
+- `ip`: Image Processing Program
+- `sp`: Puzzle Solving Program
+- `demo`: Demo Program used to show off the capabilities of this project.
+- `test`: Unit testing program
+
+The following additional commands are also available in the makefile:
+
+- `coverage`: Run tests and generate unit testing coverage report
+- `clean`: Clean the folder of all generated content.
+
 # Testing
 
 To run tests:
