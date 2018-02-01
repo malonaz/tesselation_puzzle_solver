@@ -1,6 +1,6 @@
-$(DEMOTARGET): $(BINDIR)/$(DEMOTARGET)
-
-DEMO_OBJECTS = $(OBJDIR)/demo/demo1.o
+$(DEMO_TARGET): $(BINDIR)/$(DEMO_TARGET)
+	
+DEMO_OBJECTS = $(patsubst $(SRCDIR)/%.cc,$(OBJDIR)/%.o,$(shell find $(SRCDIR)/demo/ -type f -name '*.cc'))
 
 $(DEMO_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 	@echo "\tCompiling \"$@\""
@@ -8,7 +8,7 @@ $(DEMO_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 	@$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@
 	@echo "[Done]\tCompiling \"$@\""
 
-$(BINDIR)/$(DEMOTARGET): $(COMMON_OBJECTS) $(SOLVER_OBJECTS) $(DISCRETIZER_OBJECTS) $(IMAGE_READER_OBJECTS) $(DEMO_OBJECTS)
+$(BINDIR)/$(DEMO_TARGET): $(COMMON_OBJECTS) $(SOLVER_OBJECTS) $(DISCRETIZER_OBJECTS) $(IMAGE_READER_OBJECTS) $(DEMO_OBJECTS)
 	@echo "\tLinking \"$@\""
 	@mkdir -p bin
 	@$(CXX) $(CPPFLAGS)\

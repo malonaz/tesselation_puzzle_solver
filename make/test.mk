@@ -2,7 +2,7 @@ include ./dep/googletest/make/Makefile
 
 TEST_OBJECTS = $(patsubst $(TESTDIR)/%.cc,$(OBJDIR)/%.o,$(shell find $(TESTDIR)/ -type f -name '*.cc'))
 
-$(TESTTARGET): $(BINDIR)/$(TESTTARGET)
+$(TEST_TARGET): $(BINDIR)/$(TEST_TARGET)
 
 $(TEST_OBJECTS): $(OBJDIR)/%.o : $(TESTDIR)/%.cc
 	@echo "\tCompiling \"$@\""
@@ -11,7 +11,7 @@ $(TEST_OBJECTS): $(OBJDIR)/%.o : $(TESTDIR)/%.cc
 		$(CXXFLAGS) -c $< -o $@
 	@echo "[Done]\tCompiling \"$@\""
 
-$(BINDIR)/$(TESTTARGET): $(COMMON_OBJECTS) $(DISCRETIZER_OBJECTS) $(SOLVER_OBJECTS) $(TEST_OBJECTS) gtest_main.a
+$(BINDIR)/$(TEST_TARGET): $(COMMON_OBJECTS) $(DISCRETIZER_OBJECTS) $(SOLVER_OBJECTS) $(TEST_OBJECTS) gtest_main.a
 	@echo "\tLinking \"$@\""
 	@mkdir -p bin
 	@$(CXX) $(CPPFLAGS)\
