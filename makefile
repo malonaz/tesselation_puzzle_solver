@@ -33,5 +33,5 @@ include $(MAKEDIR)/test.mk
 check:
 	cppcheck --enable=all --check-config --suppress=missingIncludeSystem -I src src
 
-clean: test-clean
+clean:
 	rm -rf $(BINDIR) $(OBJDIR) $(COVDIR) *.o *.d *.gcno *.gcda
