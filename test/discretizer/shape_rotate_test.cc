@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include "common/point.h"
 #include "common/types.h"
-#include "image_processor/discretizer/shape_rotate.h"
+#include "discretizer/shape_rotate.h"
 
 namespace {
 

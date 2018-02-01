@@ -8,9 +8,9 @@
 #include "common/shape_matrix_io.h"
 #include "common/shape_matrix.h"
 #include "common/types.h"
-#include "image_processor/discretizer/shape_rotate.h"
-#include "image_processor/discretizer/shape_translate.h"
-#include "image_processor/imagereader/image_read.h"
+#include "discretizer/shape_rotate.h"
+#include "discretizer/shape_translate.h"
+#include "imagereader/image_read.h"
 #include "solver/solver.h"
 
 using namespace std;
