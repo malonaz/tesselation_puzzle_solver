@@ -9,7 +9,7 @@ MAKEDIR = make
 TEST_TARGET = test
 DEMO_TARGET = demo
 IMAGE_PROCESSOR_TARGET = ip
-
+SOLVER_PROGRAM_TARGET = sp
 
 OPENCV_CXXFLAGS = $(shell pkg-config --cflags opencv)
 OPENCV_LIBFLAGS = $(shell pkg-config --cflags --libs opencv)
@@ -29,6 +29,7 @@ include $(MAKEDIR)/solver.mk
 include $(MAKEDIR)/demo.mk
 include $(MAKEDIR)/test.mk
 include $(MAKEDIR)/image_processor.mk
+include $(MAKEDIR)/solver_program.mk
 
 check:
 	cppcheck --enable=all --check-config --suppress=missingIncludeSystem -I src src
