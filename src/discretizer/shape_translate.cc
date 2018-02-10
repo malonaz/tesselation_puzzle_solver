@@ -83,8 +83,11 @@ void shape_process_edge(Point edge_start, Point edge_end, map<uint, ListOfEdges*
 } 
 
 
-
-void process_row_filter(map<uint, ListOfEdges*> &horizontal_edges, uint row, bool row_filter[]) {
+/**
+ * This function looks up the edges present at the given row and if any, updates the row filter
+ * by flipping the boolean values of the blocks implied by these edges. 
+ */
+void process_row_filter(map<uint, ListOfEdges*> &horizontal_edges, uint row, bool* row_filter) {
 
   // if there is no edge at this row, no processing to do 
   if (horizontal_edges.find(row) == horizontal_edges.end()) 
