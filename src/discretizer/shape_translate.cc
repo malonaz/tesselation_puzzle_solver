@@ -54,40 +54,37 @@ void shape_get_size(const ListOfPoints* const shape, uint& width, uint& height) 
 
 
 
- 
- 
 /**
-  Filter and process an edge, defined by two points, of a shape.
-  If the edge is horizontal, the edge gets added into horizontal_edges map.
-  \param horizontal_edges The mapping of y-coordinate to the list of horizontal edges.
-    If the incoming edge defined by point1 and point2 is horizontal, it gets
-    added to this map.
-  \param point1 The first point of the edge to process
-  \param point2 The second point of the edge to process
+ * Filter and process an edge, defined as two points, of a shape.
+ * Copies all horizontal edges into output parameter horizontal_edges.
+ *   @param horizontal_edges: The mapping of y-coordinate to the list of horizontal edges.
+ *   @param edge_start: The first point of the edge to process
+ *   @param edge_end: The second point of the edge to process
 */
-void shape_process_edge(map<uint, ListOfEdges*> &horizontal_edges,
-    Point point1, Point point2) {
-  if (point1.y != point2.y) {
+void shape_process_edge(Point edge_start, Point edge_end, map<uint, ListOfEdges*> &horizontal_edges) {
+
+  // if y values are not equal, edge is not horizontal
+  if (edge_start.y != edge_end.y)
     return;
-  }
 
-  // edge has same y coordinates
-  int y_coord = point1.y;
+  // edge is horizontal here. Save edge's y coordinate
+  int y_coord = edge_start.y;
 
-  if (horizontal_edges.find(y_coord) == horizontal_edges.end()) {
-    // there's no entry of this y coordinate in the map
+  // If there is no entry of this y coordinate in the map, add a new list of edges.
+  if (horizontal_edges.find(y_coord) == horizontal_edges.end())  
     horizontal_edges[y_coord] = new ListOfEdges();
-  }
+  
+  // create edge
+  int* edge = new int[2]{edge_start.x, edge_end.x};
 
-  // array must be created on heap so that other methods can access it later.
-  int* edge = new int[2]{ point1.x, point2.x };
+  // push the edge onto the map
   horizontal_edges[y_coord]->push_back(edge);
-} // shape_process_edge(map<uint, ListOfEdges*>&, int[], int[])
+  
+} 
 
 
 
-void process_row_filter(map<uint, ListOfEdges*> &horizontal_edges,
-    uint row, bool row_filter[]) {
+void process_row_filter(map<uint, ListOfEdges*> &horizontal_edges, uint row, bool row_filter[]) {
   if (horizontal_edges.find(row) == horizontal_edges.end()) {
     return;
   }
@@ -143,11 +140,11 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
   // skip processing the first point
   for (++iterator; iterator != shape->end(); ++iterator) {
     Point current_point = *iterator;
-    shape_process_edge(horizontal_edges, last_processed_point, current_point);
+    shape_process_edge(last_processed_point, current_point, horizontal_edges);
     last_processed_point = current_point;
   }
   // process the edge of last point to the first point
-  shape_process_edge(horizontal_edges, last_processed_point, first_point);
+  shape_process_edge(last_processed_point, first_point, horizontal_edges);
 
   // clean up handled by caller of this method
   matrix = new ShapeMatrix(width, height);
