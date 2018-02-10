@@ -207,8 +207,6 @@ int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
   // used to store the length of shortest edge in shape. initiated as -1 for error signaling purposes
   int shortest_edge_length = -1;
 
-
-
   // get the shape's last point
   Point last_point = shape->at(shape->size() - 1);
 
@@ -288,7 +286,7 @@ int find_unit_length(const ListOfShapes* const shapes) {
 /**
  * Helper function which 
  */
-void shape_reduce(ListOfPoints* const shape, int unit_length) {
+void normalize_shape(ListOfPoints* const shape, int unit_length) {
 
   // make sure shape is not null
   assert(shape != NULL);
@@ -354,8 +352,7 @@ bool shape_translate_all_shapes(const ListOfShapes* const shapes, ListOfShapeMat
 
     
     // normalize the shape using the unit length
-    shape_reduce(shape, unit_length);
-
+    normalize_shape(shape, unit_length);
 
     
     // move the shape to the 1st quadrant
