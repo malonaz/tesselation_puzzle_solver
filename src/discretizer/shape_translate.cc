@@ -232,11 +232,8 @@ int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
     
   }
 
-  // if the shortest edge length is 0, set it equal to -1 for error signaling purposes
-  shortest_edge_length = shortest_edge_length? shortest_edge_length: -1;
-
-  return shortest_edge_length;
-  
+  // if the shortest edge length is 0, return -1 for error signaling purposes
+  return shortest_edge_length? shortest_edge_length: -1;
 } 
 
 
