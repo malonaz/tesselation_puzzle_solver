@@ -198,21 +198,56 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
 } 
 
 
+
+/**
+ * Helper function which uses delta to figure out which lengths are similar
+ * and returns the average of the shortest lengths
+ */
+int get_average_shortest_length(vector<int> &lengths){
+
+  // sort the vector
+  std::sort(lengths.begin(), lengths.end());
+
+  // now we wish to keep track of all the lengths that are within delta of each other
+  // and average them. Total will be used to keep a total count
+  int total = 0;
+  
+  for (uint i = 0; i < lengths.size() - 1; i++){
+
+    // add current length to total
+    total += lengths[i];
+
+    // gather information about length and the next
+    float current_length = static_cast<float>(lengths[i]);
+    float next_length = static_cast<float>(lengths[i + 1]);
+
+    // calculate the length change
+    float change = (next_length/current_length) - 1;
+
+    // stop if the percent change of the next edge's length is bigger than our delta. returns avg
+    if (change > THRESHOLD)
+      return total/(i + 1);
+  }
+
+  // we will get here if all the lengths are of similar proportions
+  return total/lengths.size();
+}
+
+
+
 /**
  * Helper function which returns the length of the shortest edge in the shape.
- * Returns -1 if an error is found.
  */
 int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
 
-  // used to store the length of shortest edge in shape. initiated as -1 for error signaling purposes
-  int shortest_edge_length = -1;
+  // used to store all the edge's lengths
+  vector<int> edges_length;
 
   // get the shape's last point
   Point last_point = shape->at(shape->size() - 1);
 
   // used to keep track of the last point processed. initially equal to the last point
   Point last_processed_point = last_point;
-
  
   for (uint i = 0; i < shape->size(); i++) {
 
@@ -222,17 +257,16 @@ int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
     // compute the distance between the last processed point and the current point
     int length = static_cast<int>(current_point.distanceTo(last_processed_point));
 
-    // update the current shortest edge length
-    if (length < shortest_edge_length || shortest_edge_length == -1) 
-      shortest_edge_length = length;
+    // push it onto the edges length vector
+    edges_length.push_back(length);
     
     // update last processed point
     last_processed_point = current_point;
     
   }
+  
+  return get_average_shortest_length(edges_length);
 
-  // if the shortest edge length is 0, return -1 for error signaling purposes
-  return shortest_edge_length? shortest_edge_length: -1;
 } 
 
 
@@ -254,32 +288,7 @@ int find_unit_length(const ListOfShapes* const shapes) {
 
   }
 
-  // sort the lengths of each shape's shortest edge
-  std::sort(shortest_edges_length.begin(), shortest_edges_length.end());
-
-  // now we wish to keep all the edges that are with delta of each other and average them.
-  // total will keep track of the total of these smallest edges' length
-  int total = 0;
-  
-  for (uint i = 0; i < shortest_edges_length.size() - 1; i++){
-    std::cout << shortest_edges_length[i] << ", ";
-    // add current edge to total
-    total += shortest_edges_length[i];
-
-    // gather information about this edge and the next
-    float current_edge_length = static_cast<float>(shortest_edges_length[i]);
-    float next_edge_length = static_cast<float>(shortest_edges_length[i + 1]);
-
-    // calculate the length change
-    float change = (next_edge_length/current_edge_length) - 1;
-
-    // stop if the percent change of the next edge's length is bigger than our delta. returns avg
-    if (change > THRESHOLD)
-      return total/(i + 1);
-  }
-
-  // we will get here if all of edges's length are similar in proportion
-  return total/shapes->size();
+  return get_average_shortest_length(shortest_edges_length);
 }
 
 
@@ -337,18 +346,12 @@ bool shape_translate_all_shapes(const ListOfShapes* const shapes, ListOfShapeMat
   assert(matrices != NULL);
 
   // get the unit length of these shapes
-  int unit_length = static_cast<float>(find_unit_length(shapes))*1.10;
-
-  std::cout << "size: " << unit_length << std::endl;
+  int unit_length = find_unit_length(shapes);
   
   for (uint i = 0; i < shapes->size(); i++){
 
     // get the current shape
     ListOfPoints* shape = shapes->at(i);
-
-    for (uint i = 0; i < shape->size(); i++){
-      std::cout << shape->at(i);
-    }
 
     
     // normalize the shape using the unit length
