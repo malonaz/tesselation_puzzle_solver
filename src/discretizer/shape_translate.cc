@@ -86,25 +86,31 @@ void shape_process_edge(Point edge_start, Point edge_end, map<uint, ListOfEdges*
 
 void process_row_filter(map<uint, ListOfEdges*> &horizontal_edges, uint row, bool row_filter[]) {
 
-  
-  if (horizontal_edges.find(row) == horizontal_edges.end()) {
+  // if there is no edge at this row, no processing to do 
+  if (horizontal_edges.find(row) == horizontal_edges.end()) 
     return;
-  }
-  // has the entry for this row. so let's loop through and perform the flips
+
+  // this row has edges. let's loop through and perform the flips
   ListOfEdges* edges = horizontal_edges[row];
 
-  ListOfEdges::const_iterator edges_it;
-  for (edges_it = edges->begin(); edges_it != edges->end(); ++edges_it) {
-    int* current_edge = (int*) *edges_it;
+  
+  for (uint i = 0; i < edges->size(); i++){
+
+    // get current edge
+    int* current_edge = edges->at(i);
+
+    // extract x coordinates of current edge
     int x1 = current_edge[0];
     int x2 = current_edge[1];
 
+    // get the min and max so we can loop through it properly
     int min_x = min(x1, x2);
     int max_x = max(x1, x2);
 
-    for (int col = min_x; col < max_x; ++col) {
+    // perform the flips
+    for (int col = min_x; col < max_x; col++) 
       row_filter[col] = !row_filter[col];
-    }
+    
   }
 }
 
@@ -164,8 +170,7 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
       matrix->set(row, col, row_filter[col]);    
   }
 
-  // now we free, the edges we have created from the heap
-
+  // now we must free the edges we have created from the heap
 
   // create iterator
   map<uint, ListOfEdges*>::iterator pair;
@@ -183,7 +188,6 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
     delete pair->second;
     
   }
-  
 } 
 
 int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
