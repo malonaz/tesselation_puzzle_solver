@@ -16,6 +16,9 @@ using std::map;
 using std::min;
 using std::max;
 
+// used as threshold to decide if two lengths are similar
+#define THRESHOLD 0.15
+
 /*
 
 Steps:
@@ -275,7 +278,7 @@ int find_unit_length(const ListOfShapes* const shapes) {
     float change = (next_edge_length/current_edge_length) - 1;
 
     // stop if the percent change of the next edge's length is bigger than our delta. returns avg
-    if (change > 0.15)
+    if (change > THRESHOLD)
       return total/(i + 1);
   }
 

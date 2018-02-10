@@ -19,7 +19,7 @@ enum Direction {NORTH, EAST, SOUTH, WEST};
 enum Quadrant {I = 1, II = 2, III = 3, IV = 4, INVALID_QUADRANT};
 
 // used as threshold to decide if two points are equal
-#define PERCENT_THRESHOLD 0.15
+#define THRESHOLD 0.15
 
 
 /**
@@ -198,7 +198,7 @@ void rotate_shape(ListOfPoints* const shape_points, ListOfPoints* rotated_shape_
   assert(shape_points->size() % 2 == 0);
 
   // gather your delta for this shape
-  int delta = PERCENT_THRESHOLD * average_side_length(shape_points);
+  int delta = THRESHOLD * average_side_length(shape_points);
 
   // gather information about first side
   Point start = shape_points->at(0);
