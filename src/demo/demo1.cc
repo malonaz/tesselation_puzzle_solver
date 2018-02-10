@@ -19,7 +19,7 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   /* READ FILE */
   ListOfShapes* puzzle_pieces = new ListOfShapes();
 
-  const char* image_file = "demo_data/puzzle6.jpg";
+  const char* image_file = argv[1];
   const char* coordinate_file = "demo_data/puzzle2.txt";
 
   find_coordinates(image_file, puzzle_pieces);
