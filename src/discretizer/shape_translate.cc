@@ -294,44 +294,61 @@ void shape_reduce(ListOfPoints* const shape, int unit_length) {
   
   for (uint i = 0; i < shape->size(); i++){
 
-    // divide the unit length of each shape
+    // divide each coordinate by the unit length of each shape
     shape->at(i).x /= unit_length;
     shape->at(i).y /= unit_length;
     
   }
 } 
 
+
+/**
+ * Helper function which modifies the shapes' coordinate to move it in the first quadrant
+ */
 void shape_zero(ListOfPoints* const shape) {
-  ListOfPoints::iterator iterator;
-  iterator = shape->begin();
-  int min_x = (*iterator).x;
-  int min_y = (*iterator).y;
-  for (++iterator; iterator != shape->end(); ++iterator) {
-    Point current_point = *iterator;
+
+  // set min_x and min_y to the first point of the shape
+  int min_x = shape->at(0).x;
+  int min_y = shape->at(0).y;
+
+  for (uint i = 1; i < shape->size(); i++){
+
+    // get current point
+    Point current_point = shape->at(i);
+
+    // update mininum x and y values
     min_x = min(current_point.x, min_x);
     min_y = min(current_point.y, min_y);
+    
   }
 
-  for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
-    Point* current_point = &(*iterator);
-    current_point->x -= min_x;
-    current_point->y -= min_y;
+  for (uint i = 0; i < shape->size(); i++){
+
+    // now substract the min x and min y from all the x and y coordinates of shape's points.
+    shape->at(i).x -= min_x;
+    shape->at(i).y -= min_y;
+    
   }
 }
 
-bool shape_translate_all_shapes(const ListOfShapes* const shapes,
-    ListOfShapeMatrices* const matrices) {
+
+bool shape_translate_all_shapes(const ListOfShapes* const shapes, ListOfShapeMatrices* const matrices) {
+  // asert matrices and shapes are not null
   assert(shapes != NULL);
   assert(matrices != NULL);
-  int unit_length = find_unit_length(shapes);
-  if (unit_length == -1) {
-    return false;
-  }
 
-  ListOfShapes::const_iterator it;
-  for (it = shapes->begin(); it != shapes->end(); ++it) {
-    ListOfPoints* shape = *it;
+  // get the unit length of these shapes
+  int unit_length = find_unit_length(shapes);  
+
+  for (uint i = 0; i < shapes->size(); i++){
+
+    // get the current shape
+    ListOfPoints* shape = shapes->at(i);
+
+    // normalize the shape using the unit length
     shape_reduce(shape, unit_length);
+
+    
     shape_zero(shape);
     ShapeMatrix* matrix = NULL;
     shape_translate(shape, matrix);
