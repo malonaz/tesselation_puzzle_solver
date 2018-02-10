@@ -305,7 +305,7 @@ void shape_reduce(ListOfPoints* const shape, int unit_length) {
 /**
  * Helper function which modifies the shapes' coordinate to move it in the first quadrant
  */
-void shape_zero(ListOfPoints* const shape) {
+void move_shape_to_first_quadrant(ListOfPoints* const shape) {
 
   // set min_x and min_y to the first point of the shape
   int min_x = shape->at(0).x;
@@ -348,8 +348,10 @@ bool shape_translate_all_shapes(const ListOfShapes* const shapes, ListOfShapeMat
     // normalize the shape using the unit length
     shape_reduce(shape, unit_length);
 
+    // move the shape to the 1st quadrant
+    move_shape_to_first_quadrant(shape);
+
     
-    shape_zero(shape);
     ShapeMatrix* matrix = NULL;
     shape_translate(shape, matrix);
     // we're ignoring shapes that cannot be produced from
