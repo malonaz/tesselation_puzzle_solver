@@ -351,16 +351,23 @@ bool shape_translate_all_shapes(const ListOfShapes* const shapes, ListOfShapeMat
     // move the shape to the 1st quadrant
     move_shape_to_first_quadrant(shape);
 
-    
+    // used to hold the matrix
     ShapeMatrix* matrix = NULL;
+
+    // matrix will be assigned a matrix from the heap here
     shape_translate(shape, matrix);
-    // we're ignoring shapes that cannot be produced from
-    if (matrix == NULL) {
+    
+    // ignore shapes that cannot produce matrices
+    if (matrix == NULL) 
       continue;
-    }
+
+    // push this matrix onto the matrices
     matrices->push_back(matrix);
+
+    // print it for debug
     shape_matrix_print(matrix);
+    
   }
 
   return true;
-} // shape_translate_all_shapes(ListOfShapes*, vector<ShapeMatrix*>*)
+} 
