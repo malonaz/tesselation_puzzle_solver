@@ -85,6 +85,8 @@ void shape_process_edge(Point edge_start, Point edge_end, map<uint, ListOfEdges*
 
 
 void process_row_filter(map<uint, ListOfEdges*> &horizontal_edges, uint row, bool row_filter[]) {
+
+  
   if (horizontal_edges.find(row) == horizontal_edges.end()) {
     return;
   }
@@ -104,70 +106,85 @@ void process_row_filter(map<uint, ListOfEdges*> &horizontal_edges, uint row, boo
       row_filter[col] = !row_filter[col];
     }
   }
-} // process_row_filter(map<uint, ListOfEdges*>&, uint, bool[])
+}
+
+
 
 void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
+
+  // matrix cannot be null
   assert(matrix == NULL);
+
+  // will be used to store the dimensions of the shape implied by the list of point
   uint width = 0;
   uint height = 0;
 
   // find width and height of the shape
   shape_get_size(shape, width, height);
 
-  if (width == 0 || height == 0) {
+  // check the width and height are valid
+  if (width == 0 || height == 0) 
     return;
-  }
+  
+  // create the row filter, initializing all values to false.
+  bool row_filter[width] = {false};
 
-  // minimum 4 points
-  if (shape->size() < 4) {
-    return;
-  }
-
-  // create the row filter
-  bool row_filter[width];
-  for (uint i = 0; i < width; ++i) {
-    row_filter[i] = false;
-  }
-
-  // the map of edges organized by their row-value
+  // used to store the map of edges organized by their row-value
   map<uint, ListOfEdges*> horizontal_edges;
-  ListOfPoints::const_iterator iterator;
 
-  iterator = shape->begin();
-  Point first_point = *iterator;
-  Point last_processed_point  = *iterator;
+  // get last point of shape 
+  Point last_point = shape->at(shape->size() - 1);
 
-  // skip processing the first point
-  for (++iterator; iterator != shape->end(); ++iterator) {
-    Point current_point = *iterator;
+  // used to keep track of the last point processed. initially equal to the last point
+  Point last_processed_point = last_point;
+
+  for (uint i = 0; i < shape->size(); i++){
+
+    // get current point
+    Point current_point = shape->at(i);
+
+    // process the edge from last processed point to the current point
     shape_process_edge(last_processed_point, current_point, horizontal_edges);
+
+    // update the last processed point
     last_processed_point = current_point;
   }
-  // process the edge of last point to the first point
-  shape_process_edge(last_processed_point, first_point, horizontal_edges);
-
-  // clean up handled by caller of this method
+  
+  // used to store the shape
   matrix = new ShapeMatrix(width, height);
 
   // process the matrix row-wise
-  for (uint row = 0; row < height; ++row) {
+  for (uint row = 0; row < height; row++) {
+
+    // update the row filter
     process_row_filter(horizontal_edges, row, row_filter);
-    for (uint col = 0; col < width; ++col) {
-      matrix->set(row, col, row_filter[col]);
-    }
+
+    // process this row, column by column
+    for (uint col = 0; col < width; ++col) 
+      matrix->set(row, col, row_filter[col]);    
   }
 
-  // perform clean up on the edges we've created.
-  map<uint, ListOfEdges*>::iterator map_it;
-  for (map_it = horizontal_edges.begin(); map_it != horizontal_edges.end(); ++map_it) {
-    ListOfEdges* edges = map_it->second;
-    ListOfEdges::iterator list_it;
-    for (list_it = edges->begin(); list_it != edges->end(); ++list_it) {
-      delete[] *list_it;
-    }
-    delete map_it->second;
+  // now we free, the edges we have created from the heap
+
+
+  // create iterator
+  map<uint, ListOfEdges*>::iterator pair;
+  
+  for (pair = horizontal_edges.begin(); pair != horizontal_edges.end(); pair++) {
+
+    // get the vector of edges
+    ListOfEdges* edges = pair->second;
+
+    // free each edge in the vector
+    for (uint i = 0; i < edges->size(); i++)
+      delete[] edges->at(i);
+
+    // now delete the vector
+    delete pair->second;
+    
   }
-} // shape_translate(ListOfPoints*, ShapeMatrix*&)
+  
+} 
 
 int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
   int shortest_edge_length = -1;
