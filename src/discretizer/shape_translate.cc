@@ -15,6 +15,7 @@
 using std::map;
 using std::min;
 using std::max;
+using std::round;
 
 // used as threshold to decide if two lengths are similar
 #define THRESHOLD 0.20
@@ -263,7 +264,7 @@ int find_unit_length(const ListOfShapes* const shapes) {
   int total = 0;
   
   for (uint i = 0; i < shortest_edges_length.size() - 1; i++){
-    
+    std::cout << shortest_edges_length[i] << ", ";
     // add current edge to total
     total += shortest_edges_length[i];
 
@@ -295,8 +296,8 @@ void shape_reduce(ListOfPoints* const shape, int unit_length) {
   for (uint i = 0; i < shape->size(); i++){
 
     // divide each coordinate by the unit length of each shape
-    shape->at(i).x /= unit_length;
-    shape->at(i).y /= unit_length;
+    shape->at(i).x = round(static_cast<float>(shape->at(i).x)/unit_length);
+    shape->at(i).y = round(static_cast<float>(shape->at(i).y)/unit_length);
     
   }
 } 
@@ -338,19 +339,29 @@ bool shape_translate_all_shapes(const ListOfShapes* const shapes, ListOfShapeMat
   assert(matrices != NULL);
 
   // get the unit length of these shapes
-  int unit_length = find_unit_length(shapes);  
+  int unit_length = static_cast<float>(find_unit_length(shapes))*1.10;
 
+  std::cout << "size: " << unit_length << std::endl;
+  
   for (uint i = 0; i < shapes->size(); i++){
 
     // get the current shape
     ListOfPoints* shape = shapes->at(i);
 
+    for (uint i = 0; i < shape->size(); i++){
+      std::cout << shape->at(i);
+    }
+
+    
     // normalize the shape using the unit length
     shape_reduce(shape, unit_length);
 
+
+    
     // move the shape to the 1st quadrant
     move_shape_to_first_quadrant(shape);
 
+    
     // used to hold the matrix
     ShapeMatrix* matrix = NULL;
 
