@@ -25,6 +25,7 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   find_coordinates(image_file, puzzle_pieces);
   debug_coordinates(image_file, puzzle_pieces);
 
+  /*
   cleanup_list(puzzle_pieces);
   puzzle_pieces = new ListOfShapes();
 
@@ -35,6 +36,7 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
     return 1;
   }
   cout << "File Read Complete!" << endl;
+  */
 
   cout<< "Rotating Pieces..." << endl;
   /* SHAPE TRANSLATE MODULE */

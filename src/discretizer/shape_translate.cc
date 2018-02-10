@@ -1,5 +1,6 @@
 #include "shape_translate.h"
 
+#include <iostream>
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
@@ -9,6 +10,7 @@
 #include "common/point.h"
 #include "common/shape_matrix.h"
 #include "common/types.h"
+#include "common/shape_matrix_io.h"
 
 using std::map;
 using std::min;
@@ -162,10 +164,11 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
 
 int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
   int shortest_edge_length = -1;
+  
   if (shape->size() < 4) {
     return shortest_edge_length;
   }
-
+  
   ListOfPoints::const_iterator iterator;
   iterator = shape->begin();
   Point first_point = *iterator;
@@ -206,18 +209,57 @@ int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
 int find_unit_length(const ListOfShapes* const shapes) {
   int unit_length = -1;
 
+  // used to store all shortest edges
+  std::vector<int> shortest_edges;
+  
   ListOfShapes::const_iterator it;
   for (it = shapes->begin(); it != shapes->end(); ++it) {
+    
     int shortest_edge_in_shape = find_shortest_edge_in_shape(*it);
+
+    // add current shortest edge to all shortest edges vector
+    shortest_edges.push_back(shortest_edge_in_shape);
+
+    std::cout << shortest_edge_in_shape << std::endl;
+
     if (shortest_edge_in_shape == -1) {
       continue;
     }
     if (shortest_edge_in_shape < unit_length || unit_length == -1) {
       unit_length = shortest_edge_in_shape;
     }
+
+
+    
   }
 
-  return unit_length;
+  std::sort(shortest_edges.begin(), shortest_edges.end());
+
+  
+  int avg = 0;
+  for (uint i = 0; i < shortest_edges.size() - 1; i++){
+    // add current edge to total
+    avg += shortest_edges[i];
+
+    // gather information about this edge and the next
+    float current_edge = static_cast<float>(shortest_edges[i]);
+    float next_edge = static_cast<float>(shortest_edges[i + 1]);
+
+    // calculate the length change
+    float chg = (next_edge/current_edge) - 1;
+
+    if (std::abs(chg) > 0.15){
+      // divide total and stop here
+      avg /= i + 1;
+      break;
+    }
+
+  }
+      
+  std::cout << "size: " << avg << std::endl;
+  
+  return avg;
+
 } // find_unit_length(ListOfShapes*)
 
 void shape_reduce(ListOfPoints* const shape, int unit_length) {
@@ -269,6 +311,7 @@ bool shape_translate_all_shapes(const ListOfShapes* const shapes,
       continue;
     }
     matrices->push_back(matrix);
+    shape_matrix_print(matrix);
   }
 
   return true;
