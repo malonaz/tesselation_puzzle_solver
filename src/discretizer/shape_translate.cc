@@ -194,41 +194,43 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
 } 
 
 int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
+
+  // used to store the length of shortest edge in shape. initiated as -1 for error signaling purposes
   int shortest_edge_length = -1;
-  
-  if (shape->size() < 4) {
-    return shortest_edge_length;
-  }
-  
-  ListOfPoints::const_iterator iterator;
-  iterator = shape->begin();
-  Point first_point = *iterator;
-  Point last_processed_point  = *iterator;
 
-  // skip processing the first point
-  for (++iterator; iterator != shape->end(); ++iterator) {
-    Point current_point = *iterator;
 
-    int length = (int)current_point.distanceTo(last_processed_point);
-    if (length < shortest_edge_length || shortest_edge_length == -1) {
+
+  // get the shape's last point
+  Point last_point = shape->at(shape->size() - 1);
+
+  // used to keep track of the last point processed. initially equal to the last point
+  Point last_processed_point = last_point;
+
+ 
+  for (uint i = 0; i < shape->size(); i++) {
+
+    // get current point
+    Point current_point = shape->at(i);
+
+    // compute the distance between the last processed point and the current point
+    int length = static_cast<int>(current_point.distanceTo(last_processed_point));
+
+
+    // update the current shortest edge length
+    if (length < shortest_edge_length || shortest_edge_length == -1) 
       shortest_edge_length = length;
-    }
-
+    
+    // update last processed point
     last_processed_point = current_point;
+    
   }
 
-  // process the edge of last point to the first point
-  int length = (int)first_point.distanceTo(last_processed_point);
-  if (length < shortest_edge_length || shortest_edge_length == -1) {
-    shortest_edge_length = length;
-  }
-
-  if (shortest_edge_length == 0) {
-    shortest_edge_length = -1;
-  }
+  // if the shortest edge length is 0, set it equal to -1 for error signaling purposes
+  shortest_edge_length = shortest_edge_length? shortest_edge_length: -1;
 
   return shortest_edge_length;
-} // find_shortest_edge_in_shape(ListOfPoints*)
+  
+} 
 
 /**
   Find the shortest edge length among all the shapes and take it
