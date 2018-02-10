@@ -264,8 +264,12 @@ int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
     last_processed_point = current_point;
     
   }
+  // will need to replace this
+  std::sort(edges_length.begin(), edges_length.end());
+  return edges_length[0];
   
-  return get_average_shortest_length(edges_length);
+  
+  //  return get_average_shortest_length(edges_length);
 
 } 
 
@@ -346,7 +350,8 @@ bool shape_translate_all_shapes(const ListOfShapes* const shapes, ListOfShapeMat
   assert(matrices != NULL);
 
   // get the unit length of these shapes
-  int unit_length = find_unit_length(shapes);
+  //  int unit_length = find_unit_length(shapes);
+  int unit_length = static_cast<float>(find_unit_length(shapes))*1.10;
   
   for (uint i = 0; i < shapes->size(); i++){
 
