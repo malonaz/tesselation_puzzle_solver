@@ -17,7 +17,7 @@ using std::min;
 using std::max;
 
 // used as threshold to decide if two lengths are similar
-#define THRESHOLD 0.15
+#define THRESHOLD 0.20
 
 /*
 
@@ -284,17 +284,25 @@ int find_unit_length(const ListOfShapes* const shapes) {
 
   // we will get here if all of edges's length are similar in proportion
   return total/shapes->size();
-} 
+}
 
+
+/**
+ * Helper function which 
+ */
 void shape_reduce(ListOfPoints* const shape, int unit_length) {
+
+  // make sure shape is not null
   assert(shape != NULL);
-  ListOfPoints::iterator iterator;
-  for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
-    Point* current_point = &(*iterator);
-    current_point->x /= unit_length;
-    current_point->y /= unit_length;
+  
+  for (uint i = 0; i < shape->size(); i++){
+
+    // divide the unit length of each shape
+    shape->at(i).x /= unit_length;
+    shape->at(i).y /= unit_length;
+    
   }
-} // shape_reduce(ListOfPoints* shape, int)
+} 
 
 void shape_zero(ListOfPoints* const shape) {
   ListOfPoints::iterator iterator;
