@@ -283,6 +283,11 @@ void rotate_shapes(const ListOfShapes* const shapes,
   assert(shapes != NULL);
   assert(rotated_shapes != NULL);
   for (uint i = 0; i < shapes->size(); i++) {
+    
+    // if shape has less than 4, disregard it
+    if ((*shapes)[i]->size() < 4 || (*shapes)[i]->size() % 2 != 0)
+      continue;
+
     // create new shape to store the rotated_shape in
     ListOfPoints* rotated_shape = new ListOfPoints();
 
