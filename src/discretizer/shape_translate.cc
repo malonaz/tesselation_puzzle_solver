@@ -193,6 +193,11 @@ void shape_translate(const ListOfPoints* const shape, ShapeMatrix* &matrix) {
   }
 } 
 
+
+/**
+ * Helper function which returns the length of the shortest edge in the shape.
+ * Returns -1 if an error is found.
+ */
 int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
 
   // used to store the length of shortest edge in shape. initiated as -1 for error signaling purposes
@@ -215,7 +220,6 @@ int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
     // compute the distance between the last processed point and the current point
     int length = static_cast<int>(current_point.distanceTo(last_processed_point));
 
-
     // update the current shortest edge length
     if (length < shortest_edge_length || shortest_edge_length == -1) 
       shortest_edge_length = length;
@@ -232,68 +236,52 @@ int find_shortest_edge_in_shape(const ListOfPoints* const shape) {
   
 } 
 
+
 /**
-  Find the shortest edge length among all the shapes and take it
-  as the unit length
-
-  \param shapes The list of shapes to process
-  \return The unit length among all the shapes
-*/
+ * Helper function which returns the unit length implied by this set of shapes.
+ */
 int find_unit_length(const ListOfShapes* const shapes) {
-  int unit_length = -1;
 
-  // used to store all shortest edges
-  std::vector<int> shortest_edges;
+  // used to store all shortest edges's lengths
+  vector<int> shortest_edges_length;
   
-  ListOfShapes::const_iterator it;
-  for (it = shapes->begin(); it != shapes->end(); ++it) {
-    
-    int shortest_edge_in_shape = find_shortest_edge_in_shape(*it);
+  for (uint i = 0; i < shapes->size(); i++) {
 
-    // add current shortest edge to all shortest edges vector
-    shortest_edges.push_back(shortest_edge_in_shape);
+    // compute this shape's shortest edge's length
+    int shortest_edge_length = find_shortest_edge_in_shape(shapes->at(i));
 
-    std::cout << shortest_edge_in_shape << std::endl;
+    // add this shape's shortest edge's length to the vector that holds them for all shapes
+    shortest_edges_length.push_back(shortest_edge_length);
 
-    if (shortest_edge_in_shape == -1) {
-      continue;
-    }
-    if (shortest_edge_in_shape < unit_length || unit_length == -1) {
-      unit_length = shortest_edge_in_shape;
-    }
-
-
-    
   }
 
-  std::sort(shortest_edges.begin(), shortest_edges.end());
+  // sort the lengths of each shape's shortest edge
+  std::sort(shortest_edges_length.begin(), shortest_edges_length.end());
 
+  // now we wish to keep all the edges that are with delta of each other and average them.
+  // total will keep track of the total of these smallest edges' length
+  int total = 0;
   
-  int avg = 0;
-  for (uint i = 0; i < shortest_edges.size() - 1; i++){
+  for (uint i = 0; i < shortest_edges_length.size() - 1; i++){
+    
     // add current edge to total
-    avg += shortest_edges[i];
+    total += shortest_edges_length[i];
 
     // gather information about this edge and the next
-    float current_edge = static_cast<float>(shortest_edges[i]);
-    float next_edge = static_cast<float>(shortest_edges[i + 1]);
+    float current_edge_length = static_cast<float>(shortest_edges_length[i]);
+    float next_edge_length = static_cast<float>(shortest_edges_length[i + 1]);
 
     // calculate the length change
-    float chg = (next_edge/current_edge) - 1;
+    float change = (next_edge_length/current_edge_length) - 1;
 
-    if (std::abs(chg) > 0.15){
-      // divide total and stop here
-      avg /= i + 1;
-      break;
-    }
-
+    // stop if the percent change of the next edge's length is bigger than our delta. returns avg
+    if (change > 0.15)
+      return total/(i + 1);
   }
-      
-  std::cout << "size: " << avg << std::endl;
-  
-  return avg;
 
-} // find_unit_length(ListOfShapes*)
+  // we will get here if all of edges's length are similar in proportion
+  return total/shapes->size();
+} 
 
 void shape_reduce(ListOfPoints* const shape, int unit_length) {
   assert(shape != NULL);
