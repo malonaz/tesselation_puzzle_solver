@@ -24,30 +24,38 @@ Steps:
 */
 
 /**
-  Get the width and height of a shape defined by a list of coordinates.
-  \param shape The list of coordinates that define the shape.
-  \param width The width of the shape returned by reference.
-  \param height The height of the same returned by reference.
+ * Computes the width and height of the shape inplied by the given shape's list of points. 
+ *   @param shape: The list of coordinates that define the shape.
+ *   @param width: The width of the shape returned by reference.
+ *   @param height: The height of the same returned by reference.
 */
 void shape_get_size(const ListOfPoints* const shape, uint& width, uint& height) {
-  int max_x = 0;
-  int max_y = 0;
-  int min_x = 0;
-  int min_y = 0;
 
-  ListOfPoints::const_iterator iterator;
+  // used to store the max & min of all x and y coordinates
+  int max_x = 0, max_y = 0, min_x = 0, min_y = 0;
 
-  for (iterator = shape->begin(); iterator != shape->end(); ++iterator) {
-    Point point = *iterator;
+  for (uint i = 0; i < shape->size(); i++){
+    
+    // get current point
+    Point point = shape->at(i);
+
+    // update min and max x,y coordinates
     min_x = min(min_x, point.x);
     max_x = max(max_x, point.x);
     min_y = min(min_y, point.y);
     max_y = max(max_y, point.y);
+    
   }
-  width = (uint)(max_x - min_x);
-  height = (uint)(max_y - min_y);
-} // shape_get_size(ListOfPoints*, uint&, uint&)
 
+  // compute the width and height of this shape
+  width = (uint)(max_x - min_x);
+  height = (uint)(max_y - min_y);  
+}
+
+
+
+ 
+ 
 /**
   Filter and process an edge, defined by two points, of a shape.
   If the edge is horizontal, the edge gets added into horizontal_edges map.
@@ -75,6 +83,8 @@ void shape_process_edge(map<uint, ListOfEdges*> &horizontal_edges,
   int* edge = new int[2]{ point1.x, point2.x };
   horizontal_edges[y_coord]->push_back(edge);
 } // shape_process_edge(map<uint, ListOfEdges*>&, int[], int[])
+
+
 
 void process_row_filter(map<uint, ListOfEdges*> &horizontal_edges,
     uint row, bool row_filter[]) {
