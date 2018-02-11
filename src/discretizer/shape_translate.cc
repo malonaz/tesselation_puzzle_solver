@@ -344,7 +344,7 @@ void move_shape_to_first_quadrant(ListOfPoints* const shape) {
 }
 
 
-bool shape_translate_all_shapes(const ListOfShapes* const shapes, ListOfShapeMatrices* const matrices) {
+bool shape_translate_all_shapes(const ListOfShapes* const shapes, vector<ShapeMatrix*>* const matrices) {
   // asert matrices and shapes are not null
   assert(shapes != NULL);
   assert(matrices != NULL);
