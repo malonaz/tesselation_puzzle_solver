@@ -74,11 +74,11 @@ bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant) {
 /**
  * Helper function which, given a nearly_rotated_shape, rotates it completely and returns it.
  */
-vector<Point> fix_nearly_rotated_shape(vector<Point> const shape_points) {
+vector<Point> fix_nearly_rotated_shape(vector<Point> const &shape_points) {
   
   // gather information about the first side
-  Point start = shape_points->at(0);
-  Point end = shape_points->at(1);
+  Point start = shape_points[0];
+  Point end = shape_points[1];
 
   // find the shift of the first point. We will remove it from all points to center shape at origin
   int x_shift = start.x;
@@ -93,10 +93,10 @@ vector<Point> fix_nearly_rotated_shape(vector<Point> const shape_points) {
   // push the (0, 0) point as usual
   rotated_shape_points.push_back(Point(0, 0));
   
-  for (uint i = 1; i < shape_points->size(); i++){
+  for (uint i = 1; i < shape_points.size(); i++){
     // get the previous and current points
-    Point previous_point = shape_points->at(i - 1);
-    Point current_point = shape_points->at(i);
+    Point previous_point = shape_points[i - 1];
+    Point current_point = shape_points[i];
     
     if (current_segment_horizontal)
       // set y equal to previous point's y
@@ -124,21 +124,23 @@ vector<Point> fix_nearly_rotated_shape(vector<Point> const shape_points) {
 /**
  * Helper function which returns the average side length of the given shape.
  */
-int average_side_length(vector<Point>* const shape_points){
+int average_side_length(vector<Point> const &shape_points){
+
   // used to store max side length
   uint total_side_length = 0;
 
-  for (uint i = 0; i < shape_points->size(); i++){
+  for (uint i = 0; i < shape_points.size(); i++){
+    
     // get start and end of current side
-    Point start = shape_points->at(i);
-    Point end = i == shape_points->size() - 1? shape_points->at(0): shape_points->at(i + 1);
+    Point start = shape_points[i];
+    Point end = i == shape_points.size() - 1? shape_points[0]: shape_points[i + 1];
 
     int current_side_length = start.distanceTo(end);
 
     total_side_length += current_side_length;
   }
 
-  uint num_sides = shape_points->size();
+  uint num_sides = shape_points.size();
   
   return total_side_length/num_sides;
 }
@@ -150,16 +152,17 @@ int average_side_length(vector<Point>* const shape_points){
 void align_integer(std::vector<int> &array, int delta, int &x){
 
   for (uint i = 0; i < array.size(); i++){
+    
     if (abs(array[i] - x) <= delta){
       // set x equal to the integer
       x = array[i];
       return;
     }
+    
   }
 
   // no match. add x to array
   array.push_back(x);
-  
 }
 
 
@@ -168,19 +171,19 @@ void align_integer(std::vector<int> &array, int delta, int &x){
  * Helper function which corrects points that should be on the same line but 
  * are off within the given delta
  */
-void align_points(vector<Point>* shape_points, int delta){
+void align_points(vector<Point> &shape_points, int delta){
 
   // used to save processed x and y coordinates;
   std::vector<int> processed_xs;
   std::vector<int> processed_ys;
   
-  for (uint i = 0; i < shape_points->size(); i++){
+  for (uint i = 0; i < shape_points.size(); i++){
 
     // align point x
-    align_integer(processed_xs, delta, shape_points->at(i).x);
+    align_integer(processed_xs, delta, shape_points[i].x);
 
     // align point y
-    align_integer(processed_ys, delta, shape_points->at(i).y);
+    align_integer(processed_ys, delta, shape_points[i].y);
     
   }
   
@@ -191,45 +194,45 @@ void align_points(vector<Point>* shape_points, int delta){
  * Helper function which rotates the given shape's coordinates so that all sides
  * of the given shape are vertical or horizontal.
  */
-void rotate_shape(vector<Point>* const shape_points, vector<Point>* rotated_shape_points) {
+void rotate_shape(vector<Point> const &shape_points, vector<Point> &rotated_shape_points) {
+  
   // size must be minimum 4 for a polygon with 90 degrees corners only & size must be even
-  assert(shape_points != NULL);
-  assert(rotated_shape_points != NULL);
-  assert(shape_points->size() >= 4);
-  assert(shape_points->size() % 2 == 0);
+  assert(shape_points.size() >= 4);
+  assert(shape_points.size() % 2 == 0);
 
   // gather your delta for this shape
   int delta = THRESHOLD * average_side_length(shape_points);
 
   // gather information about first side
-  Point start = shape_points->at(0);
-  Point end = shape_points->at(1);
+  Point start = shape_points[0];
+  Point end = shape_points[1];
 
   // get distance rounded to nearest integer
   float length = round(start.distanceTo(end));
 
   // add point (0,0) as start of the shape and corresponding end of shape
-  rotated_shape_points->push_back(Point(0, 0));
-  rotated_shape_points->push_back(Point(length, 0));
+  rotated_shape_points.push_back(Point(0, 0));
+  rotated_shape_points.push_back(Point(length, 0));
 
   // set previous quadrant to the first side's quadrant, and previous direction to East
   Quadrant previous_quadrant = get_quadrant(end.x - start.x, end.y - start.y, delta);
   Direction previous_direction = EAST;
 
   // save the endpoint of the first side. This is the point we are moving from next
-  Point previous_endpoint = (*rotated_shape_points)[1];
+  Point previous_endpoint = rotated_shape_points[1];
 
-  // point a, point b, (use statc for previous_direction)
-  for (uint i = 1; i < shape_points->size() - 1; i++) {
-    start = (*shape_points)[i];
-    end = (*shape_points)[i + 1];
+  for (uint i = 1; i < shape_points.size() - 1; i++) {
+
+    // get start and end of current side
+    start = shape_points[i];
+    end = shape_points[i + 1];
 
     // get quadrant
     Quadrant current_quadrant = get_quadrant(end.x - start.x, end.y - start.y, delta);
 
     if (current_quadrant == INVALID_QUADRANT){
       // shape is already rotated. only needs a bit of fix
-      *rotated_shape_points = fix_nearly_rotated_shape(shape_points);
+      rotated_shape_points = fix_nearly_rotated_shape(shape_points);
 
       // now align points if needed
       align_points(rotated_shape_points, delta); 
@@ -263,7 +266,7 @@ void rotate_shape(vector<Point>* const shape_points, vector<Point>* rotated_shap
     }
 
     // add new point
-    rotated_shape_points->push_back(new_point);
+    rotated_shape_points.push_back(new_point);
 
     // save this side's endpoint
     previous_endpoint = new_point;
@@ -280,8 +283,11 @@ void rotate_shape(vector<Point>* const shape_points, vector<Point>* rotated_shap
 
 
 void rotate_shapes(const vector<vector<Point>*>* const shapes, vector<vector<Point>*>* const rotated_shapes) {
+
+  // make sure parameters are not null
   assert(shapes != NULL);
   assert(rotated_shapes != NULL);
+  
   for (uint i = 0; i < shapes->size(); i++) {
     
     // if shape has less than 4, disregard it
@@ -292,9 +298,10 @@ void rotate_shapes(const vector<vector<Point>*>* const shapes, vector<vector<Poi
     vector<Point>* rotated_shape = new vector<Point>();
 
     // rotate the shape
-    rotate_shape((*shapes)[i], rotated_shape);
+    rotate_shape(*(*shapes)[i], *rotated_shape);
 
     // push it onto output parameter rotated_shapes
     rotated_shapes->push_back(rotated_shape);
+    
   }
 }
