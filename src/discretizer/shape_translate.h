@@ -8,15 +8,6 @@
 
 using std::vector;
 
-/**
-  Translate a given shape (defined by a list of (x, y)-coordinates) into
-  a ShapeMatrix (defined by a logical matrix).
-
-  \param shape The list of int[2] that defines the shape.
-  \param matrix The pointer to the output matrix.
-    Must be set to NULL before calling this method.
-*/
-void shape_translate(const vector<Point>* const shape, ShapeMatrix* &matrix);
 
 /**
   Translate a list of shapes (each defined by a list of (x, y)-coordinates)
