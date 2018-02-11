@@ -125,70 +125,6 @@ void process_row_filter(map<uint, vector<Edge> > &horizontal_edges, uint row, bo
 }
 
 
-/**
- * Translate a given shape (defined by a list of (x, y)-coordinates) into
- * a ShapeMatrix (defined by a logical matrix).
- *    @param shape The list of int[2] that defines the shape.
- *    @param matrix The pointer to the output matrix.
- * Must be set to NULL before calling this method.
- */
-void shape_translate(const vector<Point> &shape, ShapeMatrix* &matrix) {
-
-  // matrix must be null
-  assert(matrix == NULL);
-
-  // will be used to store the dimensions of the shape implied by the list of point
-  uint width = 0;
-  uint height = 0;
-
-  // find width and height of the shape
-  shape_get_size(shape, width, height);
-
-  // check the width and height are valid
-  if (width == 0 || height == 0) 
-    return;
-  
-  // create the row filter, initializing all values to false.
-  bool row_filter[width] = {false};
-
-  // used to store the map of edges organized by their row-value
-  map<uint, vector<Edge> > horizontal_edges;
-
-  // get last point of shape 
-  Point last_point = shape[shape.size() - 1];
-
-  // used to keep track of the last point processed. initially equal to the last point
-  Point last_processed_point = last_point;
-
-  for (uint i = 0; i < shape.size(); i++){
-
-    // get current point
-    Point current_point = shape[i];
-
-    // process the edge from last processed point to the current point
-    shape_process_edge(last_processed_point, current_point, horizontal_edges);
-
-    // update the last processed point
-    last_processed_point = current_point;
-  }
-  
-  // used to store the shape
-  matrix = new ShapeMatrix(width, height);
-
-  // process the matrix row-wise
-  for (uint row = 0; row < height; row++) {
-
-    // update the row filter
-    process_row_filter(horizontal_edges, row, row_filter);
-
-    // process this row, column by column
-    for (uint col = 0; col < width; ++col) 
-      matrix->set(row, col, row_filter[col]);
-    
-  }
-} 
-
-
 
 /**
  * Helper function which uses delta to figure out which lengths are similar
@@ -332,6 +268,53 @@ void move_shape_to_first_quadrant(vector<Point> &shape) {
 }
 
 
+/**
+ * Translate a given shape (defined by a list of (x, y)-coordinates) into
+ * a ShapeMatrix (defined by a logical matrix).
+ *    @param shape The list of int[2] that defines the shape.
+ *    @param matrix The pointer to the output matrix.
+ * Must be set to NULL before calling this method.
+ */
+void shape_translate(const vector<Point> &shape, ShapeMatrix &matrix) {
+  
+  // create the row filter, initializing all values to false.
+  bool row_filter[matrix.getWidth()] = {false};
+
+  // used to store the map of edges organized by their row-value
+  map<uint, vector<Edge> > horizontal_edges;
+
+  // get last point of shape 
+  Point last_point = shape[shape.size() - 1];
+
+  // used to keep track of the last point processed. initially equal to the last point
+  Point last_processed_point = last_point;
+
+  for (uint i = 0; i < shape.size(); i++){
+
+    // get current point
+    Point current_point = shape[i];
+
+    // process the edge from last processed point to the current point
+    shape_process_edge(last_processed_point, current_point, horizontal_edges);
+
+    // update the last processed point
+    last_processed_point = current_point;
+  }
+
+  // process the matrix row-wise
+  for (uint row = 0; row < matrix.getHeight(); row++) {
+
+    // update the row filter
+    process_row_filter(horizontal_edges, row, row_filter);
+
+    // process this row, column by column
+    for (uint col = 0; col < matrix.getWidth(); ++col) 
+      matrix.set(row, col, row_filter[col]);
+    
+  }
+} 
+
+
 bool shape_translate_all_shapes(const vector<ListOfPoints*>* const shapes, vector<ShapeMatrix*>* const matrices) {
 
   // assert matrices and shapes are not null
@@ -345,25 +328,26 @@ bool shape_translate_all_shapes(const vector<ListOfPoints*>* const shapes, vecto
 
     // get the current shape
     vector<Point>* shape = shapes->at(i);
-
     
     // normalize the shape using the unit length
     normalize_shape(*shape, unit_length);
-
     
     // move the shape to the 1st quadrant
     move_shape_to_first_quadrant(*shape);
 
+    // get width and height of the shape
+    uint width = 0, height = 0;
+    shape_get_size(*shape, width, height);
+
+    // skip invalid shapes
+    if (width == 0 || height == 0) 
+      continue;
     
     // used to hold the matrix
-    ShapeMatrix* matrix = NULL;
+    ShapeMatrix* matrix = new ShapeMatrix(width, height);
 
     // matrix will be assigned a matrix from the heap here
-    shape_translate(*shape, matrix);
-    
-    // ignore shapes that cannot produce matrices
-    if (matrix == NULL) 
-      continue;
+    shape_translate(*shape, *matrix);
 
     // push this matrix onto the matrices
     matrices->push_back(matrix);
