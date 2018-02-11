@@ -73,7 +73,7 @@ struct Edge{
  *   @param edge_start: The first point of the edge to process
  *   @param edge_end: The second point of the edge to process
 */
-void shape_process_edge(Point edge_start, Point edge_end, map<uint, vector<Edge>*> &horizontal_edges) {
+void shape_process_edge(Point edge_start, Point edge_end, map<uint, vector<Edge> > &horizontal_edges) {
 
   // if y values are not equal, edge is not horizontal
   if (edge_start.y != edge_end.y)
@@ -84,13 +84,13 @@ void shape_process_edge(Point edge_start, Point edge_end, map<uint, vector<Edge>
 
   // If there is no entry of this y coordinate in the map, add a new list of edges.
   if (horizontal_edges.find(y_coord) == horizontal_edges.end())  
-    horizontal_edges[y_coord] = new vector<Edge>();
+    horizontal_edges[y_coord] = vector<Edge>();
   
   // create edge
   Edge edge = Edge(edge_start.x, edge_end.x);
 
   // push the edge onto the map
-  horizontal_edges[y_coord]->push_back(edge);
+  horizontal_edges[y_coord].push_back(edge);
   
 } 
 
@@ -99,19 +99,19 @@ void shape_process_edge(Point edge_start, Point edge_end, map<uint, vector<Edge>
  * This function looks up the edges present at the given row and if any, updates the row filter
  * by flipping the boolean values of the blocks implied by these edges. 
  */
-void process_row_filter(map<uint, vector<Edge>*> &horizontal_edges, uint row, bool* row_filter) {
+void process_row_filter(map<uint, vector<Edge> > &horizontal_edges, uint row, bool* row_filter) {
 
   // if there is no edge at this row, no processing to do 
   if (horizontal_edges.find(row) == horizontal_edges.end()) 
     return;
 
   // this row has edges. let's loop through and perform the flips
-  vector<Edge>* edges = horizontal_edges[row];
+  vector<Edge> edges = horizontal_edges[row];
 
-  for (uint i = 0; i < edges->size(); i++){
+  for (uint i = 0; i < edges.size(); i++){
 
     // get current edge
-    Edge current_edge = edges->at(i);
+    Edge current_edge = edges[i];
 
     // get the min and max so we can loop through it properly
     int min_x = min(current_edge.start, current_edge.end);
@@ -146,7 +146,7 @@ void shape_translate(const vector<Point> &shape, ShapeMatrix* &matrix) {
   bool row_filter[width] = {false};
 
   // used to store the map of edges organized by their row-value
-  map<uint, vector<Edge>*> horizontal_edges;
+  map<uint, vector<Edge> > horizontal_edges;
 
   // get last point of shape 
   Point last_point = shape[shape.size() - 1];
@@ -177,18 +177,7 @@ void shape_translate(const vector<Point> &shape, ShapeMatrix* &matrix) {
 
     // process this row, column by column
     for (uint col = 0; col < width; ++col) 
-      matrix->set(row, col, row_filter[col]);    
-  }
-
-  // now we must free the edges we have created from the heap
-
-  // create iterator
-  map<uint, vector<Edge>*>::iterator pair;
-  
-  for (pair = horizontal_edges.begin(); pair != horizontal_edges.end(); pair++) {
-
-    // delete the vector
-    delete pair->second;
+      matrix->set(row, col, row_filter[col]);
     
   }
 } 
