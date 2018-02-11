@@ -1,5 +1,3 @@
-#include <fstream>
-#include <iostream>
 #include "common/coordinates_io.h"
 #include "common/debugger.h"
 #include "common/memory.h"
@@ -12,6 +10,9 @@
 #include "discretizer/shape_translate.h"
 #include "imagereader/image_read.h"
 #include "solver/solver.h"
+
+#include <fstream>
+#include <iostream>
 
 using namespace std;
 

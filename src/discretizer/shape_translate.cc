@@ -1,4 +1,8 @@
 #include "shape_translate.h"
+#include "common/point.h"
+#include "common/shape_matrix.h"
+#include "common/types.h"
+#include "common/shape_matrix_io.h"
 
 #include <iostream>
 #include <algorithm>
@@ -7,10 +11,6 @@
 #include <cstdlib>
 #include <map>
 
-#include "common/point.h"
-#include "common/shape_matrix.h"
-#include "common/types.h"
-#include "common/shape_matrix_io.h"
 
 using std::map;
 using std::min;
