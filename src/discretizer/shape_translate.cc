@@ -125,7 +125,13 @@ void process_row_filter(map<uint, vector<Edge> > &horizontal_edges, uint row, bo
 }
 
 
-
+/**
+ * Translate a given shape (defined by a list of (x, y)-coordinates) into
+ * a ShapeMatrix (defined by a logical matrix).
+ *    @param shape The list of int[2] that defines the shape.
+ *    @param matrix The pointer to the output matrix.
+ * Must be set to NULL before calling this method.
+ */
 void shape_translate(const vector<Point> &shape, ShapeMatrix* &matrix) {
 
   // matrix must be null
