@@ -14,7 +14,7 @@ using std::vector;
  * rotates these shapes such that the shapes's sides are vertical or horizontal. These
  * new shapes are stored in output parameter rotated shapes.
  */
-void rotate_shapes(const vector<vector<Point>*>* const shapes, vector<vector<Point>*>* const rotated_shapes);
-
+void rotate_shapes(const vector<vector<Point>*>* const shapes,
+		   vector<vector<Point>*>* const rotated_shapes);
 
 #endif

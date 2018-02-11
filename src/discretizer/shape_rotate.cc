@@ -282,7 +282,8 @@ void rotate_shape(vector<Point> const &shape_points, vector<Point> &rotated_shap
 
 
 
-void rotate_shapes(const vector<vector<Point>*>* const shapes, vector<vector<Point>*>* const rotated_shapes) {
+void rotate_shapes(const vector<vector<Point>*>* const shapes,
+		   vector<vector<Point>*>* const rotated_shapes) {
 
   // make sure parameters are not null
   assert(shapes != NULL);
