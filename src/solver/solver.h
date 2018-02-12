@@ -13,9 +13,9 @@
 PuzzleBoard* createBoard(const vector<ShapeMatrix> &matrices,
     vector<ShapeMatrix> &pieces, int& containerArea, int& totalPieceArea);
 
-bool recursiveSolver (PuzzleBoard* board,
-  const vector<ShapeMatrix> &pieces,
-  unsigned int currentIndex);
+// bool recursiveSolver (PuzzleBoard* board,
+//   const vector<ShapeMatrix> &pieces,
+//   uint currentIndex);
 
 int** copyBoard(PuzzleBoard* board);
 

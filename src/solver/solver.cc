@@ -1,12 +1,14 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include "common/debugger.h"
 #include "common/memory.h"
 #include "common/puzzle_board.h"
 #include "common/shape_matrix.h"
 #include "common/shape_matrix_io.h"
 #include "common/types.h"
 #include "solver.h"
+#include <time.h>
 
 using namespace std;
 
@@ -50,6 +52,7 @@ bool isShapeMatrixInList(const ShapeMatrix &shape,
   return result;
 }
 
+/*Function creates a list containing the unique orientations of each shape temp*/
 vector<ShapeMatrix*>* combinations(const ShapeMatrix &temp) {
   vector<ShapeMatrix*>* combi = new vector<ShapeMatrix*>();
   ShapeMatrix* r_temp = new ShapeMatrix(temp);
@@ -67,7 +70,7 @@ vector<ShapeMatrix*>* combinations(const ShapeMatrix &temp) {
   return combi;
 }
 
-/* function to get empty area */
+/* function to get an adjacent block of empty cells */
 int getAdjacentEmptyArea(uint r, uint c, uint height, uint width, int** copiedBoard) {
   if (r < height && c < width) {
     if (copiedBoard[r][c] == 0) {
@@ -132,7 +135,8 @@ void deleteCopy(uint height, int** copyBoard) {
   delete[] copyBoard;
 }
 
-/* function to check remaining area if the pieces can fit */
+/* pruning function: scans through board for every adjacent block of empty
+cells and checks if a combination of the remaining pieces can be fit into each empty block */
 bool solvableConfig(PuzzleBoard* board,
     const vector<ShapeMatrix> &pieces,
     uint currentIndex) {
@@ -142,6 +146,8 @@ bool solvableConfig(PuzzleBoard* board,
   int numRemainingPieces = pieces.size() - currentIndex;
   long int maxCombinations = pow(2, numRemainingPieces);
   int* answerArray = new int[maxCombinations]();
+  /*helper function which returns an int array of all possible areas that
+  can be formed with the remaining pieces*/
   generatePossibleAreas(answerArray, maxCombinations, pieces, currentIndex);
 
   int** copiedBoard = copyBoard(board);
@@ -180,28 +186,51 @@ bool solvableConfig(PuzzleBoard* board,
 bool recursiveSolver (PuzzleBoard* board,
     const vector<ShapeMatrix> pieces,
     uint currentIndex,
-    int& iterations) {
+    int& iterations,
+    int& solutionNum,
+    time_t start) {
   iterations++;
+
+  /*base case: if the board is already fully filled with there being no remaining pieces left*/
   if (board->getRemainingArea() == 0 || currentIndex >= pieces.size()) {
     //the board is complete, and no more remaining pieces
     return true;
   }
+  /*pruning function: checks if there are "unsolvable empty blocks" on the board
+  for example, if there is an empty block of 3-unit squares, but there is no way
+  we can form an area of 3 using any combination of the remaining pieces.  */
   if (!solvableConfig(board, pieces, currentIndex)) {
     return false;
   }
   uint height = board->getHeight();
   uint width = board->getWidth();
+
+  //Extract the current piece that we will try to place, and find the different
+  //orientations for that shape
   ShapeMatrix temp = pieces[currentIndex];
   vector<ShapeMatrix*>* shapesList = combinations(temp);
   int nextIndex = currentIndex + 1;
 
+  /*For the current piece that we are trying to place into the board,
+  1) first try to find a suitable location in the board that we might be able to
+  place it, 2) try different orientations
+  */
   for (uint r = 0; r < height; r++) {
     for (uint c = 0; c < width; c++) {
+      //try differnet orientations of the same shape
       for (uint counteri = 0; counteri < shapesList->size(); counteri++) {
         ShapeMatrix* r_temp = (*shapesList)[counteri];
         if (board->placePiece(c, r, nextIndex, *r_temp)) {
-          if (recursiveSolver(board, pieces, nextIndex,iterations)) {
-            return true;
+          if (recursiveSolver(board, pieces, nextIndex,iterations, solutionNum, start)) {
+            //TO CHANGE: SAVE THIS SOLUTION AND FIND NEXT, INSTEAD OF RETURN
+              solutionNum++;
+              time_t elapsed = time(0) - start;
+              std::cout<<"Solution number "<<solutionNum;
+              std::cout<<". After "<< iterations<<" number of iterations. ";
+              std::cout<<"Elapsed time: " << elapsed<<" seconds."<<std::endl;
+              int** board_solution = copyBoard(board);
+              print_solution_board(board_solution, height, width);
+            //return true;
           }
           board->removePiece(c, r, nextIndex, *r_temp); // revert
         }
@@ -231,8 +260,10 @@ int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
     return board_solution;
   }
   // if puzzle pieces area == container area
-  int iterations = 0;
-  bool success = recursiveSolver(board, shapes, 0, iterations);
+  int iterations =0;
+  int solutionNum = 0;
+  time_t start = time(0);
+  bool success = recursiveSolver(board, shapes, 0, iterations, solutionNum, start);
 
   if (success) {
     returnCode = SOLVED;
