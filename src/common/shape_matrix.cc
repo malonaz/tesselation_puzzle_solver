@@ -78,8 +78,8 @@ ShapeMatrix* ShapeMatrix::rotate() const {
   ShapeMatrix* rotated = new ShapeMatrix(this->height, this->width);
   rotated->shapeArea = this->shapeArea;
 
-  for(uint i = 0;  i < rotated->height; i++){
-    for(uint j = 0; j < rotated->width; j++){
+  for(uint i = 0;  i < rotated->height; i++) {
+    for(uint j = 0; j < rotated->width; j++) {
       rotated->shape[i * rotated->width + j] =
         this->shape[(this->height - j - 1) * this->width + i];
     }

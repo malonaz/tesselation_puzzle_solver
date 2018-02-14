@@ -117,7 +117,7 @@ void generatePossibleAreas(int* answerArray,
     }
     answerArray[sequencei] = answer;
     for (int countl = 0; countl < sizeArray; countl++) {
-      generativeArray[countl] =0;
+      generativeArray[countl] = 0;
     }
   }
   delete[] generativeArray;
@@ -128,11 +128,11 @@ int** copyBoard(PuzzleBoard* const board) {
   uint height = board->getHeight();
   uint width = board->getWidth();
   int** copiedBoard = new int*[height];
-  for (uint i = 0; i < height; i++){
+  for (uint i = 0; i < height; i++) {
       copiedBoard[i] = new int[width];
   }
-  for (uint i = 0; i < height; i++){
-    for (uint j = 0; j < width; j++ ){
+  for (uint i = 0; i < height; i++) {
+    for (uint j = 0; j < width; j++ ) {
       copiedBoard[i][j]= (board->getCurrentBoard())[i][j];
     }
   }
