@@ -40,28 +40,26 @@ void shape_matrix_print(const ShapeMatrix& shape) {
   }
 } // shape_matrix_print(ShapeMatrix&)
 
-void shape_matrix_write(const char* filename, ListOfShapeMatrices* const list) {
-  assert(list != NULL);
+void shape_matrix_write(const char* filename, const vector<ShapeMatrix> &list) {
   ofstream output_file;
   output_file.open(filename);
   if (output_file.fail()) {
     return;
   }
-  ListOfShapeMatrices::iterator iterator;
+  vector<ShapeMatrix>::const_iterator iterator;
 
-  for (iterator = list->begin(); iterator != list->end(); ++iterator) {
-    ShapeMatrix* shape = *iterator;
-    output_file << shape->getWidth() << ' ' << shape->getHeight() << ' ';
-    int area = shape->getMatrixArea();
+  for (iterator = list.begin(); iterator != list.end(); ++iterator) {
+    ShapeMatrix shape = *iterator;
+    output_file << shape.getWidth() << ' ' << shape.getHeight() << ' ';
+    int area = shape.getMatrixArea();
     for (int i = 0; i < area; ++i) {
-      output_file << (shape->get(i) ? '1' : '0') << ' ';
+      output_file << (shape.get(i) ? '1' : '0') << ' ';
     }
     output_file << endl;
   }
-} // shape_matrix_write(const char*, ListOfShapeMatrices*)
+} // shape_matrix_write(const char*, const vector<ShapeMatrix> &)
 
-void shape_matrix_read(const char* filename, ListOfShapeMatrices* const list) {
-  assert(list != NULL);
+void shape_matrix_read(const char* filename, vector<ShapeMatrix> &list) {
   ifstream input_file;
   input_file.open(filename);
   if (input_file.fail()) {
@@ -73,12 +71,12 @@ void shape_matrix_read(const char* filename, ListOfShapeMatrices* const list) {
     input_file >> width;
     input_file >> height;
     area = width * height;
-    ShapeMatrix* shape = new ShapeMatrix(width, height);
+    ShapeMatrix shape(width, height);
     for (int i = 0; i < area; ++i) {
       int d;
       input_file >> d;
-      shape->set(i, d == 1);
+      shape.set(i, d == 1);
     }
-    list->push_back(shape);
+    list.push_back(shape);
   }
-} // shape_matrix_read(const char*, ListOfShapeMatrices*)
+} // shape_matrix_read(const char*, vector<ShapeMatrix> &)

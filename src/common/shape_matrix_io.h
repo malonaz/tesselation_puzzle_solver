@@ -26,7 +26,7 @@ void shape_matrix_print(const ShapeMatrix& shape);
   \param filename The path name to the file to save to.
   \param list The list of shapes.
 */
-void shape_matrix_write(const char* filename, ListOfShapeMatrices* const list);
+void shape_matrix_write(const char* filename, const vector<ShapeMatrix> &list);
 
 /**
   Read a list of shape matrices from a file
@@ -34,6 +34,6 @@ void shape_matrix_write(const char* filename, ListOfShapeMatrices* const list);
   \param filename The path name to the file to read from.
   \param list The list to add the newly read in shapes to.
 */
-void shape_matrix_read(const char* filename, ListOfShapeMatrices* const list);
+void shape_matrix_read(const char* filename, vector<ShapeMatrix> &list);
 
 #endif
