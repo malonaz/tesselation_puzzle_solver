@@ -8,12 +8,12 @@
 
 class PuzzleBoard {
 private:
-  ShapeMatrix* container;
+  ShapeMatrix container;
   int** current_board;
   uint remainingArea;
 
 public:
-  PuzzleBoard(ShapeMatrix* shape);
+  PuzzleBoard(const ShapeMatrix &shape);
 
   PuzzleBoard(const PuzzleBoard &copy);
 
@@ -21,17 +21,13 @@ public:
 
   uint getWidth() const;
 
-  bool placePiece(int x, int y, int idx, ShapeMatrix* piece);
+  bool placePiece(int x, int y, int idx, const ShapeMatrix &piece);
 
-  bool removePiece(int x, int y, int indexToRemove, ShapeMatrix* piece);
+  bool removePiece(int x, int y, int indexToRemove, const ShapeMatrix &piece);
 
   int** getCurrentBoard() const;
 
   uint getRemainingArea() const;
-
-  void printBoard() const;
-
-  void printBoard(std::ostream& os) const;
 
   PuzzleBoard& operator=(const PuzzleBoard& rhs);
 
