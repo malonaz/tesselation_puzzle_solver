@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <time.h> //may be removed later
+#include <fstream>
 #include "common/debugger.h"
 #include "common/memory.h"
 #include "common/puzzle_board.h"
@@ -8,7 +10,8 @@
 #include "common/shape_matrix_io.h"
 #include "common/types.h"
 #include "solver.h"
-#include <time.h>
+#include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -190,10 +193,30 @@ bool recursiveSolver (PuzzleBoard* board,
     int& solutionNum,
     time_t start) {
   iterations++;
-
+  uint height = board->getHeight();
+  uint width = board->getWidth();
   /*base case: if the board is already fully filled with there being no remaining pieces left*/
   if (board->getRemainingArea() == 0 || currentIndex >= pieces.size()) {
     //the board is complete, and no more remaining pieces
+    solutionNum++;
+    time_t elapsed = time(0) - start;
+    std::cout<<"Solution number "<<solutionNum;
+    std::cout<<". After "<< iterations<<" number of iterations. ";
+    std::cout<<"Elapsed time: " << elapsed<<" seconds."<<std::endl;
+    int** board_solution = copyBoard(board);
+
+    string strbase1("output_data/Solution ");
+    string strbase2(".txt");
+    ofstream output(strbase1+ to_string(solutionNum)+strbase2);// to_string() need c++11
+    for (int i = 0; i<height; i++){
+      for (int j = 0; j<width; j++){
+        output<<board_solution[i][j]<<"\t";
+      }
+      output<<endl;
+    }
+
+    output.close();
+
     return true;
   }
   /*pruning function: checks if there are "unsolvable empty blocks" on the board
@@ -202,8 +225,6 @@ bool recursiveSolver (PuzzleBoard* board,
   if (!solvableConfig(board, pieces, currentIndex)) {
     return false;
   }
-  uint height = board->getHeight();
-  uint width = board->getWidth();
 
   //Extract the current piece that we will try to place, and find the different
   //orientations for that shape
@@ -223,13 +244,7 @@ bool recursiveSolver (PuzzleBoard* board,
         if (board->placePiece(c, r, nextIndex, *r_temp)) {
           if (recursiveSolver(board, pieces, nextIndex,iterations, solutionNum, start)) {
             //TO CHANGE: SAVE THIS SOLUTION AND FIND NEXT, INSTEAD OF RETURN
-              solutionNum++;
-              time_t elapsed = time(0) - start;
-              std::cout<<"Solution number "<<solutionNum;
-              std::cout<<". After "<< iterations<<" number of iterations. ";
-              std::cout<<"Elapsed time: " << elapsed<<" seconds."<<std::endl;
-              int** board_solution = copyBoard(board);
-              print_solution_board(board_solution, height, width);
+
             //return true;
           }
           board->removePiece(c, r, nextIndex, *r_temp); // revert
@@ -237,6 +252,7 @@ bool recursiveSolver (PuzzleBoard* board,
       }
     }
   }
+
   cleanup_list(shapesList);
   return false;
 }
