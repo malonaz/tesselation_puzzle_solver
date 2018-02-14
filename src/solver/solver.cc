@@ -210,8 +210,8 @@ bool recursiveSolver (PuzzleBoard* board,
     string strbase1("output_data/Solution ");
     string strbase2(".txt");
     ofstream output(strbase1+ to_string(solutionNum)+strbase2);// to_string() need c++11
-    for (int i = 0; i<height; i++){
-      for (int j = 0; j<width; j++){
+    for (uint i = 0; i<height; i++){
+      for (uint j = 0; j<width; j++){
         output<<board_solution[i][j]<<"\t";
       }
       output<<endl;
