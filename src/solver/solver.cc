@@ -10,15 +10,15 @@
 
 using namespace std;
 
-PuzzleBoard* createBoard(ListOfShapeMatrices* const matrices,
-    ListOfShapeMatrices* const pieces, int& containerArea, int& totalPieceArea) {
-  int maxArea = (*matrices)[0]->getShapeArea();
+PuzzleBoard* createBoard(const vector<ShapeMatrix> &matrices,
+    vector<ShapeMatrix> &pieces, int& containerArea, int& totalPieceArea) {
+  int maxArea = matrices[0].getShapeArea();
   int maxAreaIdx = 0;
   int accumArea = 0;
-  int matricesSize = (int)matrices->size();
+  int matricesSize = (int)matrices.size();
 
   for (int i = 1; i < matricesSize; i++) {
-    int tempArea = (*matrices)[i]->getShapeArea();
+    int tempArea = matrices[i].getShapeArea();
     int pushIdx = i;
     if (tempArea > maxArea) {
       //places the previous largest piece into the puzzle pieces vector
@@ -29,20 +29,20 @@ PuzzleBoard* createBoard(ListOfShapeMatrices* const matrices,
       accumArea -= tempArea;
     }
     accumArea += tempArea;
-    pieces->push_back((*matrices)[pushIdx]);
+    pieces.push_back(matrices[pushIdx]);
   }
-  ShapeMatrix* container = new ShapeMatrix(*(*matrices)[maxAreaIdx]);
+  ShapeMatrix container = matrices[maxAreaIdx];
   PuzzleBoard* board = new PuzzleBoard(container);
   containerArea = maxArea; // return container area as a reference
   totalPieceArea = accumArea; // return total area of puzzle pieces
   return board;
 }
 
-bool isShapeMatrixInList(const ShapeMatrix* const shape,
-    const ListOfShapeMatrices* const list) {
+bool isShapeMatrixInList(const ShapeMatrix &shape,
+    const vector<ShapeMatrix*> &list) {
   bool result = false;
-  for (uint j = 0; j < list->size(); j++) {
-    if (*shape == *((*list)[j])) {
+  for (uint j = 0; j < list.size(); j++) {
+    if (shape == *(list[j])) {
       result = true;
       break;
     }
@@ -50,12 +50,12 @@ bool isShapeMatrixInList(const ShapeMatrix* const shape,
   return result;
 }
 
-ListOfShapeMatrices* combinations(ShapeMatrix* temp) {
-  ListOfShapeMatrices* combi = new ListOfShapeMatrices();
-  ShapeMatrix* r_temp = new ShapeMatrix(*temp);
+vector<ShapeMatrix*>* combinations(const ShapeMatrix &temp) {
+  vector<ShapeMatrix*>* combi = new vector<ShapeMatrix*>();
+  ShapeMatrix* r_temp = new ShapeMatrix(temp);
 
   for (uint i = 0; i < 8; i++) {
-    if (!isShapeMatrixInList(r_temp, combi)) {
+    if (!isShapeMatrixInList(*r_temp, *combi)) {
       combi->push_back(r_temp);
     }
 
@@ -84,9 +84,9 @@ int getAdjacentEmptyArea(uint r, uint c, uint height, uint width, int** copiedBo
 /* function to generate all possible area combinations from remaining pieces */
 void generatePossibleAreas(int* answerArray,
     long int maxCombinations,
-    ListOfShapeMatrices* pieces,
+    const vector<ShapeMatrix> &pieces,
     uint currentIndex) {
-  int sizeArray = pieces->size() - currentIndex;
+  int sizeArray = pieces.size() - currentIndex;
   int* generativeArray = new int[sizeArray]();
   for (long int sequencei = 0; sequencei < maxCombinations; sequencei++) {
     int answer=0;
@@ -97,7 +97,7 @@ void generatePossibleAreas(int* answerArray,
     }
     for (int countk = 0; countk < sizeArray; countk++) {
       if (generativeArray[countk]) {
-        answer += (*pieces)[countk + currentIndex]->getShapeArea(); // size instead}
+        answer += pieces[countk + currentIndex].getShapeArea(); // size instead}
       }
     }
     answerArray[sequencei] = answer;
@@ -109,7 +109,7 @@ void generatePossibleAreas(int* answerArray,
 }
 
 /* helper function to copy current state of board into 2D array */
-int** copyBoard(PuzzleBoard* board) {
+int** copyBoard(PuzzleBoard* const board) {
   uint height = board->getHeight();
   uint width = board->getWidth();
   int** copiedBoard = new int*[height];
@@ -134,12 +134,12 @@ void deleteCopy(uint height, int** copyBoard) {
 
 /* function to check remaining area if the pieces can fit */
 bool solvableConfig(PuzzleBoard* board,
-    ListOfShapeMatrices* const pieces,
+    const vector<ShapeMatrix> &pieces,
     uint currentIndex) {
   uint b_height = board->getHeight();
   uint b_width = board->getWidth();
   //preparation to generate an array all possible area combinations.
-  int numRemainingPieces = pieces->size() - currentIndex;
+  int numRemainingPieces = pieces.size() - currentIndex;
   long int maxCombinations = pow(2, numRemainingPieces);
   int* answerArray = new int[maxCombinations]();
   generatePossibleAreas(answerArray, maxCombinations, pieces, currentIndex);
@@ -178,12 +178,11 @@ bool solvableConfig(PuzzleBoard* board,
 
 /* function for recursive solving */
 bool recursiveSolver (PuzzleBoard* board,
-    ListOfShapeMatrices* const pieces,
+    const vector<ShapeMatrix> pieces,
     uint currentIndex,
     int& iterations) {
-
   iterations++;
-  if (board->getRemainingArea() == 0 || currentIndex >= pieces->size()) {
+  if (board->getRemainingArea() == 0 || currentIndex >= pieces.size()) {
     //the board is complete, and no more remaining pieces
     return true;
   }
@@ -192,19 +191,19 @@ bool recursiveSolver (PuzzleBoard* board,
   }
   uint height = board->getHeight();
   uint width = board->getWidth();
-  ShapeMatrix* temp = (*pieces)[currentIndex];
-  ListOfShapeMatrices* shapesList = combinations(temp);
+  ShapeMatrix temp = pieces[currentIndex];
+  vector<ShapeMatrix*>* shapesList = combinations(temp);
   int nextIndex = currentIndex + 1;
 
   for (uint r = 0; r < height; r++) {
     for (uint c = 0; c < width; c++) {
       for (uint counteri = 0; counteri < shapesList->size(); counteri++) {
         ShapeMatrix* r_temp = (*shapesList)[counteri];
-        if (board->placePiece(c, r, nextIndex, r_temp)) {
+        if (board->placePiece(c, r, nextIndex, *r_temp)) {
           if (recursiveSolver(board, pieces, nextIndex,iterations)) {
             return true;
           }
-          board->removePiece(c, r, nextIndex, r_temp); // revert
+          board->removePiece(c, r, nextIndex, *r_temp); // revert
         }
       }
     }
@@ -214,14 +213,14 @@ bool recursiveSolver (PuzzleBoard* board,
 }
 
 
-int** puzzleSolver(ListOfShapeMatrices* const matrices, int& returnCode,
+int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
       uint& board_height, uint& board_width) {
   returnCode = 0;
-  ListOfShapeMatrices shapes;
+  vector<ShapeMatrix> shapes;
   int** board_solution = NULL;
-  int containerArea =0;
-  int totalPieceArea  =0;
-  PuzzleBoard* board = createBoard(matrices, &shapes,
+  int containerArea = 0;
+  int totalPieceArea = 0;
+  PuzzleBoard* board = createBoard(matrices, shapes,
       containerArea, totalPieceArea);
   if (totalPieceArea > containerArea) { // case of undersized container
     returnCode = UNDERSIZED;
@@ -232,8 +231,8 @@ int** puzzleSolver(ListOfShapeMatrices* const matrices, int& returnCode,
     return board_solution;
   }
   // if puzzle pieces area == container area
-  int iterations =0;
-  bool success = recursiveSolver(board, &shapes, 0, iterations);
+  int iterations = 0;
+  bool success = recursiveSolver(board, shapes, 0, iterations);
 
   if (success) {
     returnCode = SOLVED;
