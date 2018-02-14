@@ -62,31 +62,38 @@ vector<ShapeMatrix*>* combinations(const ShapeMatrix &temp) {
   vector<ShapeMatrix*>* combi = new vector<ShapeMatrix*>();
   ShapeMatrix* r_temp = new ShapeMatrix(temp);
 
-  for (uint i = 0; i < 8; i++) {
+  for (uint i = 0; i < 4; i++) {
     if (!isShapeMatrixInList(*r_temp, *combi)) {
       combi->push_back(r_temp);
     }
 
     r_temp = r_temp->rotate();
-    if (i == 3) {
-      r_temp = r_temp->mirror();
-    }
+    // if (i == 3) {
+    //   r_temp = r_temp->mirror();
+    // }
   }
   return combi;
 }
 
 /* function to get an adjacent block of empty cells */
-int getAdjacentEmptyArea(uint r, uint c, uint height, uint width, int** copiedBoard) {
-  if (r < height && c < width) {
-    if (copiedBoard[r][c] == 0) {
-      copiedBoard[r][c] = -1;
-      return 1 + getAdjacentEmptyArea(r, c + 1, height, width, copiedBoard)
-        + getAdjacentEmptyArea(r, c - 1, height, width,copiedBoard)
-        + getAdjacentEmptyArea(r + 1, c,height, width, copiedBoard)
-        + getAdjacentEmptyArea(r - 1, c,height, width, copiedBoard);
-    }
+int getAdjacentEmptyArea(int r, int c, uint height, uint width, int** copiedBoard) {
+  if (r < 0 ||c < 0){
+    return 0;
   }
-  return 0;
+
+  if (r >= (int)height || c >= (int)width) {
+    return 0;
+  }
+
+  if (copiedBoard[r][c] != 0) {
+    return 0;
+  }
+
+  copiedBoard[r][c] = -1;
+  return 1 + getAdjacentEmptyArea(r, c + 1, height, width, copiedBoard)
+    + getAdjacentEmptyArea(r, c - 1, height, width,copiedBoard)
+    + getAdjacentEmptyArea(r + 1, c,height, width, copiedBoard)
+    + getAdjacentEmptyArea(r - 1, c,height, width, copiedBoard);
 }
 
 /* function to generate all possible area combinations from remaining pieces */
@@ -95,7 +102,7 @@ void generatePossibleAreas(int* answerArray,
     const vector<ShapeMatrix> &pieces,
     uint currentIndex) {
   int sizeArray = pieces.size() - currentIndex;
-  int* generativeArray = new int[sizeArray]();
+  int* generativeArray = new int[sizeArray];
   for (long int sequencei = 0; sequencei < maxCombinations; sequencei++) {
     int answer=0;
     long int copyi = sequencei;
@@ -150,7 +157,7 @@ bool solvableConfig(PuzzleBoard* board,
   //preparation to generate an array all possible area combinations.
   int numRemainingPieces = pieces.size() - currentIndex;
   long int maxCombinations = pow(2, numRemainingPieces);
-  int* answerArray = new int[maxCombinations]();
+  int* answerArray = new int[maxCombinations];
   /*helper function which returns an int array of all possible areas that
   can be formed with the remaining pieces*/
   generatePossibleAreas(answerArray, maxCombinations, pieces, currentIndex);
@@ -164,16 +171,17 @@ bool solvableConfig(PuzzleBoard* board,
       bool areaImpossible = true;
 
       //IF AREA IS ZERO, JUST BREAK OUT OF THIS FOR LOOP
-      if (!area) {
+      if (area == 0) {
         break;
-      } else {
-        for (long int sequencei = 0; sequencei < maxCombinations; sequencei++) {
-          if (area == answerArray[sequencei]) {
-            areaImpossible = false;
-            break; //BREAK OUT OF SEARCH LOOP IF POSSIBLE COMBINATION OF SHAPES FOUND
-          }
+      }
+
+      for (long int sequencei = 0; sequencei < maxCombinations; sequencei++) {
+        if (area == answerArray[sequencei]) {
+          areaImpossible = false;
+          break; //BREAK OUT OF SEARCH LOOP IF POSSIBLE COMBINATION OF SHAPES FOUND
         }
       }
+
       if (areaImpossible) {
         deleteCopy(b_height, copiedBoard);
         delete[] answerArray;
@@ -193,7 +201,8 @@ bool recursiveSolver (PuzzleBoard* board,
     uint currentIndex,
     int& iterations,
     int& solutionNum,
-    time_t start) {
+    time_t start,
+    string folderName) {
   iterations++;
   uint height = board->getHeight();
   uint width = board->getWidth();
@@ -207,9 +216,9 @@ bool recursiveSolver (PuzzleBoard* board,
     std::cout<<"Elapsed time: " << elapsed<<" seconds."<<std::endl;
     int** board_solution = copyBoard(board);
 
-    string strbase1("output_data/Solution ");
+    string strbase1("/Solution ");
     string strbase2(".txt");
-    ofstream output(strbase1+ to_string(solutionNum)+strbase2);// to_string() need c++11
+    ofstream output(folderName+strbase1+ to_string(solutionNum)+strbase2);// to_string() need c++11
     for (uint i = 0; i<height; i++){
       for (uint j = 0; j<width; j++){
         output<<board_solution[i][j]<<"\t";
@@ -244,7 +253,7 @@ bool recursiveSolver (PuzzleBoard* board,
       for (uint counteri = 0; counteri < shapesList->size(); counteri++) {
         ShapeMatrix* r_temp = (*shapesList)[counteri];
         if (board->placePiece(c, r, nextIndex, *r_temp)) {
-          if (recursiveSolver(board, pieces, nextIndex,iterations, solutionNum, start)) {
+          if (recursiveSolver(board, pieces, nextIndex,iterations, solutionNum, start, folderName)) {
             //TO CHANGE: SAVE THIS SOLUTION AND FIND NEXT, INSTEAD OF RETURN
 
             //return true;
@@ -267,7 +276,7 @@ int square(int x) {
 }
 
 int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
-      uint& board_height, uint& board_width) {
+      uint& board_height, uint& board_width, string folderName) {
   returnCode = 0;
   vector<ShapeMatrix> shapes;
   int** board_solution = NULL;
@@ -285,7 +294,7 @@ int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
   }
   // if puzzle pieces area == container area
 
-
+/*********************EXPERIMENTING THREADS**********************/
   vector<thread> ths;
   for (int i = 1; i <= 20; i++) {
       ths.push_back(thread(&square, i));
@@ -295,13 +304,13 @@ int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
       th.join();
   }
   cout << "accum = " << accum << endl;
-
+/***********************************************************/
 
   //beginning solver
   int iterations =0;
   int solutionNum = 0;
   time_t start = time(0);
-  bool success = recursiveSolver(board, shapes, 0, iterations, solutionNum, start);
+  bool success = recursiveSolver(board, shapes, 0, iterations, solutionNum, start, folderName);
 
   if (success) {
     returnCode = SOLVED;

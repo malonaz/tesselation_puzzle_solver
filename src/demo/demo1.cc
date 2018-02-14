@@ -14,6 +14,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -24,7 +25,7 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   const char* image_file = argv[1];
 
   find_coordinates(image_file, puzzle_pieces);
-  debug_coordinates(image_file, puzzle_pieces);
+  // debug_coordinates(image_file, puzzle_pieces);
 
   cout<< "Rotating Pieces..." << endl;
   /* SHAPE TRANSLATE MODULE */
@@ -57,7 +58,8 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   int** solution = NULL;
   uint board_height = 0;
   uint board_width = 0;
-  solution = puzzleSolver(pieces, solve_success, board_height, board_width);
+  string folderName = "output_data"; //hardcoded for now, should receive this from hash value
+  solution = puzzleSolver(pieces, solve_success, board_height, board_width, folderName);
 
   /* Return Message */
   switch (solve_success) {
