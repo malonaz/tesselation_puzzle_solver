@@ -120,10 +120,10 @@ bool PuzzleBoard::removePiece(int x, int y, int indexToRemove, const ShapeMatrix
       int board_x = x + j;
       if (this->current_board[board_y][board_x] == indexToRemove) {
         this->current_board[board_y][board_x] = 0;
-        ++this->remainingArea;
       }
     }
   }
+  this->remainingArea += piece.getShapeArea();
   return true;
 }
 
