@@ -17,7 +17,7 @@ using std::vector;
     the puzzle pieces in the image.
   \param matrices The list of output matrices translated from the list of shapes.
 */
-bool shape_translate_all_shapes(const vector<vector<Point>*>* const shapes,
-  vector<ShapeMatrix*>* const matrices);
+bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes,
+  vector<ShapeMatrix>& matrices);
 
 #endif
