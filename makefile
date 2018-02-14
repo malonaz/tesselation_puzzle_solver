@@ -15,7 +15,7 @@ OPENCV_CXXFLAGS = $(shell pkg-config --cflags opencv)
 OPENCV_LIBFLAGS = $(shell pkg-config --cflags --libs opencv)
 
 CXX = g++
-CXXFLAGS = -Wall -g -MMD -std=c++11 -I$(SRCDIR)/
+CXXFLAGS = -Wall -g -MMD -std=c++11 -pthread -I$(SRCDIR)/
 
 all: $(DEMO_TARGET) $(TEST_TARGET) $(IMAGE_PROCESSOR_TARGET)
 

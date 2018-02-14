@@ -12,6 +12,8 @@
 #include "solver.h"
 #include <string>
 #include <fstream>
+#include <thread>
+
 
 using namespace std;
 
@@ -257,6 +259,12 @@ bool recursiveSolver (PuzzleBoard* board,
   return false;
 }
 
+int accum = 0;
+
+int square(int x) {
+  accum += x * x;
+  return 0;
+}
 
 int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
       uint& board_height, uint& board_width) {
@@ -276,6 +284,20 @@ int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
     return board_solution;
   }
   // if puzzle pieces area == container area
+
+
+  vector<thread> ths;
+  for (int i = 1; i <= 20; i++) {
+      ths.push_back(thread(&square, i));
+  }
+
+  for (auto& th : ths) {
+      th.join();
+  }
+  cout << "accum = " << accum << endl;
+
+
+  //beginning solver
   int iterations =0;
   int solutionNum = 0;
   time_t start = time(0);
