@@ -1,26 +1,27 @@
 #include "debugger.h"
 
 #include <iostream>
+#include <vector>
 
 #include "types.h"
 
+using std::vector;
 using std::cout;
 using std::endl;
 
-void print_list_of_shapes(const ListOfShapes* const list) {
- for (uint i = 0; i < list->size(); i++){
+void print_list_of_shapes(const vector<ListOfPoints> &list) {
+ for (uint i = 0; i < list.size(); i++) {
    cout << "Shape " << i << endl;
-   print_list_of_points((*list)[i]);
+   print_list_of_points(list[i]);
  }
-
  cout << endl;
 }
 
-void print_list_of_points(const ListOfPoints* const shape_points) {
- for (uint i = 0; i < shape_points->size(); i++){
-   cout << (*shape_points)[i];
+void print_list_of_points(const ListOfPoints &shape_points) {
+ for (uint i = 0; i < shape_points.size(); i++) {
+   cout << shape_points[i];
 
-   if (i < shape_points->size() - 1) {
+   if (i < shape_points.size() - 1) {
      // add comma after each (x, y) unless it is the last
      cout << ", ";
    }
@@ -29,14 +30,14 @@ void print_list_of_points(const ListOfPoints* const shape_points) {
  cout << endl;
 }
 
-void print_area(const ListOfShapeMatrices* const matrices) {
-  int matricesSize = (int)matrices->size();
+void print_area(const vector<ShapeMatrix> &matrices) {
+  int matricesSize = (int)matrices.size();
   int total = 0;
   cout << "---- Area ----" << endl;
   for (int i = 0; i < matricesSize; i++) {
-    int tempArea = (*matrices)[i]->getShapeArea();
+    int tempArea = matrices[i].getShapeArea();
     total += tempArea;
-    cout << "Shape: " << i+1 <<", Area: "<< tempArea << endl;
+    cout << "Shape: " << i + 1 <<", Area: " << tempArea << endl;
   }
   cout << "Total Area: " << total << endl;
   cout << "--------------" << endl;
