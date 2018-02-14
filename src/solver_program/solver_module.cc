@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <vector>
 #include "common/coordinates_io.h"
 #include "common/debugger.h"
 #include "common/memory.h"
@@ -16,7 +17,7 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   /* READ FILE */
   const char* pieces_file = "src/image_processor/pieces.txt";
   cout << " Reading file ....." <<endl;
-  ListOfShapeMatrices* pieces = new ListOfShapeMatrices();
+  vector<ShapeMatrix> pieces;
   shape_matrix_read(pieces_file, pieces);
   cout << "File Read Complete!" << endl;
 
@@ -50,6 +51,5 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
     print_solution_board(solution, board_height, board_width);
     deleteCopy(board_height, solution);
   }
-  cleanup_list(pieces);
   return 0;
 }

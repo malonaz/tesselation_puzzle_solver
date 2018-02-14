@@ -13,45 +13,32 @@
 
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
 int main(int argc, char** argv) { //  ./demo <input_filename>
   /* READ FILE */
-  ListOfShapes* puzzle_pieces = new ListOfShapes();
+  vector<ListOfPoints> puzzle_pieces;
 
   const char* image_file = argv[1];
-  const char* coordinate_file = "demo_data/puzzle2.txt";
 
   find_coordinates(image_file, puzzle_pieces);
   debug_coordinates(image_file, puzzle_pieces);
 
-  /*
-  cleanup_list(puzzle_pieces);
-  puzzle_pieces = new ListOfShapes();
-
-  cout << " Reading file ....." <<endl;
-  bool file_read = read_coordinates_file(coordinate_file, puzzle_pieces);
-  if (file_read == false){
-    cout << "ERROR: FILE ERROR" << endl;
-    return 1;
-  }
-  cout << "File Read Complete!" << endl;
-  */
-
   cout<< "Rotating Pieces..." << endl;
   /* SHAPE TRANSLATE MODULE */
-  ListOfShapes* rotated_puzzle_pieces = new ListOfShapes();
+  vector<ListOfPoints> rotated_puzzle_pieces;
   rotate_shapes(puzzle_pieces, rotated_puzzle_pieces);
 
   print_list_of_shapes(rotated_puzzle_pieces);
 
-  cout << puzzle_pieces->size() << " Pieces rotated!" << endl;
+  cout << puzzle_pieces.size() << " Pieces rotated!" << endl;
 
 
   cout << "Translating shape to Boolean Matrix...." <<endl;
   /* DISCRETIZER MODULE */
-  ListOfShapeMatrices* pieces = new ListOfShapeMatrices();
+  vector<ShapeMatrix> pieces;
   bool translate_success = shape_translate_all_shapes(rotated_puzzle_pieces, pieces);
 
   if (translate_success == false){
@@ -95,8 +82,5 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
     print_solution_board(solution, board_height, board_width);
     deleteCopy(board_height, solution);
   }
-  cleanup_list(puzzle_pieces);
-  cleanup_list(rotated_puzzle_pieces);
-  cleanup_list(pieces);
   return 0;
 }
