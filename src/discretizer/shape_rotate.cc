@@ -74,7 +74,7 @@ bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant) {
 /**
  * Helper function which, given a nearly_rotated_shape, rotates it completely and returns it.
  */
-vector<Point> fix_nearly_rotated_shape(vector<Point> const &shape_points) {
+ListOfPoints fix_nearly_rotated_shape(ListOfPoints const &shape_points) {
   
   // gather information about the first side
   Point start = shape_points[0];
@@ -88,7 +88,7 @@ vector<Point> fix_nearly_rotated_shape(vector<Point> const &shape_points) {
   bool current_segment_horizontal = abs(end.x - start.x) > abs(end.y - start.y);
 
   // used to store the rotated shape
-  vector<Point> rotated_shape_points;
+  ListOfPoints rotated_shape_points;
 
   // push the (0, 0) point as usual
   rotated_shape_points.push_back(Point(0, 0));
@@ -124,7 +124,7 @@ vector<Point> fix_nearly_rotated_shape(vector<Point> const &shape_points) {
 /**
  * Helper function which returns the average side length of the given shape.
  */
-int average_side_length(vector<Point> const &shape_points){
+int average_side_length(ListOfPoints const &shape_points){
 
   // used to store max side length
   uint total_side_length = 0;
@@ -171,7 +171,7 @@ void align_integer(std::vector<int> &array, int delta, int &x){
  * Helper function which corrects points that should be on the same line but 
  * are off within the given delta
  */
-void align_points(vector<Point> &shape_points, int delta){
+void align_points(ListOfPoints &shape_points, int delta){
 
   // used to save processed x and y coordinates;
   std::vector<int> processed_xs;
@@ -194,7 +194,7 @@ void align_points(vector<Point> &shape_points, int delta){
  * Helper function which rotates the given shape's coordinates so that all sides
  * of the given shape are vertical or horizontal.
  */
-void rotate_shape(vector<Point> const &shape_points, vector<Point> &rotated_shape_points) {
+void rotate_shape(const ListOfPoints &shape_points, ListOfPoints &rotated_shape_points) {
   
   // size must be minimum 4 for a polygon with 90 degrees corners only & size must be even
   assert(shape_points.size() >= 4);
@@ -279,30 +279,21 @@ void rotate_shape(vector<Point> const &shape_points, vector<Point> &rotated_shap
   align_points(rotated_shape_points, delta); 
 }
 
-
-
-
-void rotate_shapes(const vector<vector<Point>*>* const shapes,
-		   vector<vector<Point>*>* const rotated_shapes) {
-
-  // make sure parameters are not null
-  assert(shapes != NULL);
-  assert(rotated_shapes != NULL);
-  
-  for (uint i = 0; i < shapes->size(); i++) {
+void rotate_shapes(const vector<ListOfPoints> &shapes,
+		   vector<ListOfPoints> &rotated_shapes) {
+  for (uint i = 0; i < shapes.size(); i++) {
     
     // if shape has less than 4, disregard it
-    if ((*shapes)[i]->size() < 4 || (*shapes)[i]->size() % 2 != 0)
+    if (shapes[i].size() < 4 || shapes[i].size() % 2 != 0)
       continue;
 
     // create new shape to store the rotated_shape in
-    vector<Point>* rotated_shape = new vector<Point>();
+    ListOfPoints rotated_shape;
 
     // rotate the shape
-    rotate_shape(*(*shapes)[i], *rotated_shape);
+    rotate_shape(shapes[i], rotated_shape);
 
     // push it onto output parameter rotated_shapes
-    rotated_shapes->push_back(rotated_shape);
-    
+    rotated_shapes.push_back(rotated_shape);
   }
 }
