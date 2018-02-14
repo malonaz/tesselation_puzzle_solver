@@ -2,8 +2,12 @@
 #define IMAGE_READ_H_
 #include "common/types.h"
 
-void find_coordinates(const char* input, ListOfShapes* const list);
-void debug_coordinates(const char* filename, const ListOfShapes* const list);
+#include <vector>
+
+using std::vector;
+
+void find_coordinates(const char* input, vector<ListOfPoints> &list);
+void debug_coordinates(const char* filename, const vector<ListOfPoints> &list);
 #endif
 
 //ordering points clockwise
