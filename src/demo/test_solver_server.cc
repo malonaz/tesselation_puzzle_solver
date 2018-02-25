@@ -22,10 +22,10 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   /* READ FILE */
 
   const char* image_file = argv[1];
-  const char* hash = argv[2];
+  char* upload_dir = argv[2];
 
   cout << "File Passed in: " << image_file << endl;
-  cout << "File Hash Passed in: " << hash << endl;
+  cout << "Upload Directory: " << upload_dir << endl;
 
   cout << "simulate solving..." <<endl;
   unsigned int ms;
@@ -34,13 +34,8 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
 
   cout <<"solved" << endl;
 
-  // now will try to delete the solving file...
-  // char upload_dir[512];
-  // extract_dir(image_file, upload_dir);
-  char upload_dir[512] = "./../web/puzzles/uploads/";
-  char* file_dir = strcat(upload_dir, hash);
   char* name = "/solving";
-  char* solving_file = strcat(file_dir, name);
+  char* solving_file = strcat(upload_dir, name);
   cout << "file to remove: "<< solving_file <<endl;
   if( remove( solving_file ) != 0 ){
     cout << "Error deleting file" <<endl;
