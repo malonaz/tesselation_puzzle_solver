@@ -1,6 +1,6 @@
 $(SERVER_TEST_TARGET): $(BINDIR)/$(SERVER_TEST_TARGET)
 
-test_solver_server.o: $(SRCDIR)/demo/test_solver_server.cc
+test_solver_server.o: $(SRCDIR)/server_test/test_solver_server.cc
 	@echo "\tCompiling \"$@\""
 	@mkdir -p `dirname $@`
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
