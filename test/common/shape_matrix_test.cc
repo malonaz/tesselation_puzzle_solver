@@ -6,10 +6,12 @@
 namespace {
 
 TEST(ShapeMatrixTest, DataStructure) {
+  int identifier = 2;
   int width = 10;
   int height = 5;
-  ShapeMatrix* matrix = new ShapeMatrix(width, height);
+  ShapeMatrix* matrix = new ShapeMatrix(identifier, width, height);
 
+  EXPECT_EQ(identifier, matrix->getIdentifier());
   EXPECT_EQ(height, matrix->getHeight());
   EXPECT_EQ(width, matrix->getWidth());
   EXPECT_EQ(height * width, matrix->getMatrixArea());
@@ -19,9 +21,10 @@ TEST(ShapeMatrixTest, DataStructure) {
 }
 
 TEST(ShapeMatrixTest, CopyConstructor) {
+  int identifier = 2;
   int width = 10;
   int height = 5;
-  ShapeMatrix* matrix1 = new ShapeMatrix(width, height);
+  ShapeMatrix* matrix1 = new ShapeMatrix(identifier, width, height);
   ShapeMatrix* matrix2 = new ShapeMatrix(*matrix1);
 
   EXPECT_NE(matrix1, matrix2);
@@ -31,9 +34,10 @@ TEST(ShapeMatrixTest, CopyConstructor) {
 }
 
 TEST(ShapeMatrixTest, SetGet) {
+  int identifier = 2;
   int width = 10;
   int height = 5;
-  ShapeMatrix* matrix = new ShapeMatrix(width, height);
+  ShapeMatrix* matrix = new ShapeMatrix(identifier, width, height);
 
   EXPECT_EQ(0, matrix->getShapeArea());
 
@@ -60,9 +64,10 @@ TEST(ShapeMatrixTest, SetGet) {
 }
 
 TEST(ShapeMatrixTest, RotateOnce) {
+  int identifier = 2;
   int width = 2;
   int height = 3;
-  ShapeMatrix* matrix = new ShapeMatrix(width, height);
+  ShapeMatrix* matrix = new ShapeMatrix(identifier, width, height);
   ShapeMatrix* rotatedMatrix = NULL;
 
   matrix->set(0, 0, true);
@@ -84,9 +89,10 @@ TEST(ShapeMatrixTest, RotateOnce) {
 }
 
 TEST(ShapeMatrixTest, RotateOnce2) {
+  int identifier = 2;
   int width = 2;
   int height = 3;
-  ShapeMatrix* matrix = new ShapeMatrix(width, height);
+  ShapeMatrix* matrix = new ShapeMatrix(identifier, width, height);
   ShapeMatrix* rotatedMatrix = NULL;
 
   matrix->set(0, 0, true);
@@ -108,9 +114,10 @@ TEST(ShapeMatrixTest, RotateOnce2) {
 }
 
 TEST(ShapeMatrixTest, RotateNegative) {
+  int identifier = 2;
   int width = 2;
   int height = 3;
-  ShapeMatrix* matrix = new ShapeMatrix(width, height);
+  ShapeMatrix* matrix = new ShapeMatrix(identifier, width, height);
   ShapeMatrix* rotatedMatrix = NULL;
 
   matrix->set(0, 0, true);
@@ -126,9 +133,10 @@ TEST(ShapeMatrixTest, RotateNegative) {
 }
 
 TEST(ShapeMatrixTest, NoRotate) {
+  int identifier = 2;
   int width = 2;
   int height = 3;
-  ShapeMatrix* matrix = new ShapeMatrix(width, height);
+  ShapeMatrix* matrix = new ShapeMatrix(identifier, width, height);
   ShapeMatrix* rotatedMatrix = NULL;
 
   matrix->set(0, 0, true);
@@ -153,9 +161,10 @@ TEST(ShapeMatrixTest, NoRotate) {
 }
 
 TEST(ShapeMatrixTest, RotateTwice) {
+  int identifier = 2;
   int width = 2;
   int height = 3;
-  ShapeMatrix* matrix = new ShapeMatrix(width, height);
+  ShapeMatrix* matrix = new ShapeMatrix(identifier, width, height);
   ShapeMatrix* rotatedMatrix = NULL;
 
   matrix->set(0, 0, true);
@@ -177,9 +186,10 @@ TEST(ShapeMatrixTest, RotateTwice) {
 }
 
 TEST(ShapeMatrixTest, RotateThrice) {
+  int identifier = 2;
   int width = 2;
   int height = 3;
-  ShapeMatrix* matrix = new ShapeMatrix(width, height);
+  ShapeMatrix* matrix = new ShapeMatrix(identifier, width, height);
   ShapeMatrix* rotatedMatrix = NULL;
 
   matrix->set(0, 0, true);
@@ -201,9 +211,10 @@ TEST(ShapeMatrixTest, RotateThrice) {
 }
 
 TEST(ShapeMatrixTest, RotateFourTimes) {
+  int identifier = 2;
   int width = 2;
   int height = 3;
-  ShapeMatrix* matrix = new ShapeMatrix(width, height);
+  ShapeMatrix* matrix = new ShapeMatrix(identifier, width, height);
   ShapeMatrix* rotatedMatrix = NULL;
 
   matrix->set(0, 0, true);
@@ -228,9 +239,10 @@ TEST(ShapeMatrixTest, RotateFourTimes) {
 }
 
 TEST(ShapeMatrixTest, Mirror) {
+  int identifier = 2;
   int width = 2;
   int height = 3;
-  ShapeMatrix* matrix = new ShapeMatrix(width, height);
+  ShapeMatrix* matrix = new ShapeMatrix(identifier, width, height);
   ShapeMatrix* mirroredMatrix = NULL;
 
   matrix->set(0, 0, true);
@@ -252,11 +264,12 @@ TEST(ShapeMatrixTest, Mirror) {
 }
 
 TEST(ShapeMatrixTest, AssignmentCopy) {
+  int identifier = 2;
   int width = 2;
   int height = 3;
 
   // ON STACK
-  ShapeMatrix matrix1(width, height);
+  ShapeMatrix matrix1(identifier, width, height);
 
   matrix1.set(0, 0, true);
   matrix1.set(1, 0, true);
@@ -264,7 +277,7 @@ TEST(ShapeMatrixTest, AssignmentCopy) {
   matrix1.set(2, 1, true);
   // an L shape
 
-  ShapeMatrix matrix2(width, height);
+  ShapeMatrix matrix2(identifier, width, height);
   EXPECT_NE(&matrix1, &matrix2);
 
   matrix2 = matrix1;
@@ -279,11 +292,12 @@ TEST(ShapeMatrixTest, AssignmentCopy) {
 }
 
 TEST(ShapeMatrixTest, AssignmentSelf) {
+  int identifier = 2;
   int width = 2;
   int height = 3;
 
   // ON STACK
-  ShapeMatrix matrix1(width, height);
+  ShapeMatrix matrix1(identifier, width, height);
 
   matrix1.set(0, 0, true);
   matrix1.set(1, 0, true);
@@ -296,11 +310,12 @@ TEST(ShapeMatrixTest, AssignmentSelf) {
 }
 
 TEST(ShapeMatrixTest, EqualityCheckSelf) {
+  int identifier = 2;
   int width = 2;
   int height = 3;
 
   // ON STACK
-  ShapeMatrix matrix1(width, height);
+  ShapeMatrix matrix1(identifier, width, height);
 
   matrix1.set(0, 0, true);
   matrix1.set(1, 0, true);
@@ -314,11 +329,12 @@ TEST(ShapeMatrixTest, EqualityCheckSelf) {
 }
 
 TEST(ShapeMatrixTest, EqualityCheckCopy) {
+  int identifier = 2;
   int width = 2;
   int height = 3;
 
   // ON STACK
-  ShapeMatrix matrix1(width, height);
+  ShapeMatrix matrix1(identifier, width, height);
 
   matrix1.set(0, 0, true);
   matrix1.set(1, 0, true);
@@ -334,11 +350,12 @@ TEST(ShapeMatrixTest, EqualityCheckCopy) {
 }
 
 TEST(ShapeMatrixTest, EqualityCheckIdentical) {
+  int identifier = 2;
   int width = 2;
   int height = 3;
 
   // ON STACK
-  ShapeMatrix matrix1(width, height);
+  ShapeMatrix matrix1(identifier, width, height);
 
   matrix1.set(0, 0, true);
   matrix1.set(1, 0, true);
@@ -346,7 +363,7 @@ TEST(ShapeMatrixTest, EqualityCheckIdentical) {
   matrix1.set(2, 1, true);
   // an L shape
 
-  ShapeMatrix matrix2(width, height);
+  ShapeMatrix matrix2(identifier, width, height);
 
   matrix2.set(0, 0, true);
   matrix2.set(1, 0, true);
@@ -359,11 +376,12 @@ TEST(ShapeMatrixTest, EqualityCheckIdentical) {
 }
 
 TEST(ShapeMatrixTest, EqualityCheckDifferentSize) {
+  int identifier = 2;
   int width = 2;
   int height = 3;
 
   // ON STACK
-  ShapeMatrix matrix1(width, height);
+  ShapeMatrix matrix1(identifier, width, height);
 
   matrix1.set(0, 0, true);
   matrix1.set(1, 0, true);
@@ -371,7 +389,7 @@ TEST(ShapeMatrixTest, EqualityCheckDifferentSize) {
   matrix1.set(2, 1, true);
   // an L shape
 
-  ShapeMatrix matrix2(height, width);
+  ShapeMatrix matrix2(identifier, height, width);
 
   // inequality with different size
   EXPECT_FALSE(matrix1 == matrix2);
@@ -379,11 +397,12 @@ TEST(ShapeMatrixTest, EqualityCheckDifferentSize) {
 }
 
 TEST(ShapeMatrixTest, EqualityCheckDifferentShapeArea) {
+  int identifier = 2;
   int width = 2;
   int height = 3;
 
   // ON STACK
-  ShapeMatrix matrix1(width, height);
+  ShapeMatrix matrix1(identifier, width, height);
 
   matrix1.set(0, 0, true);
   matrix1.set(1, 0, true);
@@ -391,7 +410,7 @@ TEST(ShapeMatrixTest, EqualityCheckDifferentShapeArea) {
   matrix1.set(2, 1, true);
   // an L shape
 
-  ShapeMatrix matrix2(width, height);
+  ShapeMatrix matrix2(identifier, width, height);
 
   // inequality with different shape area
   EXPECT_FALSE(matrix1 == matrix2);
@@ -399,11 +418,12 @@ TEST(ShapeMatrixTest, EqualityCheckDifferentShapeArea) {
 }
 
 TEST(ShapeMatrixTest, EqualityCheckDifferentShape) {
+  int identifier = 2;
   int width = 2;
   int height = 3;
 
   // ON STACK
-  ShapeMatrix matrix1(width, height);
+  ShapeMatrix matrix1(identifier, width, height);
 
   matrix1.set(0, 0, true);
   matrix1.set(1, 0, true);
@@ -411,7 +431,7 @@ TEST(ShapeMatrixTest, EqualityCheckDifferentShape) {
   matrix1.set(2, 1, true);
   // an L shape
 
-  ShapeMatrix matrix2(width, height);
+  ShapeMatrix matrix2(identifier, width, height);
 
   matrix2.set(0, 0, true);
   matrix2.set(1, 0, true);
