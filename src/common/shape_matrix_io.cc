@@ -50,7 +50,9 @@ void shape_matrix_write(const char* filename, const vector<ShapeMatrix> &list) {
 
   for (iterator = list.begin(); iterator != list.end(); ++iterator) {
     ShapeMatrix shape = *iterator;
-    output_file << shape.getWidth() << ' ' << shape.getHeight() << ' ';
+    output_file << shape.getIdentifier() << ' ';
+    output_file << shape.getWidth() << ' ';
+    output_file << shape.getHeight() << ' ';
     int area = shape.getMatrixArea();
     for (int i = 0; i < area; ++i) {
       output_file << (shape.get(i) ? '1' : '0') << ' ';
@@ -67,12 +69,13 @@ void shape_matrix_read(const char* filename, vector<ShapeMatrix> &list) {
   }
 
   while (!input_file.eof()) {
-    int width, height, area;
+    uint identifier, width, height, area;
+    input_file >> identifier;
     input_file >> width;
     input_file >> height;
     area = width * height;
-    ShapeMatrix shape(width, height);
-    for (int i = 0; i < area; ++i) {
+    ShapeMatrix shape(identifier, width, height);
+    for (uint i = 0; i < area; ++i) {
       int d;
       input_file >> d;
       shape.set(i, d == 1);
