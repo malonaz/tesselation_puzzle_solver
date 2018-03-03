@@ -21,6 +21,9 @@ int** copyBoard(PuzzleBoard* board);
 
 void deleteCopy(uint height, int** copyBoard);
 
+bool solvableConfig(PuzzleBoard* board,const vector<ShapeMatrix> &pieces,
+    uint currentIndex);
+
 int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
       uint& board_height, uint& board_width);
 
