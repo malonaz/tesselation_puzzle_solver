@@ -5,12 +5,10 @@
 
 #include "types.h"
 
-ShapeMatrix::ShapeMatrix(int width, int height):
+ShapeMatrix::ShapeMatrix(int identifier, int width, int height):
+    identifier(identifier),
     width(width), height(height),
     shapeArea(0), shape(NULL) {
-  assert(width > 0);
-  assert(height > 0);
-
   int area = width * height;
   this->shape = new bool[area];
   for (int i = 0; i < area; ++i) {
@@ -19,6 +17,7 @@ ShapeMatrix::ShapeMatrix(int width, int height):
 } // ShapeMatrix::ShapeMatrix(int, int)
 
 ShapeMatrix::ShapeMatrix(const ShapeMatrix &copy):
+    identifier(copy.identifier),
     width(copy.width), height(copy.height),
     shapeArea(copy.shapeArea), shape(NULL) {
   int area = this->width * this->height;
@@ -58,6 +57,10 @@ bool ShapeMatrix::get(uint row, uint col) const {
   return this->shape[row * this->width + col];
 } // ShapeMatrix::get(int, int)
 
+uint ShapeMatrix::getIdentifier() const {
+  return this->identifier;
+}
+
 uint ShapeMatrix::getWidth() const {
   return this->width;
 } // ShapeMatrix::getWidth()
@@ -75,7 +78,11 @@ uint ShapeMatrix::getMatrixArea() const {
 } // ShapeMatrix::getMatrixArea()
 
 ShapeMatrix* ShapeMatrix::rotate() const {
-  ShapeMatrix* rotated = new ShapeMatrix(this->height, this->width);
+  ShapeMatrix* rotated = new ShapeMatrix(
+    this->identifier,
+    this->height,
+    this->width
+  );
   rotated->shapeArea = this->shapeArea;
 
   for(uint i = 0;  i < rotated->height; i++){
@@ -107,7 +114,11 @@ ShapeMatrix* ShapeMatrix::rotate(int n) const {
 } // ShapeMatrix::rotate(int)
 
 ShapeMatrix* ShapeMatrix::mirror() const {
-  ShapeMatrix* result = new ShapeMatrix(width, height);
+  ShapeMatrix* result = new ShapeMatrix(
+    this->identifier,
+    this->width,
+    this->height
+  );
   int last_index = this->height - 1;
   // copy the matrix over but mirrored row-wise
   for (uint i = 0; i < this->height; ++i) {
@@ -124,6 +135,7 @@ ShapeMatrix& ShapeMatrix::operator=(const ShapeMatrix& rhs) {
   }
   delete[] this->shape;
 
+  this->identifier = rhs.identifier;
   this->width = rhs.width;
   this->height = rhs.height;
   this->shapeArea = rhs.shapeArea;
@@ -140,6 +152,10 @@ ShapeMatrix& ShapeMatrix::operator=(const ShapeMatrix& rhs) {
 bool ShapeMatrix::operator==(const ShapeMatrix& rhs) const {
   if (this == &rhs) {
     return true;
+  }
+
+  if (this->identifier != rhs.identifier) {
+    return false;
   }
 
   if (this->width != rhs.width || this->height != rhs.height) {
