@@ -7,7 +7,7 @@
 namespace {
 
 TEST(PuzzleBoardTest, DataStructure) {
-  ShapeMatrix* shape = new ShapeMatrix(2,2);
+  ShapeMatrix* shape = new ShapeMatrix(2, 2,2);
   shape->set(0, 0, true);
   shape->set(0, 1, true);
   shape->set(1, 0, true);
@@ -32,7 +32,7 @@ TEST(PuzzleBoardTest, DataStructure) {
 }
 
 TEST(PuzzleBoardTest, CopyConstructor) {
-  ShapeMatrix* shape = new ShapeMatrix(2, 2);
+  ShapeMatrix* shape = new ShapeMatrix(2, 2, 2);
   shape->set(0, 0, true);
   shape->set(0, 1, true);
   shape->set(1, 0, true);
@@ -47,22 +47,22 @@ TEST(PuzzleBoardTest, CopyConstructor) {
 }
 
 TEST(PuzzleBoardTest, AddPieceOOB) {
-  ShapeMatrix* shape = new ShapeMatrix(2, 2);
+  ShapeMatrix* shape = new ShapeMatrix(2, 2, 2);
   shape->set(0, 0, true);
   shape->set(0, 1, true);
   shape->set(1, 0, true);
   shape->set(1, 1, true);
   PuzzleBoard* board = new PuzzleBoard(*shape);
 
-  ShapeMatrix* shape1 = new ShapeMatrix(1, 1);
+  ShapeMatrix* shape1 = new ShapeMatrix(2, 1, 1);
   shape1->set(0, 0, true);
 
-  ShapeMatrix* shape2 = new ShapeMatrix(1, 3);
+  ShapeMatrix* shape2 = new ShapeMatrix(2, 1, 3);
   shape2->set(0, 0, true);
   shape2->set(1, 0, true);
   shape2->set(2, 0, true);
 
-  ShapeMatrix* shape3 = new ShapeMatrix(3, 1);
+  ShapeMatrix* shape3 = new ShapeMatrix(2, 3, 1);
   shape3->set(0, 0, true);
   shape3->set(0, 1, true);
   shape3->set(0, 2, true);
@@ -85,7 +85,7 @@ TEST(PuzzleBoardTest, AddPieceOOB) {
 }
 
 TEST(PuzzleBoardTest, AddRemovePiece) {
-  ShapeMatrix* shape = new ShapeMatrix(2,2);
+  ShapeMatrix* shape = new ShapeMatrix(2, 2,2);
   shape->set(0, 0, true);
   shape->set(0, 1, true);
   shape->set(1, 0, true);
@@ -93,7 +93,7 @@ TEST(PuzzleBoardTest, AddRemovePiece) {
 
   PuzzleBoard* board = new PuzzleBoard(*shape);
 
-  ShapeMatrix* shape1 = new ShapeMatrix(1,1);
+  ShapeMatrix* shape1 = new ShapeMatrix(2, 1,1);
   shape1->set(0, 0, true);
 
   /* test the addition of piece*/
@@ -121,22 +121,22 @@ TEST(PuzzleBoardTest, AddRemovePiece) {
 }
 
 TEST(PuzzleBoardTest, RemovePieceOOB) {
-  ShapeMatrix* shape = new ShapeMatrix(2,2);
+  ShapeMatrix* shape = new ShapeMatrix(2, 2,2);
   shape->set(0, 0, true);
   shape->set(0, 1, true);
   shape->set(1, 0, true);
   shape->set(1, 1, true);
 
   PuzzleBoard* board = new PuzzleBoard(*shape);
-  ShapeMatrix* shape1 = new ShapeMatrix(1,1);
+  ShapeMatrix* shape1 = new ShapeMatrix(2, 1,1);
   shape1->set(0, 0, true);
 
-  ShapeMatrix* shape2 = new ShapeMatrix(1,3);
+  ShapeMatrix* shape2 = new ShapeMatrix(2, 1,3);
   shape2->set(0, 0, true);
   shape2->set(1, 0, true);
   shape2->set(2, 0, true);
 
-  ShapeMatrix* shape3 = new ShapeMatrix(3,1);
+  ShapeMatrix* shape3 = new ShapeMatrix(2, 3,1);
   shape3->set(0, 0, true);
   shape3->set(0, 1, true);
   shape3->set(0, 2, true);

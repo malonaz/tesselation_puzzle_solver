@@ -8,12 +8,13 @@ typedef unsigned int uint;
 */
 class ShapeMatrix {
 private:
+  uint identifier;
   /**
     The width of the matrix
   */
   uint width;
 
-  /** 
+  /**
     The height of the matrix
   */
   uint height;
@@ -29,7 +30,7 @@ private:
   bool* shape;
 
 public:
-  ShapeMatrix(int width, int height);
+  ShapeMatrix(int identifier, int width, int height);
 
   ShapeMatrix(const ShapeMatrix &copy);
 
@@ -40,6 +41,8 @@ public:
   void set(uint row, uint col, bool value);
 
   bool get(uint row, uint col) const;
+
+  uint getIdentifier() const;
 
   uint getWidth() const;
 
@@ -52,7 +55,7 @@ public:
   /**
     Creates a new copy of the shape matrix that is rotated clockwise by
     90 degrees.
-    
+
     \return The pointer to the new copy of the rotated matrix.
   */
   ShapeMatrix* rotate() const;
@@ -60,23 +63,23 @@ public:
   /**
     Creates a new copy of the shape matrix that is rotated clockwise by
     n * 90 degrees.
-    
+
     \param n The number of 90 degree transpose to rotate
     \return The pointer to the new copy of the rotated matrix.
   */
   ShapeMatrix* rotate(int n) const;
-  
+
   /**
     Creates a copy of the shape matrix that is mirrored row-wise.
-    
+
     \return The pointer to the new copy of the mirroed matrix.
   */
   ShapeMatrix* mirror() const;
 
   ShapeMatrix& operator=(const ShapeMatrix& shape);
-  
+
   bool operator==(const ShapeMatrix& rhs) const;
-  
+
   bool operator!=(const ShapeMatrix& rhs) const;
 
   virtual ~ShapeMatrix();
