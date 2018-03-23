@@ -9,8 +9,11 @@
 #include <vector>
 #include <cmath>
 
+using std::min;
+using std::max;
+using std::round;
+using std::vector;
 
-using namespace std;
 
 PuzzleBoard* createBoard(const vector<ShapeMatrix> &matrices,
     vector<ShapeMatrix> &pieces, int& containerArea, int& totalPieceArea) {
