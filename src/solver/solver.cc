@@ -16,30 +16,42 @@ using std::vector;
 
 
 PuzzleBoard* createBoard(const vector<ShapeMatrix> &matrices,
-    vector<ShapeMatrix> &pieces, int& containerArea, int& totalPieceArea) {
-  int maxArea = matrices[0].getShapeArea();
-  int maxAreaIdx = 0;
-  int accumArea = 0;
-  int matricesSize = (int)matrices.size();
+    vector<ShapeMatrix> &pieces, int& container_area, int& pieces_area) {
 
-  for (int i = 1; i < matricesSize; i++) {
-    int tempArea = matrices[i].getShapeArea();
-    int pushIdx = i;
-    if (tempArea > maxArea) {
-      //places the previous largest piece into the puzzle pieces vector
-      pushIdx = maxAreaIdx;
-      accumArea += maxArea;
-      maxArea = tempArea;
-      maxAreaIdx = i;
-      accumArea -= tempArea;
-    }
-    accumArea += tempArea;
-    pieces.push_back(matrices[pushIdx]);
+  // set output parameter to 0. used to keep track of the cumulative areas of all the pieces
+  pieces_area = 0;
+  
+  // set the container area and index to zero. notice container area is an output parameter
+  int container_index = -1;
+  container_area = -1;
+
+  // process all pieces
+  for (uint i = 0; i < matrices.size(); i++) {
+
+    // add the piece to the pieces vector
+    pieces.push_back(matrices[i]);
+    
+    // get area of current matrix
+    int current_area = matrices[i].getShapeArea();
+
+    // add area to cumulative area
+    pieces_area += current_area;
+    
+    if (current_area > container_area) {
+      // update output parameters with current piece's dimensions 
+      container_index = i;
+      container_area  = current_area;
+    } 
   }
-  ShapeMatrix container = matrices[maxAreaIdx];
+  
+  // remove the container area from the pieces' area and from the pieces vector
+  pieces_area -= container_area;
+  pieces.erase(pieces.begin() + container_index);
+
+  // extract the container and use it to create a new puzzle board
+  ShapeMatrix container = matrices[container_index];
   PuzzleBoard* board = new PuzzleBoard(container);
-  containerArea = maxArea; // return container area as a reference
-  totalPieceArea = accumArea; // return total area of puzzle pieces
+
   return board;
 }
 
