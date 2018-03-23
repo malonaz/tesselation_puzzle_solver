@@ -1,12 +1,14 @@
-#include <iostream>
-#include <vector>
-#include <cmath>
 #include "common/memory.h"
 #include "common/puzzle_board.h"
 #include "common/shape_matrix.h"
 #include "common/shape_matrix_io.h"
 #include "common/types.h"
 #include "solver.h"
+
+#include <iostream>
+#include <vector>
+#include <cmath>
+
 
 using namespace std;
 
