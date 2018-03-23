@@ -15,6 +15,13 @@ using std::round;
 using std::vector;
 
 
+/**
+ * Creates a PuzzleBoard objects using the pieces contained in matrices.
+ *   @params: matrices: a list of ShapeMatrix representing shapes of a puzzle, including the puzzle container
+ *   @params: pieces: will contain all pieces in param matrices except the container piece
+ *   @params: container_area: will hold the area of the container of the puzzle board
+ *   @params: pieces_area: will contain the area of all pieces of the puzzle (excluding the container's)
+ */
 PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices,
     vector<ShapeMatrix> &pieces, int& container_area, int& pieces_area) {
 
@@ -66,6 +73,7 @@ bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix*
 }
 
 vector<ShapeMatrix*>* combinations(const ShapeMatrix &temp) {
+  
   vector<ShapeMatrix*>* combi = new vector<ShapeMatrix*>();
   ShapeMatrix* r_temp = new ShapeMatrix(temp);
 
