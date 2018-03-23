@@ -15,7 +15,7 @@ using std::round;
 using std::vector;
 
 
-PuzzleBoard* createBoard(const vector<ShapeMatrix> &matrices,
+PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices,
     vector<ShapeMatrix> &pieces, int& container_area, int& pieces_area) {
 
   // set output parameter to 0. used to keep track of the cumulative areas of all the pieces
@@ -55,8 +55,8 @@ PuzzleBoard* createBoard(const vector<ShapeMatrix> &matrices,
   return board;
 }
 
-bool isShapeMatrixInList(const ShapeMatrix &shape,
-    const vector<ShapeMatrix*> &list) {
+bool is_shape_matrix_in_list(const ShapeMatrix &shape,
+			 const vector<ShapeMatrix*> &list) {
   bool result = false;
   for (uint j = 0; j < list.size(); j++) {
     if (shape == *(list[j])) {
@@ -72,7 +72,7 @@ vector<ShapeMatrix*>* combinations(const ShapeMatrix &temp) {
   ShapeMatrix* r_temp = new ShapeMatrix(temp);
 
   for (uint i = 0; i < 8; i++) {
-    if (!isShapeMatrixInList(*r_temp, *combi)) {
+    if (!is_shape_matrix_in_list(*r_temp, *combi)) {
       combi->push_back(r_temp);
     }
 
@@ -85,21 +85,21 @@ vector<ShapeMatrix*>* combinations(const ShapeMatrix &temp) {
 }
 
 /* function to get empty area */
-int getAdjacentEmptyArea(uint r, uint c, uint height, uint width, int** copiedBoard) {
+int get_adjacent_empty_area(uint r, uint c, uint height, uint width, int** copiedBoard) {
   if (r < height && c < width) {
     if (copiedBoard[r][c] == 0) {
       copiedBoard[r][c] = -1;
-      return 1 + getAdjacentEmptyArea(r, c + 1, height, width, copiedBoard)
-        + getAdjacentEmptyArea(r, c - 1, height, width,copiedBoard)
-        + getAdjacentEmptyArea(r + 1, c,height, width, copiedBoard)
-        + getAdjacentEmptyArea(r - 1, c,height, width, copiedBoard);
+      return 1 + get_adjacent_empty_area(r, c + 1, height, width, copiedBoard)
+        + get_adjacent_empty_area(r, c - 1, height, width,copiedBoard)
+        + get_adjacent_empty_area(r + 1, c,height, width, copiedBoard)
+        + get_adjacent_empty_area(r - 1, c,height, width, copiedBoard);
     }
   }
   return 0;
 }
 
 /* function to generate all possible area combinations from remaining pieces */
-void generatePossibleAreas(int* answerArray,
+void generate_possible_areas(int* answerArray,
     long int maxCombinations,
     const vector<ShapeMatrix> &pieces,
     uint currentIndex) {
@@ -142,7 +142,7 @@ int** copyBoard(PuzzleBoard* const board) {
 }
 
 /* helper function to delete dynamically allocated 2D array */
-void deleteCopy(uint height, int** copyBoard) {
+void delete_copy(uint height, int** copyBoard) {
   for (uint i = 0; i < height; i++){
     delete[] copyBoard[i];
   }
@@ -150,7 +150,7 @@ void deleteCopy(uint height, int** copyBoard) {
 }
 
 /* function to check remaining area if the pieces can fit */
-bool solvableConfig(PuzzleBoard* board,
+bool solvable_config(PuzzleBoard* board,
     const vector<ShapeMatrix> &pieces,
     uint currentIndex) {
   uint b_height = board->getHeight();
@@ -159,14 +159,14 @@ bool solvableConfig(PuzzleBoard* board,
   int numRemainingPieces = pieces.size() - currentIndex;
   long int maxCombinations = pow(2, numRemainingPieces);
   int* answerArray = new int[maxCombinations]();
-  generatePossibleAreas(answerArray, maxCombinations, pieces, currentIndex);
+  generate_possible_areas(answerArray, maxCombinations, pieces, currentIndex);
 
   int** copiedBoard = copyBoard(board);
 
   for (uint r = 0; r < b_height; r++) {
     for (uint c = 0; c < b_width; c++) {
       //GETTING ADJACENT AREA OF CURRENT SLOT
-      int area = getAdjacentEmptyArea(r, c, b_height, b_width, copiedBoard);
+      int area = get_adjacent_empty_area(r, c, b_height, b_width, copiedBoard);
       bool areaImpossible = true;
 
       //IF AREA IS ZERO, JUST BREAK OUT OF THIS FOR LOOP
@@ -181,20 +181,20 @@ bool solvableConfig(PuzzleBoard* board,
         }
       }
       if (areaImpossible) {
-        deleteCopy(b_height, copiedBoard);
+        delete_copy(b_height, copiedBoard);
         delete[] answerArray;
         return false;
       }
     }
   }
-  deleteCopy(b_height, copiedBoard);
+  delete_copy(b_height, copiedBoard);
 
   delete[] answerArray;
   return true;
 }
 
 /* function for recursive solving */
-bool recursiveSolver (PuzzleBoard* board,
+bool recursive_solver (PuzzleBoard* board,
     const vector<ShapeMatrix> pieces,
     uint currentIndex,
     int& iterations) {
@@ -203,7 +203,7 @@ bool recursiveSolver (PuzzleBoard* board,
     //the board is complete, and no more remaining pieces
     return true;
   }
-  if (!solvableConfig(board, pieces, currentIndex)) {
+  if (!solvable_config(board, pieces, currentIndex)) {
     return false;
   }
   uint height = board->getHeight();
@@ -217,7 +217,7 @@ bool recursiveSolver (PuzzleBoard* board,
       for (uint counteri = 0; counteri < shapesList->size(); counteri++) {
         ShapeMatrix* r_temp = (*shapesList)[counteri];
         if (board->placePiece(c, r, nextIndex, *r_temp)) {
-          if (recursiveSolver(board, pieces, nextIndex,iterations)) {
+          if (recursive_solver(board, pieces, nextIndex,iterations)) {
             return true;
           }
           board->removePiece(c, r, nextIndex, *r_temp); // revert
@@ -230,14 +230,14 @@ bool recursiveSolver (PuzzleBoard* board,
 }
 
 
-int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
+int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& returnCode,
       uint& board_height, uint& board_width) {
   returnCode = 0;
   vector<ShapeMatrix> shapes;
   int** board_solution = NULL;
   int containerArea = 0;
   int totalPieceArea = 0;
-  PuzzleBoard* board = createBoard(matrices, shapes,
+  PuzzleBoard* board = create_board(matrices, shapes,
       containerArea, totalPieceArea);
   if (totalPieceArea > containerArea) { // case of undersized container
     returnCode = UNDERSIZED;
@@ -249,7 +249,7 @@ int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
   }
   // if puzzle pieces area == container area
   int iterations = 0;
-  bool success = recursiveSolver(board, shapes, 0, iterations);
+  bool success = recursive_solver(board, shapes, 0, iterations);
 
   if (success) {
     returnCode = SOLVED;

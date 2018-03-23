@@ -57,7 +57,7 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   int** solution = NULL;
   uint board_height = 0;
   uint board_width = 0;
-  solution = puzzleSolver(pieces, solve_success, board_height, board_width);
+  solution = puzzle_solver(pieces, solve_success, board_height, board_width);
 
   /* Return Message */
   switch (solve_success) {
@@ -80,7 +80,7 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
 
   if (solve_success == SOLVED) {
     print_solution_board(solution, board_height, board_width);
-    deleteCopy(board_height, solution);
+    delete_copy(board_height, solution);
   }
   return 0;
 }
