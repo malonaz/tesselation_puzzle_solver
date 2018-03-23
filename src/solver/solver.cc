@@ -55,16 +55,14 @@ PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices,
   return board;
 }
 
-bool is_shape_matrix_in_list(const ShapeMatrix &shape,
-			 const vector<ShapeMatrix*> &list) {
-  bool result = false;
-  for (uint j = 0; j < list.size(); j++) {
-    if (shape == *(list[j])) {
-      result = true;
-      break;
-    }
-  }
-  return result;
+bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix*> &list) {
+
+  for (uint j = 0; j < list.size(); j++) 
+    if (shape == *(list[j]))
+      // the shape matrix is in the list
+      return true;
+  
+  return false;
 }
 
 vector<ShapeMatrix*>* combinations(const ShapeMatrix &temp) {
