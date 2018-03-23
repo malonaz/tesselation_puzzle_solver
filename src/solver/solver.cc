@@ -62,6 +62,9 @@ PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices,
   return board;
 }
 
+/**
+ * Helper function which returns true if shape is in the given list.
+ */
 bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix*> &list) {
 
   for (uint j = 0; j < list.size(); j++) 
@@ -72,22 +75,32 @@ bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix*
   return false;
 }
 
-vector<ShapeMatrix*>* combinations(const ShapeMatrix &temp) {
+vector<ShapeMatrix*>* combinations(const ShapeMatrix &piece) {
+
+  // will hold all the possible rotations and mirrors of this piece
+  vector<ShapeMatrix*>* variations = new vector<ShapeMatrix*>();
+
+  // create a copy of the given piece
+  ShapeMatrix* current_variation = new ShapeMatrix(piece);
   
-  vector<ShapeMatrix*>* combi = new vector<ShapeMatrix*>();
-  ShapeMatrix* r_temp = new ShapeMatrix(temp);
+  for (uint i = 0; i < 4; i++){
+    
+    // add the current variation if it is not in the variations list
+    if (!is_shape_matrix_in_list(*current_variation, *variations)) 
+      variations->push_back(current_variation);
 
-  for (uint i = 0; i < 8; i++) {
-    if (!is_shape_matrix_in_list(*r_temp, *combi)) {
-      combi->push_back(r_temp);
-    }
+    // create a flipped version of the piece
+    current_variation = current_variation->mirror();
 
-    r_temp = r_temp->rotate();
-    if (i == 3) {
-      r_temp = r_temp->mirror();
-    }
+    // add the current variation if it is not in the variations list
+    if (!is_shape_matrix_in_list(*current_variation, *variations)) 
+      variations->push_back(current_variation);
+
+    // now rotate the shape
+    current_variation = current_variation->rotate();
   }
-  return combi;
+    
+  return variations;
 }
 
 /* function to get empty area */
