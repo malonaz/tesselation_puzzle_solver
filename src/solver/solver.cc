@@ -52,10 +52,10 @@ PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices,
 /**
  * Helper function which returns true if shape is in the given list.
  */
-bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix*> &list) {
+bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix> &list) {
 
   for (uint j = 0; j < list.size(); j++) 
-    if (shape == *(list[j]))
+    if (shape == list[j])
       // the shape matrix is in the list
       return true;
   
@@ -66,13 +66,13 @@ bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix*
  * Helper function which takes a piece and returns all possible variation of this piece,
  * rotations and flips (mirrors). Does not return any duplicates.
  */
-vector<ShapeMatrix*>* variations(const ShapeMatrix &piece) {
+vector<ShapeMatrix> get_variations(const ShapeMatrix &piece) {
   
   // will hold all the possible rotations and mirrors of this piece
-  vector<ShapeMatrix*>* variations = new vector<ShapeMatrix*>();
+  vector<ShapeMatrix> variations = vector<ShapeMatrix>();
 
   // create a copy of the given piece
-  ShapeMatrix* current_variation = new ShapeMatrix(piece);
+  ShapeMatrix current_variation = ShapeMatrix(piece);
 
   // vector keeps track of duplicates within variations
   vector<int> duplicates = vector<int>();
@@ -81,26 +81,16 @@ vector<ShapeMatrix*>* variations(const ShapeMatrix &piece) {
 
     if (i == 4)
       // create a flipped version of the piece
-      current_variation = current_variation->mirror();
+      current_variation = current_variation.flip();
 
-    // check if current variation is already in the variations list
-    if (is_shape_matrix_in_list(*current_variation, *variations))
-      duplicates.push_back(i);
+    // add current variation if is is not already in the variations list
+    if (!is_shape_matrix_in_list(current_variation, variations))
+       variations.push_back(current_variation);
     
-    // add the current variation
-    variations->push_back(current_variation);
-
     // now rotate the shape
-    current_variation = current_variation->rotate();
+    current_variation = current_variation.rotate();
   }
 
-  
-  // free duplicates from the heap and remove them from the variations list
-  for (int i = duplicates.size() -1 ; i != -1; i--){
-    delete (*variations)[duplicates[i]];
-    variations->erase(variations->begin() + duplicates[i]);
-  }
-    
   return variations;
 }
 
@@ -241,35 +231,29 @@ bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> pieces, uin
 
   // get the current piece's variations (flips and rotations)
   ShapeMatrix current_piece = pieces[current_index];
-  vector<ShapeMatrix*>* current_piece_variations = variations(current_piece);
+  vector<ShapeMatrix> current_piece_variations = get_variations(current_piece);
 
   int next_index = current_index + 1;
 
   for (uint row = 0; row < height; row++) 
     for (uint col = 0; col < width; col++) 
-      for (uint i = 0; i < current_piece_variations->size(); i++) {
+      for (uint i = 0; i < current_piece_variations.size(); i++) {
 
 	// get the ith variation of the current piece
-        ShapeMatrix* current_piece_variation = (*current_piece_variations)[i];
+        ShapeMatrix current_piece_variation = current_piece_variations[i];
 
 	// if this variation cannot be placed, try the next
-        if (!board->placePiece(col, row, next_index, *current_piece_variation))
+        if (!board->placePiece(col, row, next_index, current_piece_variation))
 	  continue;
 
 	// check that puzzle can be solved after placing the piece
-	if (recursive_solver(board, pieces, next_index,iterations)){
-	  // free the list of shape from the heap and return true
-	  cleanup_list(current_piece_variations);
+	if (recursive_solver(board, pieces, next_index,iterations))
 	  return true;
-	}
 
 	// backtrack
-	board->removePiece(col, row, next_index, *current_piece_variation);
+	board->removePiece(col, row, next_index, current_piece_variation);
         }
       
-  // free the list of shape from the heap
-  cleanup_list(current_piece_variations);
-
   return false;
 }
 

@@ -55,7 +55,7 @@ public:
     
     \return The pointer to the new copy of the rotated matrix.
   */
-  ShapeMatrix* rotate() const;
+  ShapeMatrix rotate() const;
 
   /**
     Creates a new copy of the shape matrix that is rotated clockwise by
@@ -64,14 +64,14 @@ public:
     \param n The number of 90 degree transpose to rotate
     \return The pointer to the new copy of the rotated matrix.
   */
-  ShapeMatrix* rotate(int n) const;
+  //  ShapeMatrix* rotate(int n) const;
   
   /**
     Creates a copy of the shape matrix that is mirrored row-wise.
     
     \return The pointer to the new copy of the mirroed matrix.
   */
-  ShapeMatrix* mirror() const;
+  ShapeMatrix flip() const;
 
   ShapeMatrix& operator=(const ShapeMatrix& shape);
   
