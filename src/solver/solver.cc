@@ -271,35 +271,55 @@ bool recursive_solver (PuzzleBoard* board,
 }
 
 
-int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& returnCode,
-      uint& board_height, uint& board_width) {
+int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& returnCode, uint& board_height, uint& board_width) {
+
+  // set the return code to 0
   returnCode = 0;
-  vector<ShapeMatrix> shapes;
+
+  // set solution to null
   int** board_solution = NULL;
+  
+  vector<ShapeMatrix> shapes;
+
+  // set variables used by recursive solver
   int containerArea = 0;
   int totalPieceArea = 0;
-  PuzzleBoard* board = create_board(matrices, shapes,
-      containerArea, totalPieceArea);
-  if (totalPieceArea > containerArea) { // case of undersized container
+
+  // create a board
+  PuzzleBoard* board = create_board(matrices, shapes, containerArea, totalPieceArea);
+
+  // check for undersized container case
+  if (totalPieceArea > containerArea) { 
     returnCode = UNDERSIZED;
     return board_solution;
   }
+
+  // check for oversized container case
   if (totalPieceArea < containerArea) { // case of oversized container
     returnCode = OVERSIZED;
     return board_solution;
   }
-  // if puzzle pieces area == container area
+
+  // attempt to solve the puzzle recusively
   int iterations = 0;
   bool success = recursive_solver(board, shapes, 0, iterations);
 
-  if (success) {
-    returnCode = SOLVED;
-    board_height = board->getHeight(); //returns height of board
-    board_width = board->getWidth(); // returns width of board
-    board_solution = copy_board(board); // returns a 2D int array of board (w soln)
-  } else {
-    returnCode = UNSOLVED;
+  // check if puzzle was solved
+  if (!success){
+      returnCode = UNSOLVED;
+      delete board;
+      return NULL;
   }
+      
+  // set output parameters
+  returnCode = SOLVED;
+  board_height = board->getHeight(); 
+  board_width = board->getWidth(); 
+  board_solution = copy_board(board);
+
+  // free board
   delete board;
+
+  // return solution
   return board_solution;
 }
