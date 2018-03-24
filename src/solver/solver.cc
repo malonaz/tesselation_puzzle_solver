@@ -30,35 +30,20 @@ PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices,
   // set output parameter to 0. used to keep track of the cumulative areas of all the pieces
   pieces_area = 0;
 
-  // set the container area and index to zero. notice container area is an output parameter
-  int container_index = -1;
-  container_area = -1;
+  // set pieces equal to matrices, then sort it in descending order
+  pieces = matrices;
+  std::sort(pieces.rbegin(), pieces.rend());
 
-  // process all pieces
-  for (uint i = 0; i < matrices.size(); i++) {
-
-    // add the piece to the pieces vector
-    pieces.push_back(matrices[i]);
+  // extract container (last piece) and save its area
+  ShapeMatrix container = pieces[0];
+  pieces.erase(pieces.begin());
+  container_area = container.getShapeArea();
+	       
+  // find total area of pieces
+  for (uint i = 0; i < pieces.size(); i++) 
+    pieces_area += pieces[i].getShapeArea();
     
-    // get area of current matrix
-    int current_area = matrices[i].getShapeArea();
-
-    // add area to cumulative area
-    pieces_area += current_area;
-    
-    if (current_area > container_area) {
-      // update output parameters with current piece's dimensions 
-      container_index = i;
-      container_area  = current_area;
-    } 
-  }
-  
-  // remove the container area from the pieces' area and from the pieces vector
-  pieces_area -= container_area;
-  pieces.erase(pieces.begin() + container_index);
-
-  // extract the container and use it to create a new puzzle board
-  ShapeMatrix container = matrices[container_index];
+  // use container to create a new puzzle board
   PuzzleBoard* board = new PuzzleBoard(container);
 
   return board;
@@ -306,9 +291,6 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint&
 
   // create a board
   PuzzleBoard* board = create_board(matrices, shapes, container_area, pieces_area);
-
-  // sort pieces for largest to smallest
-  std::sort(shapes.rbegin(), shapes.rend());
   
   // check for undersized container case
   if (pieces_area > container_area) { 
