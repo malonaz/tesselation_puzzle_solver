@@ -234,39 +234,52 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
   return true;
 }
 
-/* function for recursive solving */
-bool recursive_solver (PuzzleBoard* board,
-    const vector<ShapeMatrix> pieces,
-    uint currentIndex,
-    int& iterations) {
+/**
+ * Helper function which recursively attempts to place a piece to solve the puzzle. depth-first!
+ */
+bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> pieces, uint current_index, int& iterations) {
+
+  // increment the iterations number
   iterations++;
-  if (board->getRemainingArea() == 0 || currentIndex >= pieces.size()) {
-    //the board is complete, and no more remaining pieces
+
+  // check if board is complete
+  if (board->getRemainingArea() == 0 || current_index >= pieces.size()) 
     return true;
-  }
-  if (!solvable_config(board, pieces, currentIndex)) {
+
+  // check if board is solvable
+  if (!solvable_config(board, pieces, current_index)) 
     return false;
-  }
+
+  // get board dimensions
   uint height = board->getHeight();
   uint width = board->getWidth();
-  ShapeMatrix temp = pieces[currentIndex];
-  vector<ShapeMatrix*>* shapesList = variations(temp);
-  int nextIndex = currentIndex + 1;
 
-  for (uint r = 0; r < height; r++) {
-    for (uint c = 0; c < width; c++) {
+  // get the current piece's variations (flips and rotations)
+  ShapeMatrix current_piece = pieces[current_index];
+  vector<ShapeMatrix*>* shapesList = variations(current_piece);
+
+  int nextIndex = current_index + 1;
+
+  for (uint row = 0; row < height; row++) 
+    for (uint col = 0; col < width; col++) 
       for (uint counteri = 0; counteri < shapesList->size(); counteri++) {
         ShapeMatrix* r_temp = (*shapesList)[counteri];
-        if (board->placePiece(c, r, nextIndex, *r_temp)) {
-          if (recursive_solver(board, pieces, nextIndex,iterations)) {
-            return true;
-          }
-          board->removePiece(c, r, nextIndex, *r_temp); // revert
+
+	// check that piece can be placed at (col, row)
+        if (!board->placePiece(col, row, nextIndex, *r_temp))
+	  continue;
+
+	// check that puzzle can be solved after placing the piece
+	if (recursive_solver(board, pieces, nextIndex,iterations)) 
+	  return true;
+
+	// backtrack
+	board->removePiece(col, row, nextIndex, *r_temp);
         }
-      }
-    }
-  }
+      
+  // free the list of shape form the heap
   cleanup_list(shapesList);
+
   return false;
 }
 
@@ -294,6 +307,9 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint&
   // create a board
   PuzzleBoard* board = create_board(matrices, shapes, container_area, pieces_area);
 
+  // sort pieces for largest to smallest
+  
+  
   // check for undersized container case
   if (pieces_area > container_area) { 
     return_code = UNDERSIZED;
