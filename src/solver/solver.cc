@@ -137,33 +137,27 @@ int get_adjacent_empty_area(uint row, uint col, uint height, uint width, int** b
 }
 
 
-/* function to generate all possible area variations from remaining pieces */
-void generate_possible_areas(int* answer_array, long int max_variations,
-			     const vector<ShapeMatrix> &pieces, uint current_index) {
+/**
+ * Helper functions which copies into possible_areas all the possible permutations of the area of the 
+ * pieces starting at current index
+ */
+void generate_possible_areas(vector<int>& possible_areas, const vector<ShapeMatrix>& pieces, uint current_index, int sum = 0){
 
-  
-  int size_array = pieces.size() - current_index;
-  int* generative_array = new int[size_array]();
+  // check current_index is positive
+  if (current_index >= pieces.size())
+    return;
 
-  for (long int sequencei = 0; sequencei < max_variations; sequencei++) {
-    int answer=0;
-    long int copyi = sequencei;
-    for (int countj = size_array-1; countj >= 0; countj--) {
-      generative_array[countj] = copyi % 2 ;
-      copyi /= 2;
-    }
-    for (int countk = 0; countk < size_array; countk++) {
-      if (generative_array[countk]) {
-        answer += pieces[countk + current_index].getShapeArea(); // size instead}
-      }
-    }
-    answer_array[sequencei] = answer;
-    for (int countl = 0; countl < size_array; countl++) {
-      generative_array[countl] =0;
-    }
-  }
-  delete[] generative_array;
+  // get area of shape at current index
+  int area = pieces[current_index].getShapeArea();
+
+  // add sum + area to possible areas
+  possible_areas.push_back(sum + pieces[current_index].getShapeArea());
+
+  // recursive calls. two choices: use this piece's area or not
+  generate_possible_areas(possible_areas, pieces, current_index + 1, sum + area);
+  generate_possible_areas(possible_areas, pieces, current_index + 1, sum);
 }
+
 
 /**
  * Helper function which returns a copy of the given board as a 2D integer array
@@ -201,30 +195,30 @@ void delete_2d_array(uint height, int** copy_board) {
 }
 
 /* function to check remaining area if the pieces can fit */
-bool solvable_config(PuzzleBoard* board,
-    const vector<ShapeMatrix> &pieces,
-    uint currentIndex) {
-  uint b_height = board->getHeight();
-  uint b_width = board->getWidth();
+bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint currentIndex) {
+
+  // get board dimensions
+  uint height = board->getHeight();
+  uint width = board->getWidth();
+  
   //preparation to generate an array all possible area variations.
-  int numRemainingPieces = pieces.size() - currentIndex;
-  long int maxVariations = pow(2, numRemainingPieces);
-  int* answerArray = new int[maxVariations]();
-  generate_possible_areas(answerArray, maxVariations, pieces, currentIndex);
+  vector<int> answerArray = vector<int>();
+  
+  generate_possible_areas(answerArray, pieces, currentIndex);
 
   int** copiedBoard = copy_board(board);
 
-  for (uint r = 0; r < b_height; r++) {
-    for (uint c = 0; c < b_width; c++) {
+  for (uint r = 0; r < height; r++) {
+    for (uint c = 0; c < width; c++) {
       //GETTING ADJACENT AREA OF CURRENT SLOT
-      int area = get_adjacent_empty_area(r, c, b_height, b_width, copiedBoard);
+      int area = get_adjacent_empty_area(r, c, height, width, copiedBoard);
       bool areaImpossible = true;
 
       //IF AREA IS ZERO, JUST BREAK OUT OF THIS FOR LOOP
       if (!area) {
         break;
       } else {
-        for (long int sequencei = 0; sequencei < maxVariations; sequencei++) {
+        for (uint sequencei = 0; sequencei < answerArray.size(); sequencei++) {
           if (area == answerArray[sequencei]) {
             areaImpossible = false;
             break; //BREAK OUT OF SEARCH LOOP IF POSSIBLE COMBINATION OF SHAPES FOUND
@@ -232,15 +226,13 @@ bool solvable_config(PuzzleBoard* board,
         }
       }
       if (areaImpossible) {
-        delete_2d_array(b_height, copiedBoard);
-        delete[] answerArray;
+        delete_2d_array(height, copiedBoard);
         return false;
       }
     }
   }
-  delete_2d_array(b_height, copiedBoard);
+  delete_2d_array(height, copiedBoard);
 
-  delete[] answerArray;
   return true;
 }
 
