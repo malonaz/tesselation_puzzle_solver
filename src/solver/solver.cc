@@ -241,29 +241,31 @@ bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> pieces, uin
 
   // get the current piece's variations (flips and rotations)
   ShapeMatrix current_piece = pieces[current_index];
-  vector<ShapeMatrix*>* shapesList = variations(current_piece);
+  vector<ShapeMatrix*>* current_piece_variations = variations(current_piece);
 
-  int nextIndex = current_index + 1;
+  int next_index = current_index + 1;
 
   for (uint row = 0; row < height; row++) 
     for (uint col = 0; col < width; col++) 
-      for (uint counteri = 0; counteri < shapesList->size(); counteri++) {
-        ShapeMatrix* r_temp = (*shapesList)[counteri];
+      for (uint i = 0; i < current_piece_variations->size(); i++) {
 
-	// check that piece can be placed at (col, row)
-        if (!board->placePiece(col, row, nextIndex, *r_temp))
+	// get the ith variation of the current piece
+        ShapeMatrix* current_piece_variation = (*current_piece_variations)[i];
+
+	// if this variation cannot be placed, try the next
+        if (!board->placePiece(col, row, next_index, *current_piece_variation))
 	  continue;
 
 	// check that puzzle can be solved after placing the piece
-	if (recursive_solver(board, pieces, nextIndex,iterations)) 
+	if (recursive_solver(board, pieces, next_index,iterations)) 
 	  return true;
 
 	// backtrack
-	board->removePiece(col, row, nextIndex, *r_temp);
+	board->removePiece(col, row, next_index, *current_piece_variationc);
         }
       
   // free the list of shape form the heap
-  cleanup_list(shapesList);
+  cleanup_list(current_piece_variations);
 
   return false;
 }
