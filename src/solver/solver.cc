@@ -29,7 +29,7 @@ PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices,
 
   // set output parameter to 0. used to keep track of the cumulative areas of all the pieces
   pieces_area = 0;
-  
+
   // set the container area and index to zero. notice container area is an output parameter
   int container_index = -1;
   container_area = -1;
@@ -308,7 +308,7 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint&
   PuzzleBoard* board = create_board(matrices, shapes, container_area, pieces_area);
 
   // sort pieces for largest to smallest
-  
+  std::sort(shapes.rbegin(), shapes.rend());
   
   // check for undersized container case
   if (pieces_area > container_area) { 

@@ -79,6 +79,8 @@ public:
   
   bool operator!=(const ShapeMatrix& rhs) const;
 
+  friend bool operator< (const ShapeMatrix& a, const ShapeMatrix& b);
+
   virtual ~ShapeMatrix();
 
 }; // ShapeMatrix

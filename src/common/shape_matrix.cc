@@ -166,3 +166,8 @@ bool ShapeMatrix::operator!=(const ShapeMatrix& rhs) const {
 ShapeMatrix::~ShapeMatrix() {
   delete[] this->shape;
 } // ShapeMatrix::~ShapeMatrix()
+
+
+bool operator< (const ShapeMatrix& a, const ShapeMatrix& b){
+  return a.getShapeArea() < b.getShapeArea();
+}
