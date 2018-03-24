@@ -297,31 +297,26 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint&
   // check for undersized container case
   if (pieces_area > container_area) { 
     return_code = UNDERSIZED;
-    return board_solution;
+    return NULL;
   }
 
   // check for oversized container case
   if (pieces_area < container_area) { // case of oversized container
     return_code = OVERSIZED;
-    return board_solution;
+    return NULL;
   }
 
   // attempt to solve the puzzle recusively
   int iterations = 0;
   bool success = recursive_solver(board, shapes, 0, iterations);
 
-  // check if puzzle was solved
-  if (!success){
-      return_code = UNSOLVED;
-      delete board;
-      return NULL;
-  }
-      
   // set output parameters
-  return_code = SOLVED;
+  return_code = success? SOLVED: UNSOLVED;
   board_height = board->getHeight(); 
-  board_width = board->getWidth(); 
-  board_solution = copy_board(board);
+  board_width = board->getWidth();
+
+  // set return param
+  int** board_solution = success? copy_board(board): NULL;
 
   // free board
   delete board;
