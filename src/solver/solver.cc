@@ -196,7 +196,10 @@ void delete_2d_array(uint height, int** copy_board) {
   delete[] copy_board;
 }
 
-/* function to check remaining area if the pieces can fit */
+/**
+ * Helper function which checks empty areas to see if a combination of pieces can fit there.
+ * used to prune search space
+ */
 bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint currentIndex) {
 
   // get board dimensions
@@ -220,7 +223,7 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
       if (area == 0)
 	continue; 
 
-      // search for area in possible_areas
+      // if area is not in the possible permutations of area, then config is unsolvable
       if (std::find(possible_areas.begin(), possible_areas.end(), area) == possible_areas.end()){
 	delete_2d_array(height, board_copy);
 	return false;
