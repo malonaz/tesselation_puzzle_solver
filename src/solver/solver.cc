@@ -76,28 +76,38 @@ bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix*
 }
 
 vector<ShapeMatrix*>* variations(const ShapeMatrix &piece) {
-
+  
   // will hold all the possible rotations and mirrors of this piece
   vector<ShapeMatrix*>* variations = new vector<ShapeMatrix*>();
 
   // create a copy of the given piece
   ShapeMatrix* current_variation = new ShapeMatrix(piece);
+
+  // vector keeps track of duplicates within variations
+  vector<int> duplicates = vector<int>();
   
-  for (uint i = 0; i < 4; i++){
+  for (uint i = 0; i < 8; i++){
+
+    if (i == 4)
+      // create a flipped version of the piece
+      current_variation = current_variation->mirror();
+
+    // check if current variation is already in the variations list
+    if (is_shape_matrix_in_list(*current_variation, *variations))
+      duplicates.push_back(i);
     
-    // add the current variation if it is not in the variations list
-    if (!is_shape_matrix_in_list(*current_variation, *variations)) 
-      variations->push_back(current_variation);
-
-    // create a flipped version of the piece
-    current_variation = current_variation->mirror();
-
-    // add the current variation if it is not in the variations list
-    if (!is_shape_matrix_in_list(*current_variation, *variations)) 
-      variations->push_back(current_variation);
+    // add the current variation
+    variations->push_back(current_variation);
 
     // now rotate the shape
     current_variation = current_variation->rotate();
+  }
+
+  
+  // free duplicates from the heap and remove them from the variations list
+  for (int i = duplicates.size() -1 ; i != -1; i--){
+    delete (*variations)[duplicates[i]];
+    variations->erase(variations->begin() + duplicates[i]);
   }
     
   return variations;
