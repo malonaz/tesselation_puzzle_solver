@@ -75,7 +75,7 @@ bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix*
   return false;
 }
 
-vector<ShapeMatrix*>* combinations(const ShapeMatrix &piece) {
+vector<ShapeMatrix*>* variations(const ShapeMatrix &piece) {
 
   // will hold all the possible rotations and mirrors of this piece
   vector<ShapeMatrix*>* variations = new vector<ShapeMatrix*>();
@@ -117,14 +117,14 @@ int get_adjacent_empty_area(uint r, uint c, uint height, uint width, int** copie
   return 0;
 }
 
-/* function to generate all possible area combinations from remaining pieces */
+/* function to generate all possible area variations from remaining pieces */
 void generate_possible_areas(int* answerArray,
-    long int maxCombinations,
+    long int maxVariations,
     const vector<ShapeMatrix> &pieces,
     uint currentIndex) {
   int sizeArray = pieces.size() - currentIndex;
   int* generativeArray = new int[sizeArray]();
-  for (long int sequencei = 0; sequencei < maxCombinations; sequencei++) {
+  for (long int sequencei = 0; sequencei < maxVariations; sequencei++) {
     int answer=0;
     long int copyi = sequencei;
     for (int countj = sizeArray-1; countj >= 0; countj--) {
@@ -174,11 +174,11 @@ bool solvable_config(PuzzleBoard* board,
     uint currentIndex) {
   uint b_height = board->getHeight();
   uint b_width = board->getWidth();
-  //preparation to generate an array all possible area combinations.
+  //preparation to generate an array all possible area variations.
   int numRemainingPieces = pieces.size() - currentIndex;
-  long int maxCombinations = pow(2, numRemainingPieces);
-  int* answerArray = new int[maxCombinations]();
-  generate_possible_areas(answerArray, maxCombinations, pieces, currentIndex);
+  long int maxVariations = pow(2, numRemainingPieces);
+  int* answerArray = new int[maxVariations]();
+  generate_possible_areas(answerArray, maxVariations, pieces, currentIndex);
 
   int** copiedBoard = copyBoard(board);
 
@@ -192,7 +192,7 @@ bool solvable_config(PuzzleBoard* board,
       if (!area) {
         break;
       } else {
-        for (long int sequencei = 0; sequencei < maxCombinations; sequencei++) {
+        for (long int sequencei = 0; sequencei < maxVariations; sequencei++) {
           if (area == answerArray[sequencei]) {
             areaImpossible = false;
             break; //BREAK OUT OF SEARCH LOOP IF POSSIBLE COMBINATION OF SHAPES FOUND
@@ -228,7 +228,7 @@ bool recursive_solver (PuzzleBoard* board,
   uint height = board->getHeight();
   uint width = board->getWidth();
   ShapeMatrix temp = pieces[currentIndex];
-  vector<ShapeMatrix*>* shapesList = combinations(temp);
+  vector<ShapeMatrix*>* shapesList = variations(temp);
   int nextIndex = currentIndex + 1;
 
   for (uint r = 0; r < height; r++) {
