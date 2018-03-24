@@ -6,6 +6,7 @@
 #include "solver.h"
 
 #include <iostream>
+#include <unordered_set>
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -14,7 +15,7 @@ using std::min;
 using std::max;
 using std::round;
 using std::vector;
-
+using std::unordered_set;
 
 /**
  * Creates a PuzzleBoard objects using the pieces contained in matrices.
@@ -142,7 +143,7 @@ int get_adjacent_empty_area(uint row, uint col, uint height, uint width, int** b
  * Helper functions which copies into possible_areas all the possible permutations of the area of the 
  * pieces starting at current index
  */
-void get_areas_permutations(vector<int>& possible_areas, const vector<ShapeMatrix>& pieces, uint current_index, int sum = 0){
+void get_areas_permutations(unordered_set<int>& possible_areas, const vector<ShapeMatrix>& pieces, uint current_index, int sum = 0){
 
   // check current_index is positive
   if (current_index >= pieces.size())
@@ -152,7 +153,7 @@ void get_areas_permutations(vector<int>& possible_areas, const vector<ShapeMatri
   int area = pieces[current_index].getShapeArea();
 
   // add sum + area to possible areas
-  possible_areas.push_back(sum + pieces[current_index].getShapeArea());
+  possible_areas.insert(sum + pieces[current_index].getShapeArea());
 
   // recursive calls. two choices: use this piece's area or not
   get_areas_permutations(possible_areas, pieces, current_index + 1, sum + area);
@@ -203,7 +204,7 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
   uint width = board->getWidth();
   
   // get all possible area variations.
-  vector<int> possible_areas = vector<int>();
+  unordered_set<int> possible_areas = unordered_set<int>();
   get_areas_permutations(possible_areas, pieces, currentIndex);
 
   // get a copy of the board's 2D array
