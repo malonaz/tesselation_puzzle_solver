@@ -117,7 +117,9 @@ vector<ShapeMatrix*>* variations(const ShapeMatrix &piece) {
   return variations;
 }
 
-
+/**
+ * Helper function which returns the empty area near the square at (row, col) in the given board
+ */
 int get_adjacent_empty_area(uint row, uint col, uint height, uint width, int** board) {
 
   // return 0 if (row, col) is not a valid square on the board that is empty
@@ -136,30 +138,31 @@ int get_adjacent_empty_area(uint row, uint col, uint height, uint width, int** b
 
 
 /* function to generate all possible area variations from remaining pieces */
-void generate_possible_areas(int* answerArray,
-    long int maxVariations,
-    const vector<ShapeMatrix> &pieces,
-    uint currentIndex) {
-  int sizeArray = pieces.size() - currentIndex;
-  int* generativeArray = new int[sizeArray]();
-  for (long int sequencei = 0; sequencei < maxVariations; sequencei++) {
+void generate_possible_areas(int* answer_array, long int max_variations,
+			     const vector<ShapeMatrix> &pieces, uint current_index) {
+
+  
+  int size_array = pieces.size() - current_index;
+  int* generative_array = new int[size_array]();
+
+  for (long int sequencei = 0; sequencei < max_variations; sequencei++) {
     int answer=0;
     long int copyi = sequencei;
-    for (int countj = sizeArray-1; countj >= 0; countj--) {
-      generativeArray[countj] = copyi % 2 ;
+    for (int countj = size_array-1; countj >= 0; countj--) {
+      generative_array[countj] = copyi % 2 ;
       copyi /= 2;
     }
-    for (int countk = 0; countk < sizeArray; countk++) {
-      if (generativeArray[countk]) {
-        answer += pieces[countk + currentIndex].getShapeArea(); // size instead}
+    for (int countk = 0; countk < size_array; countk++) {
+      if (generative_array[countk]) {
+        answer += pieces[countk + current_index].getShapeArea(); // size instead}
       }
     }
-    answerArray[sequencei] = answer;
-    for (int countl = 0; countl < sizeArray; countl++) {
-      generativeArray[countl] =0;
+    answer_array[sequencei] = answer;
+    for (int countl = 0; countl < size_array; countl++) {
+      generative_array[countl] =0;
     }
   }
-  delete[] generativeArray;
+  delete[] generative_array;
 }
 
 /* helper function to copy current state of board into 2D array */
