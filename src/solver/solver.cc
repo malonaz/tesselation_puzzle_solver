@@ -141,7 +141,7 @@ int get_adjacent_empty_area(uint row, uint col, uint height, uint width, int** b
  * Helper functions which copies into possible_areas all the possible permutations of the area of the 
  * pieces starting at current index
  */
-void generate_possible_areas(vector<int>& possible_areas, const vector<ShapeMatrix>& pieces, uint current_index, int sum = 0){
+void get_areas_permutations(vector<int>& possible_areas, const vector<ShapeMatrix>& pieces, uint current_index, int sum = 0){
 
   // check current_index is positive
   if (current_index >= pieces.size())
@@ -154,8 +154,8 @@ void generate_possible_areas(vector<int>& possible_areas, const vector<ShapeMatr
   possible_areas.push_back(sum + pieces[current_index].getShapeArea());
 
   // recursive calls. two choices: use this piece's area or not
-  generate_possible_areas(possible_areas, pieces, current_index + 1, sum + area);
-  generate_possible_areas(possible_areas, pieces, current_index + 1, sum);
+  get_areas_permutations(possible_areas, pieces, current_index + 1, sum + area);
+  get_areas_permutations(possible_areas, pieces, current_index + 1, sum);
 }
 
 
@@ -201,10 +201,10 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
   uint height = board->getHeight();
   uint width = board->getWidth();
   
-  //preparation to generate an array all possible area variations.
+  // get all possible area variations.
   vector<int> answerArray = vector<int>();
   
-  generate_possible_areas(answerArray, pieces, currentIndex);
+  get_areas_permutations(answerArray, pieces, currentIndex);
 
   int** copiedBoard = copy_board(board);
 
