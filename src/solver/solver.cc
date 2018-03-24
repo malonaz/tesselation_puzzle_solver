@@ -270,33 +270,39 @@ bool recursive_solver (PuzzleBoard* board,
   return false;
 }
 
-
-int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& returnCode, uint& board_height, uint& board_width) {
-
-  // set the return code to 0
-  returnCode = 0;
-
-  // set solution to null
-  int** board_solution = NULL;
+/**
+ * Function which attempts to solve the puzzle implied by the give matrices.
+ *   @params:
+ *     return_code:
+ *       - SOLVED if the puzzle can be solved.
+ *       - UNSOLVED if the puzzle cannot be solved
+ *       - UNDERSIZED if the puzzle's container is too small for the pieces
+ *       - OVERSIZED is the puzzle's container is too large for the pieces
+ *     board_height: height of the board implied by the given matrices
+ *     board_width: width of the board implied by the given matrices
+ *   @returns: the solution of the board found as a 2D array.
+ * Encodes the solution found into
+ */ 
+int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint& board_height, uint& board_width) {
   
   vector<ShapeMatrix> shapes;
 
   // set variables used by recursive solver
-  int containerArea = 0;
-  int totalPieceArea = 0;
+  int container_area = 0;
+  int pieces_area = 0;
 
   // create a board
-  PuzzleBoard* board = create_board(matrices, shapes, containerArea, totalPieceArea);
+  PuzzleBoard* board = create_board(matrices, shapes, container_area, pieces_area);
 
   // check for undersized container case
-  if (totalPieceArea > containerArea) { 
-    returnCode = UNDERSIZED;
+  if (pieces_area > container_area) { 
+    return_code = UNDERSIZED;
     return board_solution;
   }
 
   // check for oversized container case
-  if (totalPieceArea < containerArea) { // case of oversized container
-    returnCode = OVERSIZED;
+  if (pieces_area < container_area) { // case of oversized container
+    return_code = OVERSIZED;
     return board_solution;
   }
 
@@ -306,13 +312,13 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& returnCode, uint& 
 
   // check if puzzle was solved
   if (!success){
-      returnCode = UNSOLVED;
+      return_code = UNSOLVED;
       delete board;
       return NULL;
   }
       
   // set output parameters
-  returnCode = SOLVED;
+  return_code = SOLVED;
   board_height = board->getHeight(); 
   board_width = board->getWidth(); 
   board_solution = copy_board(board);
