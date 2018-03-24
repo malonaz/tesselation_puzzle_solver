@@ -75,6 +75,10 @@ bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix*
   return false;
 }
 
+/**
+ * Helper function which takes a piece and returns all possible variation of this piece,
+ * rotations and flips (mirrors). Does not return any duplicates.
+ */
 vector<ShapeMatrix*>* variations(const ShapeMatrix &piece) {
   
   // will hold all the possible rotations and mirrors of this piece
