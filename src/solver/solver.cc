@@ -165,28 +165,34 @@ void generate_possible_areas(int* answer_array, long int max_variations,
   delete[] generative_array;
 }
 
-/* helper function to copy current state of board into 2D array */
-int** copyBoard(PuzzleBoard* const board) {
+/**
+ * Helper function which returns a copy of the given board as a 2D integer array
+ */
+int** copy_board(PuzzleBoard* const board) {
+
+  // get board dimensions
   uint height = board->getHeight();
   uint width = board->getWidth();
-  int** copiedBoard = new int*[height];
-  for (uint i = 0; i < height; i++){
-      copiedBoard[i] = new int[width];
-  }
-  for (uint i = 0; i < height; i++){
-    for (uint j = 0; j < width; j++ ){
-      copiedBoard[i][j]= (board->getCurrentBoard())[i][j];
-    }
-  }
-  return copiedBoard;
+
+  // create a 2d array on the heap, with the board's dimensions
+  int** board_copy = new int*[height];
+  for (uint i = 0; i < height; i++)
+      board_copy[i] = new int[width];
+  
+  // copy each square's value into the 2d array
+  for (uint row = 0; row < height; row++)
+    for (uint col = 0; col < width; col++ )
+      board_copy[row][col]= (board->getCurrentBoard())[row][col];
+     
+  return board_copy;
 }
 
 /* helper function to delete dynamically allocated 2D array */
-void delete_copy(uint height, int** copyBoard) {
+void delete_copy(uint height, int** copy_board) {
   for (uint i = 0; i < height; i++){
-    delete[] copyBoard[i];
+    delete[] copy_board[i];
   }
-  delete[] copyBoard;
+  delete[] copy_board;
 }
 
 /* function to check remaining area if the pieces can fit */
@@ -201,7 +207,7 @@ bool solvable_config(PuzzleBoard* board,
   int* answerArray = new int[maxVariations]();
   generate_possible_areas(answerArray, maxVariations, pieces, currentIndex);
 
-  int** copiedBoard = copyBoard(board);
+  int** copiedBoard = copy_board(board);
 
   for (uint r = 0; r < b_height; r++) {
     for (uint c = 0; c < b_width; c++) {
@@ -295,7 +301,7 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& returnCode,
     returnCode = SOLVED;
     board_height = board->getHeight(); //returns height of board
     board_width = board->getWidth(); // returns width of board
-    board_solution = copyBoard(board); // returns a 2D int array of board (w soln)
+    board_solution = copy_board(board); // returns a 2D int array of board (w soln)
   } else {
     returnCode = UNSOLVED;
   }
