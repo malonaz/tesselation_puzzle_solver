@@ -257,14 +257,17 @@ bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> pieces, uin
 	  continue;
 
 	// check that puzzle can be solved after placing the piece
-	if (recursive_solver(board, pieces, next_index,iterations)) 
+	if (recursive_solver(board, pieces, next_index,iterations)){
+	  // free the list of shape from the heap and return true
+	  cleanup_list(current_piece_variations);
 	  return true;
+	}
 
 	// backtrack
-	board->removePiece(col, row, next_index, *current_piece_variationc);
+	board->removePiece(col, row, next_index, *current_piece_variation);
         }
       
-  // free the list of shape form the heap
+  // free the list of shape from the heap
   cleanup_list(current_piece_variations);
 
   return false;
