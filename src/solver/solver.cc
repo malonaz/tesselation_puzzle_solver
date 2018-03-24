@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <algorithm>
 
 using std::min;
 using std::max;
@@ -202,37 +203,30 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
   uint width = board->getWidth();
   
   // get all possible area variations.
-  vector<int> answerArray = vector<int>();
-  
-  get_areas_permutations(answerArray, pieces, currentIndex);
+  vector<int> possible_areas = vector<int>();
+  get_areas_permutations(possible_areas, pieces, currentIndex);
 
-  int** copiedBoard = copy_board(board);
+  // get a copy of the board's 2D array
+  int** board_copy = copy_board(board);
 
-  for (uint r = 0; r < height; r++) {
-    for (uint c = 0; c < width; c++) {
-      //GETTING ADJACENT AREA OF CURRENT SLOT
-      int area = get_adjacent_empty_area(r, c, height, width, copiedBoard);
-      bool areaImpossible = true;
+  for (uint row = 0; row < height; row++) 
+    for (uint col = 0; col < width; col++) {
+      
+      // get area near current square
+      int area = get_adjacent_empty_area(row, col, height, width, board_copy);
 
-      //IF AREA IS ZERO, JUST BREAK OUT OF THIS FOR LOOP
-      if (!area) {
-        break;
-      } else {
-        for (uint sequencei = 0; sequencei < answerArray.size(); sequencei++) {
-          if (area == answerArray[sequencei]) {
-            areaImpossible = false;
-            break; //BREAK OUT OF SEARCH LOOP IF POSSIBLE COMBINATION OF SHAPES FOUND
-          }
-        }
-      }
-      if (areaImpossible) {
-        delete_2d_array(height, copiedBoard);
-        return false;
+      // if area is zero, continue
+      if (area == 0)
+	continue; 
+
+      // search for area in possible_areas
+      if (std::find(possible_areas.begin(), possible_areas.end(), area) == possible_areas.end()){
+	delete_2d_array(height, board_copy);
+	return false;
       }
     }
-  }
-  delete_2d_array(height, copiedBoard);
 
+  delete_2d_array(height, board_copy);
   return true;
 }
 
