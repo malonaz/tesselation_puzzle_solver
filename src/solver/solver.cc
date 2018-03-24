@@ -187,11 +187,16 @@ int** copy_board(PuzzleBoard* const board) {
   return board_copy;
 }
 
-/* helper function to delete dynamically allocated 2D array */
-void delete_copy(uint height, int** copy_board) {
-  for (uint i = 0; i < height; i++){
+/**
+ * Helper function which frees a 2D array from the heap
+ */
+void delete_2d_array(uint height, int** copy_board) {
+
+  // free each row
+  for (uint i = 0; i < height; i++)
     delete[] copy_board[i];
-  }
+
+  // free array
   delete[] copy_board;
 }
 
@@ -227,13 +232,13 @@ bool solvable_config(PuzzleBoard* board,
         }
       }
       if (areaImpossible) {
-        delete_copy(b_height, copiedBoard);
+        delete_2d_array(b_height, copiedBoard);
         delete[] answerArray;
         return false;
       }
     }
   }
-  delete_copy(b_height, copiedBoard);
+  delete_2d_array(b_height, copiedBoard);
 
   delete[] answerArray;
   return true;
