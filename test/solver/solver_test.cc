@@ -98,24 +98,14 @@ namespace {
         shape1->set(1, 0, true);
         shape1->set(2, 0, true);
 
-<<<<<<< HEAD
-        //Small L shape (Area 3)
-        ShapeMatrix* shape2 = new ShapeMatrix(2, 2);
-=======
         //Small L shape (2 by 2, area 3)
         ShapeMatrix* shape2 = new ShapeMatrix(2, 2, 2);
->>>>>>> 946ad087b0b2cef1d76dfe0b70a09ce22bc5465d
         shape2->set(0, 0, true);
         shape2->set(0, 1, true);
         shape2->set(1, 0, true);
 
-<<<<<<< HEAD
-        //Single unit-sized block
-        ShapeMatrix* shape3 = new ShapeMatrix(1, 1);
-=======
         //Single unit-sized block ()
         ShapeMatrix* shape3 = new ShapeMatrix(2, 1, 1);
->>>>>>> 946ad087b0b2cef1d76dfe0b70a09ce22bc5465d
         shape3->set(0, 0, true);
 
         vector<ShapeMatrix> matrices;
