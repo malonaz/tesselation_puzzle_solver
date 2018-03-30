@@ -14,7 +14,7 @@ ShapeMatrix::ShapeMatrix(int identifier, int width, int height):
   for (int i = 0; i < area; ++i) {
     this->shape[i] = false;
   }
-} // ShapeMatrix::ShapeMatrix(int, int)
+} // ShapeMatrix::ShapeMatrix(int, int, int)
 
 ShapeMatrix::ShapeMatrix(const ShapeMatrix &copy):
     identifier(copy.identifier),

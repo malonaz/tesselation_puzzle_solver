@@ -8,7 +8,11 @@ typedef unsigned int uint;
 */
 class ShapeMatrix {
 private:
+  /**
+    A board-unique identifier of the piece
+  */
   uint identifier;
+
   /**
     The width of the matrix
   */
