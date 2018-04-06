@@ -53,6 +53,8 @@ bool PuzzleBoard::placePiece(int x, int y, int idx, const ShapeMatrix &piece) {
   int piece_width = piece.getWidth();
   int container_height = this->container.getHeight();
   int container_width = this->container.getWidth();
+  int shapeIdentifier = piece.getIdentifier();
+
   if (idx <= 0) {
     return false;
   }
@@ -87,11 +89,12 @@ bool PuzzleBoard::placePiece(int x, int y, int idx, const ShapeMatrix &piece) {
       int board_y = y + i;
       int board_x = x + j;
       if (piece.get(i, j)) {
-        this->current_board[board_y][board_x] = idx;
+        this->current_board[board_y][board_x] = shapeIdentifier;
       }
     }
   }
   this->remainingArea -= piece.getShapeArea();
+
   return true;
 }
 
@@ -100,6 +103,8 @@ bool PuzzleBoard::removePiece(int x, int y, int indexToRemove, const ShapeMatrix
   int piece_width = piece.getWidth();
   int container_height = this->container.getHeight();
   int container_width = this->container.getWidth();
+
+int shapeIdentifier = piece.getIdentifier();
 
   if (y < 0 || y >= container_height) {
     return false;
@@ -118,7 +123,7 @@ bool PuzzleBoard::removePiece(int x, int y, int indexToRemove, const ShapeMatrix
     for (int j = 0; j < piece_width; j++) {
       int board_y = y + i;
       int board_x = x + j;
-      if (this->current_board[board_y][board_x] == indexToRemove) {
+      if (this->current_board[board_y][board_x] == shapeIdentifier) {
         this->current_board[board_y][board_x] = 0;
         ++this->remainingArea;
       }

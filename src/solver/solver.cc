@@ -18,6 +18,10 @@ PuzzleBoard* createBoard(const vector<ShapeMatrix> &matrices,
   int accumArea = 0;
   int matricesSize = (int)matrices.size();
 
+
+  //Saving the pieces to a folder called "pieces"
+    shape_matrix_write("temp_folder/pieces.txt", matrices);
+
   for (int i = 1; i < matricesSize; i++) {
     int tempArea = matrices[i].getShapeArea();
     int pushIdx = i;
@@ -30,7 +34,9 @@ PuzzleBoard* createBoard(const vector<ShapeMatrix> &matrices,
       accumArea -= tempArea;
     }
     accumArea += tempArea;
+    //pushIdx will either be the current i, or the previous maxArea
     pieces.push_back(matrices[pushIdx]);
+
   }
   ShapeMatrix container = matrices[maxAreaIdx];
   PuzzleBoard* board = new PuzzleBoard(container);
@@ -189,12 +195,12 @@ bool recursiveSolver (PuzzleBoard* board,
     //the board is complete, and no more remaining pieces
 
 	  /******comment out these 2 lines below to remove all solutions search: *****/
-	  int** board_solution = copyBoard(board);
-	  print_solution_board(board_solution, height, width);
-	  deleteCopy(height, board_solution);
+	  // int** board_solution = copyBoard(board);
+	  // print_solution_board(board_solution, height, width);
+	  // deleteCopy(height, board_solution);
 	  /*************************************************************/
 
-    
+
     return true;
   }
   if (!solvableConfig(board, pieces, currentIndex)) {
@@ -203,20 +209,18 @@ bool recursiveSolver (PuzzleBoard* board,
 
   ShapeMatrix temp = pieces[currentIndex];
   vector<ShapeMatrix*>* shapesList = combinations(temp);
-  int nextIndex = currentIndex + 1;
+  int nextIndex = currentIndex+1;
 
   for (uint r = 0; r < height; r++) {
     for (uint c = 0; c < width; c++) {
       for (uint counteri = 0; counteri < shapesList->size(); counteri++) {
         ShapeMatrix* r_temp = (*shapesList)[counteri];
+
         if (board->placePiece(c, r, nextIndex, *r_temp)) {
           if (recursiveSolver(board, pieces, nextIndex,iterations)) {
 	    /******Un-comment "return true;" to remove all solutions search: *****/
-	    // return true;
+	     return true;
           }
-
-
-	  
           board->removePiece(c, r, nextIndex, *r_temp); // revert
         }
       }
@@ -234,6 +238,9 @@ int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
   int** board_solution = NULL;
   int containerArea = 0;
   int totalPieceArea = 0;
+
+
+
   PuzzleBoard* board = createBoard(matrices, shapes,
       containerArea, totalPieceArea);
   if (totalPieceArea > containerArea) { // case of undersized container

@@ -340,7 +340,7 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes,
     }
 
     // used to hold the matrix
-    ShapeMatrix matrix(i, width, height);
+    ShapeMatrix matrix(i + 1, width, height);
 
     // matrix will be assigned a matrix from the heap here
     shape_translate(shape, matrix);
