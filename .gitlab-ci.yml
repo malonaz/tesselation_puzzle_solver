@@ -2,8 +2,6 @@ runtests:
   before_script:
     - make test
   script:
-    - bin/test
-  after_script:
     - make coverage
   tags:
     - linux

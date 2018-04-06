@@ -16,7 +16,7 @@ namespace {
           //setup always called before the test starts
           virtual void SetUp(){
             //this is the container
-            ShapeMatrix* shape = new ShapeMatrix(3, 3);
+            ShapeMatrix* shape = new ShapeMatrix(1, 3, 3);
             shape->set(0, 0, true);
             shape->set(0, 1, true);
             shape->set(0, 2, true);
@@ -28,7 +28,7 @@ namespace {
             shape->set(2, 2, true);
 
             //Big L shape (3 by 3, area 5)
-            ShapeMatrix* shape1 = new ShapeMatrix(3, 3);
+            ShapeMatrix* shape1 = new ShapeMatrix(2, 3, 3);
             shape1->set(0, 0, true);
             shape1->set(0, 1, true);
             shape1->set(0, 2, true);
@@ -36,13 +36,13 @@ namespace {
             shape1->set(2, 0, true);
 
             //Small L shape (Area 3)
-            ShapeMatrix* shape2 = new ShapeMatrix(2, 2);
+            ShapeMatrix* shape2 = new ShapeMatrix(3, 2, 2);
             shape2->set(0, 0, true);
             shape2->set(0, 1, true);
             shape2->set(1, 0, true);
 
             //Single unit-sized block
-            ShapeMatrix* shape3 = new ShapeMatrix(1, 1);
+            ShapeMatrix* shape3 = new ShapeMatrix(4, 1, 1);
             shape3->set(0, 0, true);
 
             vector<ShapeMatrix> matrices;
@@ -79,7 +79,7 @@ namespace {
 
       TEST(SolverTest1, BoardCreation_Solvable) {
         //this is the container
-        ShapeMatrix* shape = new ShapeMatrix(2, 3, 3);
+        ShapeMatrix* shape = new ShapeMatrix(1, 3, 3);
         shape->set(0, 0, true);
         shape->set(0, 1, true);
         shape->set(0, 2, true);
@@ -99,13 +99,13 @@ namespace {
         shape1->set(2, 0, true);
 
         //Small L shape (2 by 2, area 3)
-        ShapeMatrix* shape2 = new ShapeMatrix(2, 2, 2);
+        ShapeMatrix* shape2 = new ShapeMatrix(3, 2, 2);
         shape2->set(0, 0, true);
         shape2->set(0, 1, true);
         shape2->set(1, 0, true);
 
         //Single unit-sized block ()
-        ShapeMatrix* shape3 = new ShapeMatrix(2, 1, 1);
+        ShapeMatrix* shape3 = new ShapeMatrix(4, 1, 1);
         shape3->set(0, 0, true);
 
         vector<ShapeMatrix> matrices;
