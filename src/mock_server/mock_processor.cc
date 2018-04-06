@@ -6,18 +6,6 @@
 
 using namespace std;
 
- void extract_dir(const char* filename, char* dir) {
-   int length =0;
-   while(filename[length] != '\0'){
-     length++;
-   }
-   int idx =0;
-   for (; idx<length-9; idx++ ){
-     dir[idx] = filename[idx];
-   }
-   dir[length-9] = '\0';
-}
-
 int main(int argc, char** argv) { //  ./demo <input_filename>
   /* READ FILE */
 
