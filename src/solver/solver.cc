@@ -11,6 +11,57 @@
 
 using namespace std;
 
+bool shapeAlreadyUsed(int currentIdentifier, int* partialBoard, int sizeOfPartialBoard){
+  for (int i = 2; i < sizeOfPartialBoard; i++){
+    //cout << "testing" << currentIdentifier << partialBoard[i] << endl;
+    if (currentIdentifier == partialBoard[i]) {
+      return true;
+    }
+  }
+  return false;
+}
+
+PuzzleBoard* createPartialBoard(int* partialBoard, int count, const vector<ShapeMatrix> &allPieces,
+      vector<ShapeMatrix> &unusedPieces) {
+
+    int allPiecesSize = (int)allPieces.size();
+
+    //finding the original shape of container
+    int maxAreaIdx;
+    int containerIdentifier;
+
+    uint containerHeight = partialBoard[0];
+    uint containerWidth = partialBoard[1];
+    int sizeOfPartialBoard = count;
+    cout<<"the size of partial board is " << sizeOfPartialBoard<<endl;
+
+    for (int i = 0; i < allPiecesSize; i++) {
+      if ((containerHeight == allPieces[i].getHeight()) &&
+      (containerWidth == allPieces[i].getWidth())) {
+        if (allPieces[i].getShapeArea() == allPieces[i].getMatrixArea()) {
+          maxAreaIdx = i;
+          containerIdentifier = allPieces[i].getIdentifier();
+          break;
+        }
+      }
+    }
+    ShapeMatrix container = allPieces[maxAreaIdx];
+    //constructs the board, and then fill in based on the partialBoard array
+    PuzzleBoard* board = new PuzzleBoard(partialBoard, container);
+
+    for (int j = 0; j < allPiecesSize; j++) {
+      int currentIdentifier = allPieces[j].getIdentifier();
+      if (currentIdentifier!=containerIdentifier){
+        if (!shapeAlreadyUsed(currentIdentifier, partialBoard, sizeOfPartialBoard)){
+          unusedPieces.push_back(allPieces[j]);
+          cout <<"pushing in piece number"<<allPieces[j].getIdentifier()<<endl;
+        }
+      }
+    }
+    return board;
+}
+
+//this is only called by when the solver is used for the first time.
 PuzzleBoard* createBoard(const vector<ShapeMatrix> &matrices,
     vector<ShapeMatrix> &pieces, int& containerArea, int& totalPieceArea) {
   int maxArea = matrices[0].getShapeArea();
@@ -18,9 +69,8 @@ PuzzleBoard* createBoard(const vector<ShapeMatrix> &matrices,
   int accumArea = 0;
   int matricesSize = (int)matrices.size();
 
-
-  //Saving the pieces to a folder called "pieces"
-    shape_matrix_write("temp_folder/pieces.txt", matrices);
+  //Saving the pieces to a folder called "pieces", the name of the folder needs to be updated
+    shape_matrix_write("output_data/pieces.txt", matrices);
 
   for (int i = 1; i < matricesSize; i++) {
     int tempArea = matrices[i].getShapeArea();
@@ -183,6 +233,22 @@ bool solvableConfig(PuzzleBoard* board,
   return true;
 }
 
+void test_print(int** board_solution, char* file_name, uint height, uint width){
+  ofstream out(file_name, ios_base::app);
+  for (uint r = 0; r < height; r++) {
+    for (uint c = 0; c < width; c++) {
+      out << board_solution[r][c] << " ";
+      if (board_solution[r][c]<10){
+        out<<" ";
+      }
+
+    }
+    out << endl;
+  }
+  out << endl;
+  out.close();
+}
+
 /* function for recursive solving */
 bool recursiveSolver (PuzzleBoard* board,
     const vector<ShapeMatrix> pieces,
@@ -191,6 +257,10 @@ bool recursiveSolver (PuzzleBoard* board,
   iterations++;
   uint height = board->getHeight();
   uint width = board->getWidth();
+  // int** board_solution = copyBoard(board);
+  // test_print(board_solution,"output_data/solution.txt", height, width);
+  // deleteCopy(height, board_solution);
+
   if (board->getRemainingArea() == 0 || currentIndex >= pieces.size()) {
     //the board is complete, and no more remaining pieces
 
@@ -239,8 +309,6 @@ int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
   int containerArea = 0;
   int totalPieceArea = 0;
 
-
-
   PuzzleBoard* board = createBoard(matrices, shapes,
       containerArea, totalPieceArea);
   if (totalPieceArea > containerArea) { // case of undersized container
@@ -254,6 +322,37 @@ int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
   // if puzzle pieces area == container area
   int iterations = 0;
   bool success = recursiveSolver(board, shapes, 0, iterations);
+
+  if (success) {
+    returnCode = SOLVED;
+    board_height = board->getHeight(); //returns height of board
+    board_width = board->getWidth(); // returns width of board
+    board_solution = copyBoard(board); // returns a 2D int array of board (w soln)
+  } else {
+    returnCode = UNSOLVED;
+  }
+  delete board;
+  return board_solution;
+}
+
+
+int** partialSolver(int* partialBoard, int count, const vector<ShapeMatrix> &allPieces, int& returnCode,
+      uint& board_height, uint& board_width) {
+  returnCode = 0;
+  vector<ShapeMatrix> unusedPieces;
+  int** board_solution = NULL;
+
+  PuzzleBoard* board = createPartialBoard(partialBoard, count, allPieces, unusedPieces);
+
+  for (int i = 0; i < unusedPieces.size(); i++) {
+    cout << unusedPieces[i].getIdentifier() << endl;
+    shape_matrix_print(unusedPieces[i]);
+  }
+
+  print_solution_board(board->getCurrentBoard(), board->getHeight(), board->getWidth());
+
+  int iterations = 0;
+  bool success = recursiveSolver(board, unusedPieces, 0, iterations);
 
   if (success) {
     returnCode = SOLVED;

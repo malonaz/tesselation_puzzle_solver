@@ -15,10 +15,12 @@ using namespace std;
 
 int main(int argc, char** argv) { //  ./demo <input_filename>
   /* READ FILE */
-  const char* pieces_file = "src/image_processor/pieces.txt";
+
+  //argv[1] append to the pieces.txt
+  const char* pieces_file = "output_data/pieces.txt";
   cout << " Reading file ....." <<endl;
-  vector<ShapeMatrix> pieces;
-  shape_matrix_read(pieces_file, pieces);
+  vector<ShapeMatrix> allPieces;
+  shape_matrix_read(pieces_file, allPieces);
   cout << "File Read Complete!" << endl;
 
   /* SOLVER MODULE */
@@ -26,7 +28,44 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   int** solution = NULL;
   uint board_height = 0;
   uint board_width = 0;
-  solution = puzzleSolver(pieces, solve_success, board_height, board_width);
+
+  //createPartialBoard based on argv[2]
+
+//  solution = puzzleSolver(pieces, solve_success, board_height, board_width);
+  ifstream input_file;
+  input_file.open(argv[2]);
+  if (input_file.fail()){
+    cout<<"Failed to open the partialBoard file!!!";
+    return 1;
+  }
+
+  int count = 0;
+  while (!input_file.eof()){
+    int temp;
+    input_file >> temp;
+    cout << temp;
+    count++;
+  }
+  count--;
+  cout << "There are " << count << " elements in file";
+  input_file.close();
+
+  input_file.open(argv[2]);
+  if (input_file.fail()){
+    cout<<"Failed to open the partialBoard file!!!";
+    return 1;
+  }
+
+  int partialBoard[count];
+  int counter = 0;
+  while (!input_file.eof()&&counter<count){
+    input_file >> partialBoard[counter];
+    cout << counter << ":" << partialBoard[counter] << endl;
+    counter++;
+  }
+  input_file.close();
+
+  solution = partialSolver(partialBoard, count, allPieces, solve_success, board_height, board_width);
 
   /* Return Message */
   switch (solve_success) {

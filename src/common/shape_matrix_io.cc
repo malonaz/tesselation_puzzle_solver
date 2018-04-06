@@ -68,9 +68,14 @@ void shape_matrix_read(const char* filename, vector<ShapeMatrix> &list) {
     return;
   }
 
+  uint currentIdentifier = 0;
+
   while (!input_file.eof()) {
     uint identifier, width, height, area;
     input_file >> identifier;
+    if (identifier == currentIdentifier) {
+      break;
+    }
     input_file >> width;
     input_file >> height;
     area = width * height;
@@ -81,5 +86,7 @@ void shape_matrix_read(const char* filename, vector<ShapeMatrix> &list) {
       shape.set(i, d == 1);
     }
     list.push_back(shape);
+    cout<<identifier<<endl;
+    currentIdentifier++;
   }
 } // shape_matrix_read(const char*, vector<ShapeMatrix> &)

@@ -25,6 +25,22 @@ PuzzleBoard::PuzzleBoard(const ShapeMatrix &shape):
   }
 }
 
+//this is the puzzleboard constructor for a partial board
+PuzzleBoard::PuzzleBoard(int* partialBoard, const ShapeMatrix &shape):
+    container(shape),
+    current_board(NULL),
+    remainingArea(shape.getShapeArea()) {
+  int width = shape.getWidth();
+  int height = shape.getHeight();
+  this->current_board = new int*[height];
+  for (int i = 0; i < height; i++) {
+    current_board[i] = new int[width];
+    for (int j = 0; j < width; j++) {
+      current_board[i][j] = partialBoard[2 + i * width + j];
+    }
+  }
+}
+
 PuzzleBoard::PuzzleBoard(const PuzzleBoard &copy):
     container(copy.container),
     current_board(NULL),

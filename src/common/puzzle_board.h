@@ -15,6 +15,8 @@ private:
 public:
   PuzzleBoard(const ShapeMatrix &shape);
 
+  PuzzleBoard(int* intArray, const ShapeMatrix &shape);
+
   PuzzleBoard(const PuzzleBoard &copy);
 
   uint getHeight() const;
