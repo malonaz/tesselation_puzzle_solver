@@ -91,7 +91,7 @@ namespace {
         shape->set(2, 2, true);
 
         //Big L shape (3 by 3, area 5)
-        ShapeMatrix* shape1 = new ShapeMatrix(2, 3, 3);
+        ShapeMatrix* shape1 = new ShapeMatrix(2,3, 3);
         shape1->set(0, 0, true);
         shape1->set(0, 1, true);
         shape1->set(0, 2, true);
