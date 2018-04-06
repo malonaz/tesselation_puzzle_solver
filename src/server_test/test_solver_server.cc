@@ -34,7 +34,7 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
 
   cout <<"solved" << endl;
 
-  const char* name = "/solving";
+  const char* name = "/processing";
   char* solving_file = strcat(upload_dir, name);
   cout << "file to remove: "<< solving_file <<endl;
   if( remove( solving_file ) != 0 ){
