@@ -7,6 +7,7 @@
 #include "common/shape_matrix_io.h"
 #include "common/types.h"
 #include "solver.h"
+#include "common/debugger.h"
 
 using namespace std;
 
@@ -182,15 +183,24 @@ bool recursiveSolver (PuzzleBoard* board,
     uint currentIndex,
     int& iterations) {
   iterations++;
+  uint height = board->getHeight();
+  uint width = board->getWidth();
   if (board->getRemainingArea() == 0 || currentIndex >= pieces.size()) {
     //the board is complete, and no more remaining pieces
+
+	  /******comment out these 2 lines below to remove all solutions search: *****/
+	  int** board_solution = copyBoard(board);
+	  print_solution_board(board_solution, height, width);
+	  deleteCopy(height, board_solution);
+	  /*************************************************************/
+
+    
     return true;
   }
   if (!solvableConfig(board, pieces, currentIndex)) {
     return false;
   }
-  uint height = board->getHeight();
-  uint width = board->getWidth();
+
   ShapeMatrix temp = pieces[currentIndex];
   vector<ShapeMatrix*>* shapesList = combinations(temp);
   int nextIndex = currentIndex + 1;
@@ -201,8 +211,12 @@ bool recursiveSolver (PuzzleBoard* board,
         ShapeMatrix* r_temp = (*shapesList)[counteri];
         if (board->placePiece(c, r, nextIndex, *r_temp)) {
           if (recursiveSolver(board, pieces, nextIndex,iterations)) {
-            return true;
+	    /******Un-comment "return true;" to remove all solutions search: *****/
+	    // return true;
           }
+
+
+	  
           board->removePiece(c, r, nextIndex, *r_temp); // revert
         }
       }

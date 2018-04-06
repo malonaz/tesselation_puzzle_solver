@@ -8,7 +8,7 @@ MAKEDIR = make
 
 TEST_TARGET = test
 DEMO_TARGET = demo
-SERVER_TEST_TARGET = server_test
+MOCK_PROCESSOR_TARGET = mock_processor
 IMAGE_PROCESSOR_TARGET = ip
 SOLVER_PROGRAM_TARGET = sp
 
@@ -28,7 +28,7 @@ include $(MAKEDIR)/imagereader.mk
 include $(MAKEDIR)/solver.mk
 
 include $(MAKEDIR)/demo.mk
-include $(MAKEDIR)/server_test.mk
+include $(MAKEDIR)/mock_processor.mk
 include $(MAKEDIR)/test.mk
 include $(MAKEDIR)/image_processor.mk
 include $(MAKEDIR)/solver_program.mk
@@ -39,4 +39,4 @@ check:
 clean:
 	rm -rf $(BINDIR) $(OBJDIR) $(COVDIR) *.o *.d *.gcno *.gcda
 
-.PHONY: clean check $(COVDIR) $(TEST_TARGET) $(DEMO_TARGET) $(IMAGE_PROCESSOR_TARGET)
+.PHONY: clean check $(COVDIR) $(TEST_TARGET) $(DEMO_TARGET) $(IMAGE_PROCESSOR_TARGET) $(MOCK_PROCESSOR_TARGET)

@@ -27,14 +27,14 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   cout << "File Passed in: " << image_file << endl;
   cout << "Upload Directory: " << upload_dir << endl;
 
-  cout << "simulate solving..." <<endl;
+  cout << "simulate processing..." <<endl;
   unsigned int ms;
   ms = 5000;
   usleep(ms);
 
   cout <<"solved" << endl;
 
-  const char* name = "/solving";
+  const char* name = "/processing";
   char* solving_file = strcat(upload_dir, name);
   cout << "file to remove: "<< solving_file <<endl;
   if( remove( solving_file ) != 0 ){
