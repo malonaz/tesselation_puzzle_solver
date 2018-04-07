@@ -13,7 +13,6 @@ using namespace std;
 
 bool shapeAlreadyUsed(int currentIdentifier, int* partialBoard, int sizeOfPartialBoard){
   for (int i = 2; i < sizeOfPartialBoard; i++){
-    //cout << "testing" << currentIdentifier << partialBoard[i] << endl;
     if (currentIdentifier == partialBoard[i]) {
       return true;
     }
@@ -38,6 +37,7 @@ PuzzleBoard* createPartialBoard(int* partialBoard, int count, const vector<Shape
     for (int i = 0; i < allPiecesSize; i++) {
       if ((containerHeight == allPieces[i].getHeight()) &&
       (containerWidth == allPieces[i].getWidth())) {
+        //Compares the filled area with the matrix area. Assume perfect rectangular
         if (allPieces[i].getShapeArea() == allPieces[i].getMatrixArea()) {
           maxAreaIdx = i;
           containerIdentifier = allPieces[i].getIdentifier();
@@ -46,8 +46,18 @@ PuzzleBoard* createPartialBoard(int* partialBoard, int count, const vector<Shape
       }
     }
     ShapeMatrix container = allPieces[maxAreaIdx];
+    int actualSizeOfPartialBoard = container.getMatrixArea();
+
+    //copying the partialBoard into taperedPartialBoard
+    int taperedPartialBoard[actualSizeOfPartialBoard];
+    int difference = sizeOfPartialBoard - actualSizeOfPartialBoard;
+
+    for (int i = 0; i< actualSizeOfPartialBoard; i++){
+      taperedPartialBoard[i]= partialBoard[difference + i];
+    }
+
     //constructs the board, and then fill in based on the partialBoard array
-    PuzzleBoard* board = new PuzzleBoard(partialBoard, container);
+    PuzzleBoard* board = new PuzzleBoard(taperedPartialBoard, container);
 
     for (int j = 0; j < allPiecesSize; j++) {
       int currentIdentifier = allPieces[j].getIdentifier();
@@ -238,12 +248,11 @@ void test_print(int** board_solution, char* file_name, uint height, uint width){
   for (uint r = 0; r < height; r++) {
     for (uint c = 0; c < width; c++) {
       out << board_solution[r][c] << " ";
-      if (board_solution[r][c]<10){
-        out<<" ";
-      }
-
+      // if (board_solution[r][c]<10){
+      //   out<<" ";
+      // }
     }
-    out << endl;
+//    out << endl;
   }
   out << endl;
   out.close();
@@ -264,12 +273,15 @@ bool recursiveSolver (PuzzleBoard* board,
   if (board->getRemainingArea() == 0 || currentIndex >= pieces.size()) {
     //the board is complete, and no more remaining pieces
 
-	  /******comment out these 2 lines below to remove all solutions search: *****/
+	  /******Uncomment/ comment out these lines below to include/ remove all solutions search: *****/
 	  // int** board_solution = copyBoard(board);
-	  // print_solution_board(board_solution, height, width);
+	  // print_solution_board(board_solution, height, width); //TO PRINT ON TERMINAl
 	  // deleteCopy(height, board_solution);
-	  /*************************************************************/
 
+    /*************************************************************/
+    // int** board_solution = copyBoard(board);
+    // test_print(board_solution,"output_data/solution.txt", height, width);
+    // deleteCopy(height, board_solution);
 
     return true;
   }
@@ -288,8 +300,10 @@ bool recursiveSolver (PuzzleBoard* board,
 
         if (board->placePiece(c, r, nextIndex, *r_temp)) {
           if (recursiveSolver(board, pieces, nextIndex,iterations)) {
-	    /******Un-comment "return true;" to remove all solutions search: *****/
-	     return true;
+	    /******Comment/ Un-comment "return true;" to include/remove all solutions search: *****/
+      //cout<< "Solution found after " << iterations << " iterations."<< endl;
+        return true;
+
           }
           board->removePiece(c, r, nextIndex, *r_temp); // revert
         }
@@ -336,6 +350,56 @@ int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
 }
 
 
+bool searchExistingSolutions(PuzzleBoard* board) {
+  uint height = board-> getHeight();
+  uint width = board-> getWidth();
+  int matrixSize = height*width;
+
+  ifstream input("output_data/solution.txt");
+  if (input.fail()){
+    cout<< "Solution file does not exist yet!"<<endl;
+    return false;
+  }
+
+  int previousSolution[matrixSize];
+  int** currentBoard = copyBoard(board);
+
+  bool success = false;
+
+
+  while (!input.eof() && !success){
+    for (int i = 0; i < matrixSize; i++){
+      int temp;
+      input >> temp;
+      uint rowNum = i / width;
+      uint colNum = i % width;
+      int difference = temp -currentBoard[rowNum][colNum];
+      if (difference == 0 || difference == temp) {
+        previousSolution[matrixSize] = temp;
+      } else {
+        continue;
+      }
+    }
+    input.close();
+    cout << "solution found~~~~~~~~: " << endl;
+
+    for (int i = 0; i < matrixSize; i++){
+      cout << previousSolution[i] << " ";
+    }
+
+    success = true;
+    PuzzleBoard* tempBoard = new PuzzleBoard (previousSolution, board->getContainer()); // work on this.
+    board = tempBoard; //copy assignment operator
+
+    delete tempBoard;
+    deleteCopy(height, currentBoard);
+    return true;
+  }
+  input.close();
+  deleteCopy(height, currentBoard);
+  return false;
+}
+
 int** partialSolver(int* partialBoard, int count, const vector<ShapeMatrix> &allPieces, int& returnCode,
       uint& board_height, uint& board_width) {
   returnCode = 0;
@@ -351,8 +415,15 @@ int** partialSolver(int* partialBoard, int count, const vector<ShapeMatrix> &all
 
   print_solution_board(board->getCurrentBoard(), board->getHeight(), board->getWidth());
 
-  int iterations = 0;
-  bool success = recursiveSolver(board, unusedPieces, 0, iterations);
+  //Strategy 1: look in the existing repository
+  bool success = false;
+  success = searchExistingSolutions(board);
+
+  //Strategy 2: look in the existing repository
+  if (!success){
+    int iterations = 0;
+    success = recursiveSolver(board, unusedPieces, 0, iterations);
+  }
 
   if (success) {
     returnCode = SOLVED;

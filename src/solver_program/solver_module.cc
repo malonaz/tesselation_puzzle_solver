@@ -46,7 +46,7 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
     cout << temp;
     count++;
   }
-  count--;
+  count--; //Fix this, related to EOF issue.
   cout << "There are " << count << " elements in file";
   input_file.close();
 
@@ -58,12 +58,14 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
 
   int partialBoard[count];
   int counter = 0;
-  while (!input_file.eof()&&counter<count){
+  while (!input_file.eof() && counter < count){
     input_file >> partialBoard[counter];
     cout << counter << ":" << partialBoard[counter] << endl;
     counter++;
   }
   input_file.close();
+
+
 
   solution = partialSolver(partialBoard, count, allPieces, solve_success, board_height, board_width);
 

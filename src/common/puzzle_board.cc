@@ -36,7 +36,7 @@ PuzzleBoard::PuzzleBoard(int* partialBoard, const ShapeMatrix &shape):
   for (int i = 0; i < height; i++) {
     current_board[i] = new int[width];
     for (int j = 0; j < width; j++) {
-      current_board[i][j] = partialBoard[2 + i * width + j];
+      current_board[i][j] = partialBoard[i * width + j];
     }
   }
 }
@@ -154,6 +154,10 @@ int** PuzzleBoard::getCurrentBoard() const {
 
 uint PuzzleBoard::getRemainingArea() const {
   return this->remainingArea;
+}
+
+ShapeMatrix PuzzleBoard::getContainer() const {
+  return this->container;
 }
 
 PuzzleBoard& PuzzleBoard::operator=(const PuzzleBoard& rhs) {

@@ -31,6 +31,8 @@ public:
 
   uint getRemainingArea() const;
 
+  ShapeMatrix getContainer() const;
+
   PuzzleBoard& operator=(const PuzzleBoard& rhs);
 
   virtual ~PuzzleBoard();
