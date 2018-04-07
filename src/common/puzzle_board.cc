@@ -164,7 +164,6 @@ PuzzleBoard& PuzzleBoard::operator=(const PuzzleBoard& rhs) {
   if (this == &rhs) {
     return *this;
   }
-
   int container_height = this->container.getHeight();
   for (int i = 0; i < container_height; i++) {
     delete[] current_board[i];

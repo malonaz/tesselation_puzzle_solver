@@ -362,41 +362,44 @@ bool searchExistingSolutions(PuzzleBoard* board) {
   }
 
   int previousSolution[matrixSize];
+
   int** currentBoard = copyBoard(board);
 
   bool success = false;
 
+  int row = 0;
 
   while (!input.eof() && !success){
+    bool correctRow = true;
+    cout << "At existing sols row number: " << row <<endl;
     for (int i = 0; i < matrixSize; i++){
       int temp;
       input >> temp;
       uint rowNum = i / width;
       uint colNum = i % width;
-      int difference = temp -currentBoard[rowNum][colNum];
+      int difference = temp - currentBoard[rowNum][colNum];
       if (difference == 0 || difference == temp) {
-        previousSolution[matrixSize] = temp;
+        previousSolution[i] = temp;
       } else {
-        continue;
+        correctRow = false;
       }
     }
-    input.close();
-    cout << "solution found~~~~~~~~: " << endl;
+    if (correctRow) {
+      input.close();
+      cout << "Existing solution found~~~~~~~~: " << endl;
+      success = true;
+      PuzzleBoard* tempBoard = new PuzzleBoard (previousSolution, board->getContainer()); // work on this.
+      *board = *tempBoard; //copy assignment operator
 
-    for (int i = 0; i < matrixSize; i++){
-      cout << previousSolution[i] << " ";
+      deleteCopy(height, currentBoard);
+      delete tempBoard;
+      return true;
     }
-
-    success = true;
-    PuzzleBoard* tempBoard = new PuzzleBoard (previousSolution, board->getContainer()); // work on this.
-    board = tempBoard; //copy assignment operator
-
-    delete tempBoard;
-    deleteCopy(height, currentBoard);
-    return true;
+    row ++;
   }
   input.close();
   deleteCopy(height, currentBoard);
+  cout << "Existing solution not found~~~~~~~~: " << endl;
   return false;
 }
 
