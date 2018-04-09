@@ -16,9 +16,12 @@
 
 using namespace std;
 
-int main(int argc, char** argv) { //  ./demo <input_filename>
+int main(int argc, char** argv) { //  bin/sp directory state
   /* READ FILE */
-
+  if (argc != 3){
+    cout << "Error: input arguments not 3" <<endl;
+    return 0;
+  }
   //Read and load information of the puzzle pieces
   int length = strlen(argv[1]);
   char pieces_file[(length + 1)];
