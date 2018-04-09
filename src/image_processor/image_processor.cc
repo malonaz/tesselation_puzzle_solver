@@ -33,7 +33,6 @@ int main(int argc, char** argv) { //  ./ip <input_filename> <upload_dir>
   }
   vector<ListOfPoints> puzzle_pieces;
   find_coordinates(image_file, puzzle_pieces);
-  debug_coordinates(image_file, puzzle_pieces);
 
   cout<< "Rotating Pieces..." << endl;
   /* SHAPE TRANSLATE MODULE */
