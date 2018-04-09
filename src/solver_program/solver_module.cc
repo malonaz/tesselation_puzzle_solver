@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstring>
 #include <string>
+#include <sstream>
 #include "common/coordinates_io.h"
 #include "common/debugger.h"
 #include "common/memory.h"
@@ -35,7 +36,7 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   uint board_height = 0;
   uint board_width = 0;
 
-/***********Reading  and converting 1D array from text file *******************/
+/***********Reading  and converting 1D array from text file *******************
   ifstream input_file;
   input_file.open(argv[2]);
   if (input_file.fail()) {
@@ -68,7 +69,26 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
     counter++;
   }
   input_file.close();
-/***************End of read/convert 1D array from text file *******************/
+***************End of read/convert 1D array from text file *******************/
+
+  stringstream stream(argv[2]);
+
+  int count = 0;
+  while(stream){
+      int n;
+      stream>>n;
+  count++;
+  }
+
+  count--;
+  int partialBoard[count];
+
+  stringstream stream1(argv[2]);
+
+  for (int i = 0; i < count; i++){
+      stream1>>partialBoard[i];
+      cout<<partialBoard[i]<<endl;
+  }
 
   solution = partialSolver(argv[1], partialBoard, count, allPieces, solve_success, board_height, board_width);
 
