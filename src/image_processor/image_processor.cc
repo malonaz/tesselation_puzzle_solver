@@ -10,6 +10,8 @@
 #include "discretizer/shape_translate.h"
 #include "imagereader/image_read.h"
 
+#include <stdio.h>
+#include <unistd.h>
 #include <fstream>
 #include <iostream>
 #include <vector>
