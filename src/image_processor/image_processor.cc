@@ -1,6 +1,4 @@
 #include "common/coordinates_io.h"
-#include "common/debugger.h"
-#include "common/memory.h"
 #include "common/point.h"
 #include "common/puzzle_board.h"
 #include "common/shape_matrix_io.h"
@@ -42,8 +40,6 @@ int main(int argc, char** argv) { //  ./ip <input_filename> <upload_dir>
   vector<ListOfPoints> rotated_puzzle_pieces;
   rotate_shapes(puzzle_pieces, rotated_puzzle_pieces);
 
-  print_list_of_shapes(rotated_puzzle_pieces);
-
   cout << puzzle_pieces.size() << " Pieces rotated!" << endl;
 
 
@@ -57,7 +53,6 @@ int main(int argc, char** argv) { //  ./ip <input_filename> <upload_dir>
     return 1;
   }
 
-  print_area(pieces);
   const char* name = "/processing";
   char* processing_file = new char[length + 1];
   strcpy(processing_file, upload_dir);
