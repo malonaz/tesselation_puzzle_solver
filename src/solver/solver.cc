@@ -1,11 +1,9 @@
-#include <iostream>
-#include <vector>
-#include <cmath>
-#include <cstring>
-#include <string>
-#include <stdio.h>
-#include <sstream>
-#include <iomanip>
+#include "common/memory.h"
+#include "common/puzzle_board.h"
+#include "common/shape_matrix.h"
+#include "common/shape_matrix_io.h"
+#include "common/types.h"
+#include "solver.h"
 #include "common/memory.h"
 #include "common/puzzle_board.h"
 #include "common/shape_matrix.h"
@@ -13,6 +11,18 @@
 #include "common/types.h"
 #include "solver.h"
 #include "common/debugger.h"
+
+#include <iostream>
+#include <unordered_set>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#include <cstring>
+#include <string>
+#include <stdio.h>
+#include <sstream>
+#include <iomanip>
+
 
 
 using namespace std;
