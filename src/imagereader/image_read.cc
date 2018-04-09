@@ -74,7 +74,7 @@ void find_coordinates(const char* input, vector<ListOfPoints> &list) {
     for (uint j = 0; j < approx.size(); ++j) {
       shapeList.push_back(Point(approx[j].x,approx[j].y));
     }
-    
+
     list.push_back(shapeList);
   }
 }
@@ -84,10 +84,10 @@ void debug_coordinates(const char* filename, const vector<ListOfPoints> &list){
   if (src.empty()) {
     cout << "Could not open or find image!\n" << endl;
   }
-  
+
   scaleDownImage(src, src, SCALE_DOWN_IMAGE_WIDTH);
   namedWindow( "Debug window", WINDOW_AUTOSIZE );
-  
+
   /*****prints out coordinates of corners*****/
   for (uint i = 0; i < list.size(); i++) {
     cout << "Shape " << i << ": " << endl;
