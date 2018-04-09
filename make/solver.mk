@@ -3,5 +3,5 @@ SOLVER_OBJECTS = $(patsubst $(SRCDIR)/%.cc,$(OBJDIR)/%.o,$(shell find $(SRCDIR)/
 $(SOLVER_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 	@echo "\tCompiling \"$@\""
 	@mkdir -p `dirname $@`
-	@$(CXX) $(CXXFLAGS) $(OPENCV_CXXFLAGS) -Wall --coverage -c $< -o $@
+	@$(CXX) $(CXXFLAGS) $(OPENCV_CXXFLAGS) -Wall --coverage -c $< -o $@ -lcrypto
 	@echo "[Done]\tCompiling \"$@\""

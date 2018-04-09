@@ -1,6 +1,8 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <cstring>
+#include <string>
 #include "common/coordinates_io.h"
 #include "common/debugger.h"
 #include "common/memory.h"
@@ -16,8 +18,12 @@ using namespace std;
 int main(int argc, char** argv) { //  ./demo <input_filename>
   /* READ FILE */
 
-  //argv[1] append to the pieces.txt
-  const char* pieces_file = "output_data/pieces.txt";
+  //Read and load information of the puzzle pieces
+  int length = strlen(argv[1]);
+  char pieces_file[(length + 1)];
+  strcpy(pieces_file, argv[1]);
+  strcat(pieces_file, "/pieces");
+
   cout << " Reading file ....." <<endl;
   vector<ShapeMatrix> allPieces;
   shape_matrix_read(pieces_file, allPieces);
@@ -29,18 +35,16 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   uint board_height = 0;
   uint board_width = 0;
 
-  //createPartialBoard based on argv[2]
-
-//  solution = puzzleSolver(pieces, solve_success, board_height, board_width);
+/***********Reading  and converting 1D array from text file *******************/
   ifstream input_file;
   input_file.open(argv[2]);
-  if (input_file.fail()){
+  if (input_file.fail()) {
     cout<<"Failed to open the partialBoard file!!!";
     return 1;
   }
 
   int count = 0;
-  while (!input_file.eof()){
+  while (!input_file.eof()) {
     int temp;
     input_file >> temp;
     cout << temp;
@@ -51,23 +55,22 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   input_file.close();
 
   input_file.open(argv[2]);
-  if (input_file.fail()){
+  if (input_file.fail()) {
     cout<<"Failed to open the partialBoard file!!!";
     return 1;
   }
 
   int partialBoard[count];
   int counter = 0;
-  while (!input_file.eof() && counter < count){
+  while (!input_file.eof() && counter < count) {
     input_file >> partialBoard[counter];
     cout << counter << ":" << partialBoard[counter] << endl;
     counter++;
   }
   input_file.close();
+/***************End of read/convert 1D array from text file *******************/
 
-
-
-  solution = partialSolver(partialBoard, count, allPieces, solve_success, board_height, board_width);
+  solution = partialSolver(argv[1], partialBoard, count, allPieces, solve_success, board_height, board_width);
 
   /* Return Message */
   switch (solve_success) {

@@ -27,7 +27,7 @@ bool solvableConfig(PuzzleBoard* board,const vector<ShapeMatrix> &pieces,
 int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
       uint& board_height, uint& board_width);
 
-int** partialSolver(int* partialBoard, int count, const vector<ShapeMatrix> &allPieces, int& returnCode,
+int** partialSolver(char* directoryName, int* partialBoard, int count, const vector<ShapeMatrix> &allPieces, int& returnCode,
       uint& board_height, uint& board_width);
 
 #endif

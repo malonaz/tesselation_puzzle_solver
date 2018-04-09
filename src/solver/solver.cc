@@ -1,6 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <cstring>
+#include <string>
+#include <stdio.h>
+#include <sstream>
+#include <iomanip>
 #include "common/memory.h"
 #include "common/puzzle_board.h"
 #include "common/shape_matrix.h"
@@ -9,7 +14,39 @@
 #include "solver.h"
 #include "common/debugger.h"
 
+
 using namespace std;
+
+#include <openssl/sha.h>
+
+/**** This standard sha256 initialization function was adapted from an online reference: *****/
+string sha256(string str)
+{
+  unsigned char hash[SHA256_DIGEST_LENGTH];
+  SHA256_CTX sha256;
+  SHA256_Init(&sha256);
+  SHA256_Update(&sha256, str.c_str(), str.size());
+  SHA256_Final(hash, &sha256);
+  stringstream strstream;
+  for(int i = 0; i < SHA256_DIGEST_LENGTH; i++)
+    {
+      strstream << hex << setw(2) << setfill('0') << (int)hash[i];
+    }
+  return strstream.str();
+}
+/**** End of referenced initialization function *****/
+
+string intMatrixToString (int** solution, uint height, uint width) {
+  string temp = "";
+
+  for (uint r = 0; r < height; r++) {
+    for (uint c = 0; c < width; c++) {
+      temp+= to_string(solution[r][c]);
+    }
+  }
+  return temp;
+}
+
 
 bool shapeAlreadyUsed(int currentIdentifier, int* partialBoard, int sizeOfPartialBoard){
   for (int i = 2; i < sizeOfPartialBoard; i++){
@@ -302,6 +339,7 @@ bool recursiveSolver (PuzzleBoard* board,
           if (recursiveSolver(board, pieces, nextIndex,iterations)) {
 	    /******Comment/ Un-comment "return true;" to include/remove all solutions search: *****/
       //cout<< "Solution found after " << iterations << " iterations."<< endl;
+
         return true;
 
           }
@@ -403,7 +441,7 @@ bool searchExistingSolutions(PuzzleBoard* board) {
   return false;
 }
 
-int** partialSolver(int* partialBoard, int count, const vector<ShapeMatrix> &allPieces, int& returnCode,
+int** partialSolver(char* directoryName, int* partialBoard, int count, const vector<ShapeMatrix> &allPieces, int& returnCode,
       uint& board_height, uint& board_width) {
   returnCode = 0;
   vector<ShapeMatrix> unusedPieces;
@@ -420,12 +458,14 @@ int** partialSolver(int* partialBoard, int count, const vector<ShapeMatrix> &all
 
   //Strategy 1: look in the existing repository
   bool success = false;
-  success = searchExistingSolutions(board);
+//  success = searchExistingSolutions(board);
+  bool writeNewSolnFlag = false;
 
   //Strategy 2: look in the existing repository
   if (!success){
     int iterations = 0;
     success = recursiveSolver(board, unusedPieces, 0, iterations);
+    writeNewSolnFlag = true;
   }
 
   if (success) {
@@ -433,6 +473,21 @@ int** partialSolver(int* partialBoard, int count, const vector<ShapeMatrix> &all
     board_height = board->getHeight(); //returns height of board
     board_width = board->getWidth(); // returns width of board
     board_solution = copyBoard(board); // returns a 2D int array of board (w soln)
+
+    //HASH AND WRITE TO THE SOLUTIONS DIRECTORY
+    if (writeNewSolnFlag){
+      string strHashOfSoln = sha256(intMatrixToString(board_solution,board_height,board_width));
+      int n1 = strlen(directoryName);
+      int n2 = strlen("/Solutions/");
+      int n3 = strHashOfSoln.length();
+      char hashFileName[(n1 + n2 + n3 + 1)];
+      strcpy(hashFileName, directoryName);
+      strncat(hashFileName, "/Solutions/", n2);
+      strncat(hashFileName, strHashOfSoln.c_str(), n3);
+
+      test_print(board_solution, hashFileName, board_height, board_width);
+
+    }
   } else {
     returnCode = UNSOLVED;
   }

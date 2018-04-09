@@ -5,7 +5,7 @@ SOLVER_PROGRAM_OBJECTS = $(patsubst $(SRCDIR)/%.cc,$(OBJDIR)/%.o,$(shell find $(
 $(SOLVER_PROGRAM_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 	@echo "\tCompiling \"$@\""
 	@mkdir -p `dirname $@`
-	@$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@
+	@$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@  -lcrypto
 	@echo "[Done]\tCompiling \"$@\""
 
 $(BINDIR)/$(SOLVER_PROGRAM_TARGET): $(COMMON_OBJECTS) $(SOLVER_OBJECTS) $(SOLVER_PROGRAM_OBJECTS)
@@ -13,5 +13,5 @@ $(BINDIR)/$(SOLVER_PROGRAM_TARGET): $(COMMON_OBJECTS) $(SOLVER_OBJECTS) $(SOLVER
 	@mkdir -p bin
 	@$(CXX) $(CPPFLAGS)\
 		$(TESTINCLUDES)\
-		$(CXXFLAGS) -fprofile-arcs $^ -o $@
+		$(CXXFLAGS) -fprofile-arcs $^ -o $@  -lcrypto
 	@echo "[Done]\tLinking \"$@\""
