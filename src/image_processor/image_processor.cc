@@ -1,6 +1,3 @@
-#include <fstream>
-#include <iostream>
-#include <vector>
 #include "common/coordinates_io.h"
 #include "common/debugger.h"
 #include "common/memory.h"
@@ -13,6 +10,9 @@
 #include "discretizer/shape_translate.h"
 #include "imagereader/image_read.h"
 
+#include <fstream>
+#include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -20,24 +20,13 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   /* READ FILE */
   vector<ListOfPoints> puzzle_pieces;
 
-  const char* image_file = "demo_data/puzzle6.jpg";
-  const char* coordinate_file = "demo_data/puzzle2.txt";
+  const char* image_file = argv[1];
+  const char* upload_dir = argv[2];
 
   find_coordinates(image_file, puzzle_pieces);
   debug_coordinates(image_file, puzzle_pieces);
 
-  puzzle_pieces.clear();
-
-  cout << " Reading file ....." <<endl;
-  bool file_read = read_coordinates_file(coordinate_file, puzzle_pieces);
-  if (file_read == false){
-    cout << "ERROR: FILE ERROR" << endl;
-    return 1;
-  }
-  cout << "File Read Complete!" << endl;
-
   cout<< "Rotating Pieces..." << endl;
-  
   /* SHAPE TRANSLATE MODULE */
   vector<ListOfPoints> rotated_puzzle_pieces;
   rotate_shapes(puzzle_pieces, rotated_puzzle_pieces);
@@ -58,9 +47,12 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
   }
 
   print_area(pieces);
-  cout << "Translation complete!" << endl;
-  const char* file_out = "src/image_processor/pieces.txt";
-  shape_matrix_write(file_out, pieces);
-  
+
+  const char* pieces = "/pieces";
+  char* pieces_file = new char[length + 1];
+  strcpy(pieces_file, upload_dir);
+  pieces_file = strcat(pieces_file, pieces);;
+  shape_matrix_write(pieces_file, pieces);
+
   return 0;
 }
