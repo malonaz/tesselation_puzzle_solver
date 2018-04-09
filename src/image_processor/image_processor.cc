@@ -13,15 +13,21 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <string>
 
 using namespace std;
 
-int main(int argc, char** argv) { //  ./demo <input_filename>
+int main(int argc, char** argv) { //  ./ip <input_filename> <upload_dir>
   /* READ FILE */
   vector<ListOfPoints> puzzle_pieces;
 
   const char* image_file = argv[1];
   const char* upload_dir = argv[2];
+
+  int length =0;
+  while(upload_dir[length] != '\0'){
+    length++;
+  }
 
   find_coordinates(image_file, puzzle_pieces);
   debug_coordinates(image_file, puzzle_pieces);
