@@ -1,5 +1,5 @@
 $(DEMO_TARGET): $(BINDIR)/$(DEMO_TARGET)
-	
+
 DEMO_OBJECTS = $(patsubst $(SRCDIR)/%.cc,$(OBJDIR)/%.o,$(shell find $(SRCDIR)/demo/ -type f -name '*.cc'))
 
 $(DEMO_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
@@ -13,5 +13,5 @@ $(BINDIR)/$(DEMO_TARGET): $(COMMON_OBJECTS) $(SOLVER_OBJECTS) $(DISCRETIZER_OBJE
 	@mkdir -p bin
 	@$(CXX) $(CPPFLAGS)\
 		$(TESTINCLUDES)\
-		$(CXXFLAGS) -fprofile-arcs $^ -o $@ $(OPENCV_LIBFLAGS)
+		$(CXXFLAGS) -fprofile-arcs $^ -o $@ $(OPENCV_LIBFLAGS) -lcrypto
 	@echo "[Done]\tLinking \"$@\""
