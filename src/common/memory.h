@@ -1,3 +1,6 @@
+#ifndef MEMORY_H
+#define MEMORY_H
+
 #include <vector>
 
 using std::vector;
@@ -25,3 +28,6 @@ void cleanup_list(vector<T*>* list) {
   }
   delete list;
 }
+
+
+#endif
