@@ -13,7 +13,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include <string>
+#include <cstring>
 
 using namespace std;
 
@@ -25,7 +25,7 @@ int main(int argc, char** argv) { //  ./ip <input_filename> <upload_dir>
   const char* upload_dir = argv[2];
 
   int length =0;
-  while(upload_dir[length] != '\0'){
+  while (upload_dir[length] != '\0') {
     length++;
   }
 
@@ -54,10 +54,10 @@ int main(int argc, char** argv) { //  ./ip <input_filename> <upload_dir>
 
   print_area(pieces);
 
-  const char* pieces = "/pieces";
+  const char* pieces_file_name = "/pieces";
   char* pieces_file = new char[length + 1];
   strcpy(pieces_file, upload_dir);
-  pieces_file = strcat(pieces_file, pieces);;
+  pieces_file = strcat(pieces_file, pieces_file_name);
   shape_matrix_write(pieces_file, pieces);
 
   return 0;
