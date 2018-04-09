@@ -19,7 +19,10 @@ using namespace std;
 
 int main(int argc, char** argv) { //  ./ip <input_filename> <upload_dir>
   /* READ FILE */
-  vector<ListOfPoints> puzzle_pieces;
+  if (argc !=  3){
+    cout << "Not enough arguments!" <<endl;
+    return 0;
+  }
 
   const char* image_file = argv[1];
   const char* upload_dir = argv[2];
@@ -28,7 +31,7 @@ int main(int argc, char** argv) { //  ./ip <input_filename> <upload_dir>
   while (upload_dir[length] != '\0') {
     length++;
   }
-
+  vector<ListOfPoints> puzzle_pieces;
   find_coordinates(image_file, puzzle_pieces);
   debug_coordinates(image_file, puzzle_pieces);
 
@@ -53,12 +56,24 @@ int main(int argc, char** argv) { //  ./ip <input_filename> <upload_dir>
   }
 
   print_area(pieces);
-
-  const char* pieces_file_name = "/pieces";
-  char* pieces_file = new char[length + 1];
-  strcpy(pieces_file, upload_dir);
-  pieces_file = strcat(pieces_file, pieces_file_name);
-  shape_matrix_write(pieces_file, pieces);
+  const char* name = "/processing";
+  char* processing_file = new char[length + 1];
+  strcpy(processing_file, upload_dir);
+  processing_file = strcat(processing_file, name);
+  cout << "file to remove: "<< processing_file <<endl;
+  if( remove( processing_file ) != 0 ){
+    cout << "Error deleting file" <<endl;
+    return 0;
+  }
+  else{
+    cout<< "File successfully deleted" <<endl;
+    const char* pieces_file_name = "/pieces";
+    char* pieces_file = new char[length + 1];
+    strcpy(pieces_file, upload_dir);
+    pieces_file = strcat(pieces_file, pieces_file_name);
+    shape_matrix_write(pieces_file, pieces);
+    cout << "pieces file created at " << pieces_file <<endl;
+  };
 
   return 0;
 }
