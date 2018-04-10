@@ -454,7 +454,7 @@ bool searchExistingSolutions(PuzzleBoard* board) {
 
   int previousSolution[matrixSize];
 
-  int** currentBoard = copyBoard(board);
+  int** currentBoard = copy_board(board);
 
   bool success = false;
 
@@ -482,14 +482,14 @@ bool searchExistingSolutions(PuzzleBoard* board) {
       PuzzleBoard* tempBoard = new PuzzleBoard (previousSolution, board->getContainer()); // work on this.
       *board = *tempBoard; //copy assignment operator
 
-      deleteCopy(height, currentBoard);
+      delete_2d_array(height, currentBoard);
       delete tempBoard;
       return true;
     }
     row ++;
   }
   input.close();
-  deleteCopy(height, currentBoard);
+  delete_2d_array(height, currentBoard);
   cout << "Existing solution not found~~~~~~~~: " << endl;
   return false;
 }
@@ -502,7 +502,7 @@ int** partialSolver(char* directoryName, int* partialBoard, int count, const vec
 
   PuzzleBoard* board = createPartialBoard(partialBoard, count, allPieces, unusedPieces);
 
-  for (int i = 0; i < unusedPieces.size(); i++) {
+  for (uint i = 0; i < unusedPieces.size(); i++) {
     cout << unusedPieces[i].getIdentifier() << endl;
     shape_matrix_print(unusedPieces[i]);
   }
@@ -517,7 +517,7 @@ int** partialSolver(char* directoryName, int* partialBoard, int count, const vec
   //Strategy 2: look in the existing repository
   if (!success){
     int iterations = 0;
-    success = recursiveSolver(board, unusedPieces, 0, iterations);
+    success = recursive_solver(board, unusedPieces, 0, iterations);
     writeNewSolnFlag = true;
   }
 
@@ -525,7 +525,7 @@ int** partialSolver(char* directoryName, int* partialBoard, int count, const vec
     returnCode = SOLVED;
     board_height = board->getHeight(); //returns height of board
     board_width = board->getWidth(); // returns width of board
-    board_solution = copyBoard(board); // returns a 2D int array of board (w soln)
+    board_solution = copy_board(board); // returns a 2D int array of board (w soln)
 
     //HASH AND WRITE TO THE SOLUTIONS DIRECTORY
     if (writeNewSolnFlag){
