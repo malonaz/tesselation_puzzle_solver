@@ -10,7 +10,7 @@
 #define SOLVED 1
 #define UNSOLVED 0
 
-PuzzleBoard* createBoard(const vector<ShapeMatrix> &matrices,
+PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices,
     vector<ShapeMatrix> &pieces, int& containerArea, int& totalPieceArea);
 
 bool recursive_solver (PuzzleBoard* board,
@@ -27,7 +27,7 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& returnCode,
 bool solvable_config(PuzzleBoard* board,const vector<ShapeMatrix> &pieces,
     uint currentIndex);
 
-int** partialSolver(char* directoryName, int* partialBoard, int count, const vector<ShapeMatrix> &allPieces, int& returnCode,
+int** partial_board(char* directoryName, int* partialBoard, int count, const vector<ShapeMatrix> &allPieces, int& returnCode,
       uint& board_height, uint& board_width);
 
 #endif
