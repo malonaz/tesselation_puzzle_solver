@@ -225,39 +225,11 @@ float find_unit_length(const vector<ListOfPoints> &shapes) {
 }
 
 
-float find_unit_length_old(const vector<ListOfPoints> &shapes) {
-  if (shapes.size() == 0) {
-    // avoid division by zero
-    return 0;
-  }
-  
-  // used to store all shortest edges's lengths
-  vector<float> shortest_edges_length;
-  
-  for (uint i = 0; i < shapes.size(); ++i) {
-    
-    // compute this shape's shortest edge's length
-    float shortest_edge_length = find_shortest_edge_in_shape(shapes[i]);
-    
-    if (shortest_edge_length == 0) {
-      continue;
-    }
-
-    // add this shape's shortest edge's length to the vector that holds them for all shapes
-    shortest_edges_length.push_back(shortest_edge_length);
-  }
-
-  // sort edges
-  sort(shortest_edges_length.begin(), shortest_edges_length.end());
-  
-  return shortest_edges_length[0];
-}
-
 
 /**
  * Helper function which 
  */
-void normalize_shape(vector<Point> &shape, int unit_length) {
+void normalize_shape(vector<Point> &shape, float unit_length) {
   for (uint i = 0; i < shape.size(); ++i) {
     // divide each coordinate by the unit length of each shape
     shape[i].x = round(static_cast<float>(shape[i].x) / unit_length);
@@ -341,10 +313,7 @@ void shape_translate(const vector<Point> &shape, ShapeMatrix &matrix) {
 
 
 bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes,
-				vector<ShapeMatrix>& matrices, float scaling_factor) {
-  
-  // get the unit length of these shapes
-  int unit_length = round(find_unit_length_old(shapes) * scaling_factor);
+				vector<ShapeMatrix>& matrices, int unit_length) {
   
   if (unit_length == 0 || shapes.size() == 0) {
     // avoid division by zero
@@ -387,7 +356,49 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes,
   return true;
 } 
 
-bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes,
-				vector<ShapeMatrix>& matrices){
+bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes, vector<ShapeMatrix>& matrices){
+
+  // get raw unit length implied by the shapes
+  float raw_unit_length = find_unit_length(shapes);
+
+
+  // setup scaling factors
+  vector<float> scaling_factors = {1.0};
+
+  for (int i = 1; i < 15; i++){
+    scaling_factors.push_back(scaling_factors[0] + i * 0.01);
+    scaling_factors.push_back(scaling_factors[0] - i * 0.01);
+  }
+  
+  for (uint i = 0; i < scaling_factors.size(); i++){      
+
+    // compute unit_length
+    float unit_length = raw_unit_length * scaling_factors[i];
+    
+    // translate shapes
+    shape_translate_all_shapes(shapes, matrices, unit_length);
+    
+    // sort shapes in descending area shape
+    sort(matrices.rbegin(), matrices.rend());
+
+    // get area container
+    int container_area = matrices[0].getShapeArea();
+    
+    // get area of rest of pieces
+    int pieces_area = 0;
+    for (uint i = 1; i < matrices.size(); i++)
+      pieces_area += matrices[i].getShapeArea();
+
+    if (pieces_area == container_area)
+      // scaling factor is correct
+      return true;
+
+
+    // clear matrices
+    matrices.clear();
+  }
+
+  
   return true;
+  
 }
