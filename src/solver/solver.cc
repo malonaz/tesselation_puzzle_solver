@@ -266,13 +266,19 @@ int** copy_board(PuzzleBoard* const board) {
 }
 
 
-/* helper function to delete dynamically allocated 2D array */
-void deleteCopy(uint height, int** copyBoard) {
-  for (uint i = 0; i < height; i++){
-    delete[] copyBoard[i];
-  }
-  delete[] copyBoard;
+/**
+ * Helper function which frees a 2D array from the heap
+ */
+void delete_2d_array(uint height, int** copy_board) {
+
+  // free each row
+  for (uint i = 0; i < height; i++)
+    delete[] copy_board[i];
+
+  // free array
+  delete[] copy_board;
 }
+
 
 /* function to check remaining area if the pieces can fit */
 bool solvableConfig(PuzzleBoard* board,
