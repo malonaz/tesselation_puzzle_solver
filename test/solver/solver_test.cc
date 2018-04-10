@@ -55,7 +55,7 @@ namespace {
 
             int containerArea = 0, totalPieceArea = 0;
 
-            board1 = createBoard(matrices, shapes,
+            board1 = create_board(matrices, shapes,
                 containerArea, totalPieceArea);
           }
 
@@ -118,7 +118,7 @@ namespace {
 
         int containerArea = 0, totalPieceArea = 0;
 
-        PuzzleBoard* board1 = createBoard(matrices, shapes,
+        PuzzleBoard* board1 = create_board(matrices, shapes,
             containerArea, totalPieceArea);
 
         //Area check: largest piece within vector selected as container
@@ -141,12 +141,12 @@ namespace {
         }
 
         //Solvable state check: puzzle board is initialized in a solvable configuration
-        EXPECT_EQ(solvableConfig(board1,shapes, 0), true);
+        EXPECT_EQ(solvable_config(board1,shapes, 0), true);
 
         int returnCode = 0;
         uint board_height=0, board_width=0;
         int** solution = NULL;
-        solution = puzzleSolver(matrices, returnCode,
+        solution = puzzle_solver(matrices, returnCode,
               board_height, board_width);
         int filledArea = 0;
 
