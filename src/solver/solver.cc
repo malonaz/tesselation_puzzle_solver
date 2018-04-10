@@ -417,7 +417,7 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint&
   }
 
   // check for oversized container case
-  if (pieces_area < container_area) { // case of oversized container
+  if (pieces_area < container_area) { 
     return_code = OVERSIZED;
     return NULL;
   }
