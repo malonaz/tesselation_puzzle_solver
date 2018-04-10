@@ -24,6 +24,8 @@
 #include <sstream>
 #include <iomanip>
 
+using std::cout;
+using std::endl;
 using std::min;
 using std::max;
 using std::round;
@@ -78,55 +80,43 @@ bool shape_already_used(int current_identifier, int* partial_board, int partial_
   return false;
 }
 
-PuzzleBoard* create_partial_board(int* partial_board, int count, const vector<ShapeMatrix> &allPieces,
+
+PuzzleBoard* create_partial_board(int* partial_board, int count, const vector<ShapeMatrix> &pieces,
       vector<ShapeMatrix> &unusedPieces) {
 
-    int allPiecesSize = (int)allPieces.size();
+  // create copy of all_pieces and sort it in descending order
+  vector<ShapeMatrix> pieces_copy = pieces;
+  std::sort(pieces_copy.rbegin(), pieces_copy.rend());
 
-    //finding the original shape of container
-    int maxAreaIdx;
-    int containerIdentifier;
+  // find container (first piece) and save its area and identification
+  ShapeMatrix container = pieces_copy[0];
+  int container_area = container.getShapeArea();
 
-    uint containerHeight = partial_board[0];
-    uint containerWidth = partial_board[1];
-    int partial_board_size = count;
-    cout<<"the size of partial board is " << partial_board_size << endl;
-
-    for (int i = 0; i < allPiecesSize; i++) {
-      if ((containerHeight == allPieces[i].getHeight()) &&
-      (containerWidth == allPieces[i].getWidth())) {
-        //Compares the filled area with the matrix area. Assume perfect rectangular
-        if (allPieces[i].getShapeArea() == allPieces[i].getMatrixArea()) {
-          maxAreaIdx = i;
-          containerIdentifier = allPieces[i].getIdentifier();
-          break;
-        }
-      }
+  int partial_board_size = count;
+  cout << "the size of partial board is " << partial_board_size << endl;
+  
+  //copying the partial_board into taperedPartialBoard
+  int taperedPartialBoard[container_area];
+  int difference = partial_board_size - container_area;
+  
+  for (int i = 0; i < container_area; i++)
+    taperedPartialBoard[i]= partial_board[difference + i];
+  
+  //constructs the board, and then fill in based on the partial_board array
+  PuzzleBoard* board = new PuzzleBoard(taperedPartialBoard, container);
+  
+  for (uint j = 1; j < pieces_copy.size(); j++) {
+    
+    // get identifer of current piece
+    int current_identifier = pieces[j].getIdentifier();
+    
+    if (!shape_already_used(current_identifier, partial_board, partial_board_size)){
+      unusedPieces.push_back(pieces[j]);
+      cout <<"pushing in piece number"<<pieces[j].getIdentifier()<<endl;
     }
-    ShapeMatrix container = allPieces[maxAreaIdx];
-    int actualSizeOfPartialBoard = container.getMatrixArea();
-
-    //copying the partial_board into taperedPartialBoard
-    int taperedPartialBoard[actualSizeOfPartialBoard];
-    int difference = partial_board_size - actualSizeOfPartialBoard;
-
-    for (int i = 0; i< actualSizeOfPartialBoard; i++){
-      taperedPartialBoard[i]= partial_board[difference + i];
-    }
-
-    //constructs the board, and then fill in based on the partial_board array
-    PuzzleBoard* board = new PuzzleBoard(taperedPartialBoard, container);
-
-    for (int j = 0; j < allPiecesSize; j++) {
-      int current_identifier = allPieces[j].getIdentifier();
-      if (current_identifier!=containerIdentifier){
-        if (!shape_already_used(current_identifier, partial_board, partial_board_size)){
-          unusedPieces.push_back(allPieces[j]);
-          cout <<"pushing in piece number"<<allPieces[j].getIdentifier()<<endl;
-        }
-      }
-    }
-    return board;
+    
+  }
+  return board;
 }
 
 /**
@@ -146,7 +136,7 @@ PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices, vector<ShapeMatri
   pieces = matrices;
   std::sort(pieces.rbegin(), pieces.rend());
 
-  // extract container (last piece) and save its area
+  // extract container (first piece) and save its area
   ShapeMatrix container = pieces[0];
   pieces.erase(pieces.begin());
   container_area = container.getShapeArea();
@@ -505,13 +495,13 @@ bool search_existing_solutions(PuzzleBoard* board) {
   return false;
 }
 
-int** partial_solver(char* directoryName, int* partial_board, int count, const vector<ShapeMatrix> &allPieces, int& returnCode,
+int** partial_solver(char* directoryName, int* partial_board, int count, const vector<ShapeMatrix> &pieces, int& returnCode,
       uint& board_height, uint& board_width) {
   returnCode = 0;
   vector<ShapeMatrix> unusedPieces;
   int** board_solution = NULL;
 
-  PuzzleBoard* board = create_partial_board(partial_board, count, allPieces, unusedPieces);
+  PuzzleBoard* board = create_partial_board(partial_board, count, pieces, unusedPieces);
 
   for (uint i = 0; i < unusedPieces.size(); i++) {
     cout << unusedPieces[i].getIdentifier() << endl;
