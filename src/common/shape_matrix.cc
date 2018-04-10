@@ -60,6 +60,10 @@ bool ShapeMatrix::get(uint row, uint col) const {
   return this->shape[row * this->width + col];
 } // ShapeMatrix::get(int, int)
 
+uint ShapeMatrix::getIdentifier() const{
+  return this->identifier;
+}
+
 uint ShapeMatrix::getWidth() const {
   return this->width;
 } // ShapeMatrix::getWidth()
