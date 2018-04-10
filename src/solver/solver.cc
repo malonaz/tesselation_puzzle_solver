@@ -200,19 +200,26 @@ vector<ShapeMatrix> get_variations(const ShapeMatrix &piece) {
 
 
 
-/* function to get empty area */
-int getAdjacentEmptyArea(uint r, uint c, uint height, uint width, int** copiedBoard) {
-  if (r < height && c < width) {
-    if (copiedBoard[r][c] == 0) {
-      copiedBoard[r][c] = -1;
-      return 1 + getAdjacentEmptyArea(r, c + 1, height, width, copiedBoard)
-        + getAdjacentEmptyArea(r, c - 1, height, width,copiedBoard)
-        + getAdjacentEmptyArea(r + 1, c,height, width, copiedBoard)
-        + getAdjacentEmptyArea(r - 1, c,height, width, copiedBoard);
-    }
-  }
-  return 0;
+/**
+ * Helper function which returns the empty area near the square at (row, col) in the given board
+ */
+int get_adjacent_empty_area(uint row, uint col, uint height, uint width, int** board) {
+
+  // return 0 if (row, col) is not a valid square on the board that is empty
+  if (row >= height || col >= width || board[row][col] != 0)
+    return 0;
+
+  // set this square equal to -1
+  board[row][col] = -1;
+  
+  // make recursive call
+  return 1 + get_adjacent_empty_area(row, col + 1, height, width, board)
+    + get_adjacent_empty_area(row, col - 1, height, width,board)
+    + get_adjacent_empty_area(row + 1, col,height, width, board)
+    + get_adjacent_empty_area(row - 1, col,height, width, board);
 }
+
+
 
 /* function to generate all possible area combinations from remaining pieces */
 void generatePossibleAreas(int* answerArray,
