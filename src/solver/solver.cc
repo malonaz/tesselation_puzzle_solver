@@ -442,37 +442,59 @@ bool recursiveSolver_old (PuzzleBoard* board,
 }
 
 
-int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
-      uint& board_height, uint& board_width) {
-  returnCode = 0;
+
+/**
+ * Function which attempts to solve the puzzle implied by the give matrices.
+ *   @params:
+ *     return_code:
+ *       - SOLVED if the puzzle can be solved.
+ *       - UNSOLVED if the puzzle cannot be solved
+ *       - UNDERSIZED if the puzzle's container is too small for the pieces
+ *       - OVERSIZED is the puzzle's container is too large for the pieces
+ *     board_height: height of the board implied by the given matrices
+ *     board_width: width of the board implied by the given matrices
+ *   @returns: the solution of the board found as a 2D array.
+ * Encodes the solution found into
+ */ 
+int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint& board_height, uint& board_width) {
+  
   vector<ShapeMatrix> shapes;
-  int** board_solution = NULL;
-  int containerArea = 0;
-  int totalPieceArea = 0;
 
-  PuzzleBoard* board = createBoard(matrices, shapes,
-      containerArea, totalPieceArea);
-  if (totalPieceArea > containerArea) { // case of undersized container
-    returnCode = UNDERSIZED;
-    return board_solution;
+  // set variables used by recursive solver
+  int container_area = 0;
+  int pieces_area = 0;
+
+  // create a board
+  PuzzleBoard* board = create_board(matrices, shapes, container_area, pieces_area);
+  
+  // check for undersized container case
+  if (pieces_area > container_area) { 
+    return_code = UNDERSIZED;
+    return NULL;
   }
-  if (totalPieceArea < containerArea) { // case of oversized container
-    returnCode = OVERSIZED;
-    return board_solution;
+
+  // check for oversized container case
+  if (pieces_area < container_area) { // case of oversized container
+    return_code = OVERSIZED;
+    return NULL;
   }
-  // if puzzle pieces area == container area
+
+  // attempt to solve the puzzle recusively
   int iterations = 0;
-  bool success = recursiveSolver(board, shapes, 0, iterations);
+  bool success = recursive_solver(board, shapes, 0, iterations);
 
-  if (success) {
-    returnCode = SOLVED;
-    board_height = board->getHeight(); //returns height of board
-    board_width = board->getWidth(); // returns width of board
-    board_solution = copyBoard(board); // returns a 2D int array of board (w soln)
-  } else {
-    returnCode = UNSOLVED;
-  }
+  // set output parameters
+  return_code = success? SOLVED: UNSOLVED;
+  board_height = board->getHeight(); 
+  board_width = board->getWidth();
+
+  // set return param
+  int** board_solution = success? copy_board(board): NULL;
+
+  // free board
   delete board;
+
+  // return solution
   return board_solution;
 }
 
