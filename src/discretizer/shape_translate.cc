@@ -377,7 +377,7 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes, vector<Shape
     // compute unit_length
     float unit_length = raw_unit_length * scaling_factors[i];
     
-    // translate shapes
+    // attempt to translate shapes
     if (!shape_translate_all_shapes(shapes, matrices, unit_length))
       continue;
     
