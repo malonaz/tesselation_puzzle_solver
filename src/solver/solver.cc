@@ -336,8 +336,56 @@ void test_print(int** board_solution, char* file_name, uint height, uint width){
   out.close();
 }
 
+
+/**
+ * Helper function which recursively attempts to place a piece to solve the puzzle. depth-first!
+ */
+bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> pieces, uint current_index, int& iterations) {
+
+  // increment the iterations number
+  iterations++;
+
+  // check if board is complete
+  if (board->getRemainingArea() == 0 || current_index >= pieces.size()) 
+    return true;
+
+  // check if board is solvable
+  if (!solvable_config(board, pieces, current_index)) 
+    return false;
+
+  // get board dimensions
+  uint height = board->getHeight();
+  uint width = board->getWidth();
+
+  // get the current piece's variations (flips and rotations)
+  ShapeMatrix current_piece = pieces[current_index];
+  vector<ShapeMatrix> current_piece_variations = get_variations(current_piece);
+
+  for (uint row = 0; row < height; row++) 
+    for (uint col = 0; col < width; col++) 
+      for (uint i = 0; i < current_piece_variations.size(); i++) {
+
+	// get the ith variation of the current piece
+        ShapeMatrix current_piece_variation = current_piece_variations[i];
+
+	// if this variation cannot be placed, try the next
+        if (!board->placePiece(col, row, current_index + 1, current_piece_variation))
+	  continue;
+
+	// check that puzzle can be solved after placing the piece
+	if (recursive_solver(board, pieces, current_index + 1,iterations))
+	  return true;
+
+	// backtrack
+	board->removePiece(col, row, current_index + 1, current_piece_variation);
+        }
+      
+  return false;
+}
+
+
 /* function for recursive solving */
-bool recursiveSolver (PuzzleBoard* board,
+bool recursiveSolver_old (PuzzleBoard* board,
     const vector<ShapeMatrix> pieces,
     uint currentIndex,
     int& iterations) {
