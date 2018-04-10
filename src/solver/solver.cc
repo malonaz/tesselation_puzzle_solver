@@ -30,7 +30,9 @@ using std::round;
 using std::vector;
 using std::unordered_set;
 
-/**** This standard sha256 initialization function was adapted from an online reference: *****/
+/**
+ * This standard sha256 initialization function was adapted from an online reference.
+ */
 string sha256(string str){
   
   unsigned char hash[SHA256_DIGEST_LENGTH];
@@ -39,23 +41,28 @@ string sha256(string str){
   SHA256_Update(&sha256, str.c_str(), str.size());
   SHA256_Final(hash, &sha256);
   stringstream strstream;
+  
   for(int i = 0; i < SHA256_DIGEST_LENGTH; i++)
-    {
-      strstream << hex << setw(2) << setfill('0') << (int)hash[i];
-    }
+    strstream << hex << setw(2) << setfill('0') << (int)hash[i];
+  
   return strstream.str();
 }
-/**** End of referenced initialization function *****/
 
+
+/**
+ * Helper function which returns a string version of the given solution.
+ */
 string matrix_to_string (int** solution, uint height, uint width) {
-  string temp = "";
 
-  for (uint r = 0; r < height; r++) {
-    for (uint c = 0; c < width; c++) {
-      temp+= to_string(solution[r][c]);
-    }
-  }
-  return temp;
+  // used to store the output
+  string str = "";
+
+  // copy each cell into str
+  for (uint r = 0; r < height; r++) 
+    for (uint c = 0; c < width; c++) 
+      str+= to_string(solution[r][c]);
+    
+  return str;
 }
 
 
