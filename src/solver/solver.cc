@@ -280,49 +280,46 @@ void delete_2d_array(uint height, int** copy_board) {
 }
 
 
-/* function to check remaining area if the pieces can fit */
-bool solvableConfig(PuzzleBoard* board,
-    const vector<ShapeMatrix> &pieces,
-    uint currentIndex) {
-  uint b_height = board->getHeight();
-  uint b_width = board->getWidth();
-  //preparation to generate an array all possible area combinations.
-  int numRemainingPieces = pieces.size() - currentIndex;
-  long int maxCombinations = pow(2, numRemainingPieces);
-  int* answerArray = new int[maxCombinations]();
-  generatePossibleAreas(answerArray, maxCombinations, pieces, currentIndex);
 
-  int** copiedBoard = copyBoard(board);
+/**
+ * Helper function which checks empty areas to see if a combination of pieces can fit there.
+ * used to prune search space
+ */
+bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint currentIndex) {
 
-  for (uint r = 0; r < b_height; r++) {
-    for (uint c = 0; c < b_width; c++) {
-      //GETTING ADJACENT AREA OF CURRENT SLOT
-      int area = getAdjacentEmptyArea(r, c, b_height, b_width, copiedBoard);
-      bool areaImpossible = true;
+  // get board dimensions
+  uint height = board->getHeight();
+  uint width = board->getWidth();
+  
+  // get all possible area variations.
+  unordered_set<int> possible_areas = unordered_set<int>();
+  get_areas_permutations(possible_areas, pieces, currentIndex);
 
-      //IF AREA IS ZERO, JUST BREAK OUT OF THIS FOR LOOP
-      if (!area) {
-        break;
-      } else {
-        for (long int sequencei = 0; sequencei < maxCombinations; sequencei++) {
-          if (area == answerArray[sequencei]) {
-            areaImpossible = false;
-            break; //BREAK OUT OF SEARCH LOOP IF POSSIBLE COMBINATION OF SHAPES FOUND
-          }
-        }
-      }
-      if (areaImpossible) {
-        deleteCopy(b_height, copiedBoard);
-        delete[] answerArray;
-        return false;
+  // get a copy of the board's 2D array
+  int** board_copy = copy_board(board);
+
+  for (uint row = 0; row < height; row++) 
+    for (uint col = 0; col < width; col++) {
+      
+      // get area near current square
+      int area = get_adjacent_empty_area(row, col, height, width, board_copy);
+
+      // if area is zero, continue
+      if (area == 0)
+	continue; 
+
+      // if area is not in the possible permutations of area, then config is unsolvable
+      if (std::find(possible_areas.begin(), possible_areas.end(), area) == possible_areas.end()){
+	delete_2d_array(height, board_copy);
+	return false;
       }
     }
-  }
-  deleteCopy(b_height, copiedBoard);
 
-  delete[] answerArray;
+  delete_2d_array(height, board_copy);
   return true;
 }
+
+
 
 void test_print(int** board_solution, char* file_name, uint height, uint width){
   ofstream out(file_name, ios_base::app);
