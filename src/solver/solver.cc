@@ -30,8 +30,8 @@ using namespace std;
 #include <openssl/sha.h>
 
 /**** This standard sha256 initialization function was adapted from an online reference: *****/
-string sha256(string str)
-{
+string sha256(string str){
+  
   unsigned char hash[SHA256_DIGEST_LENGTH];
   SHA256_CTX sha256;
   SHA256_Init(&sha256);
@@ -46,7 +46,7 @@ string sha256(string str)
 }
 /**** End of referenced initialization function *****/
 
-string intMatrixToString (int** solution, uint height, uint width) {
+string matrix_to_string (int** solution, uint height, uint width) {
   string temp = "";
 
   for (uint r = 0; r < height; r++) {
@@ -58,7 +58,7 @@ string intMatrixToString (int** solution, uint height, uint width) {
 }
 
 
-bool shapeAlreadyUsed(int currentIdentifier, int* partialBoard, int sizeOfPartialBoard){
+bool shape_already_used(int currentIdentifier, int* partialBoard, int sizeOfPartialBoard){
   for (int i = 2; i < sizeOfPartialBoard; i++){
     if (currentIdentifier == partialBoard[i]) {
       return true;
@@ -67,7 +67,7 @@ bool shapeAlreadyUsed(int currentIdentifier, int* partialBoard, int sizeOfPartia
   return false;
 }
 
-PuzzleBoard* createPartialBoard(int* partialBoard, int count, const vector<ShapeMatrix> &allPieces,
+PuzzleBoard* create_partial_board(int* partialBoard, int count, const vector<ShapeMatrix> &allPieces,
       vector<ShapeMatrix> &unusedPieces) {
 
     int allPiecesSize = (int)allPieces.size();
@@ -109,7 +109,7 @@ PuzzleBoard* createPartialBoard(int* partialBoard, int count, const vector<Shape
     for (int j = 0; j < allPiecesSize; j++) {
       int currentIdentifier = allPieces[j].getIdentifier();
       if (currentIdentifier!=containerIdentifier){
-        if (!shapeAlreadyUsed(currentIdentifier, partialBoard, sizeOfPartialBoard)){
+        if (!shape_already_used(currentIdentifier, partialBoard, sizeOfPartialBoard)){
           unusedPieces.push_back(allPieces[j]);
           cout <<"pushing in piece number"<<allPieces[j].getIdentifier()<<endl;
         }
@@ -441,7 +441,7 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint&
 }
 
 
-bool searchExistingSolutions(PuzzleBoard* board) {
+bool search_existing_solutions(PuzzleBoard* board) {
   uint height = board-> getHeight();
   uint width = board-> getWidth();
   int matrixSize = height*width;
@@ -494,13 +494,13 @@ bool searchExistingSolutions(PuzzleBoard* board) {
   return false;
 }
 
-int** partialSolver(char* directoryName, int* partialBoard, int count, const vector<ShapeMatrix> &allPieces, int& returnCode,
+int** partial_solver(char* directoryName, int* partialBoard, int count, const vector<ShapeMatrix> &allPieces, int& returnCode,
       uint& board_height, uint& board_width) {
   returnCode = 0;
   vector<ShapeMatrix> unusedPieces;
   int** board_solution = NULL;
 
-  PuzzleBoard* board = createPartialBoard(partialBoard, count, allPieces, unusedPieces);
+  PuzzleBoard* board = create_partial_board(partialBoard, count, allPieces, unusedPieces);
 
   for (uint i = 0; i < unusedPieces.size(); i++) {
     cout << unusedPieces[i].getIdentifier() << endl;
@@ -511,7 +511,7 @@ int** partialSolver(char* directoryName, int* partialBoard, int count, const vec
 
   //Strategy 1: look in the existing repository
   bool success = false;
-//  success = searchExistingSolutions(board);
+//  success = search_existing_solutions(board);
   bool writeNewSolnFlag = false;
 
   //Strategy 2: look in the existing repository
@@ -529,7 +529,7 @@ int** partialSolver(char* directoryName, int* partialBoard, int count, const vec
 
     //HASH AND WRITE TO THE SOLUTIONS DIRECTORY
     if (writeNewSolnFlag){
-      string strHashOfSoln = sha256(intMatrixToString(board_solution,board_height,board_width));
+      string strHashOfSoln = sha256(matrix_to_string(board_solution,board_height,board_width));
       int n1 = strlen(directoryName);
       int n2 = strlen("/Solutions/");
       int n3 = strHashOfSoln.length();
