@@ -125,8 +125,8 @@ PuzzleBoard* createPartialBoard(int* partialBoard, int count, const vector<Shape
  *   @params: container_area: will hold the area of the container of the puzzle board
  *   @params: pieces_area: will contain the area of all pieces of the puzzle (excluding the container's)
  */
-PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices,
-    vector<ShapeMatrix> &pieces, int& container_area, int& pieces_area) {
+PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices, vector<ShapeMatrix> &pieces,
+			  int& container_area, int& pieces_area) {
 
   // set output parameter to 0. used to keep track of the cumulative areas of all the pieces
   pieces_area = 0;
@@ -150,19 +150,23 @@ PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices,
   return board;
 }
 
-bool isShapeMatrixInList(const ShapeMatrix &shape,
-    const vector<ShapeMatrix*> &list) {
-  bool result = false;
-  for (uint j = 0; j < list.size(); j++) {
-    if (shape == *(list[j])) {
-      result = true;
-      break;
-    }
-  }
-  return result;
+
+/**
+ * Helper function which returns true if shape is in the given list.
+ */
+bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix> &list) {
+
+  for (uint j = 0; j < list.size(); j++) 
+    if (shape == list[j])
+      // the shape matrix is in the list
+      return true;
+  
+  return false;
 }
 
+
 vector<ShapeMatrix*>* combinations(const ShapeMatrix &temp) {
+
   vector<ShapeMatrix*>* combi = new vector<ShapeMatrix*>();
   ShapeMatrix* r_temp = new ShapeMatrix(temp);
 
