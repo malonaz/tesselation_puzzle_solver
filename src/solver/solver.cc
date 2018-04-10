@@ -95,15 +95,15 @@ PuzzleBoard* create_partial_board(int* partial_board, int count, const vector<Sh
   int partial_board_size = count;
   cout << "the size of partial board is " << partial_board_size << endl;
   
-  //copying the partial_board into taperedPartialBoard
-  int taperedPartialBoard[container_area];
+  //copying the partial_board into tapered_partial_board
+  int tapered_partial_board[container_area];
   int difference = partial_board_size - container_area;
   
   for (int i = 0; i < container_area; i++)
-    taperedPartialBoard[i]= partial_board[difference + i];
+    tapered_partial_board[i] = partial_board[difference + i];
   
   //constructs the board, and then fill in based on the partial_board array
-  PuzzleBoard* board = new PuzzleBoard(taperedPartialBoard, container);
+  PuzzleBoard* board = new PuzzleBoard(tapered_partial_board, container);
   
   for (uint j = 1; j < pieces_copy.size(); j++) {
     
