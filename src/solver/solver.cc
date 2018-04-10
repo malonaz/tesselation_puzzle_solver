@@ -384,64 +384,6 @@ bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> pieces, uin
 }
 
 
-/* function for recursive solving */
-bool recursiveSolver_old (PuzzleBoard* board,
-    const vector<ShapeMatrix> pieces,
-    uint currentIndex,
-    int& iterations) {
-  iterations++;
-  uint height = board->getHeight();
-  uint width = board->getWidth();
-  // int** board_solution = copyBoard(board);
-  // test_print(board_solution,"output_data/solution.txt", height, width);
-  // deleteCopy(height, board_solution);
-
-  if (board->getRemainingArea() == 0 || currentIndex >= pieces.size()) {
-    //the board is complete, and no more remaining pieces
-
-	  /******Uncomment/ comment out these lines below to include/ remove all solutions search: *****/
-	  // int** board_solution = copyBoard(board);
-	  // print_solution_board(board_solution, height, width); //TO PRINT ON TERMINAl
-	  // deleteCopy(height, board_solution);
-
-    /*************************************************************/
-    // int** board_solution = copyBoard(board);
-    // test_print(board_solution,"output_data/solution.txt", height, width);
-    // deleteCopy(height, board_solution);
-
-    return true;
-  }
-  if (!solvableConfig(board, pieces, currentIndex)) {
-    return false;
-  }
-
-  ShapeMatrix temp = pieces[currentIndex];
-  vector<ShapeMatrix*>* shapesList = combinations(temp);
-  int nextIndex = currentIndex+1;
-
-  for (uint r = 0; r < height; r++) {
-    for (uint c = 0; c < width; c++) {
-      for (uint counteri = 0; counteri < shapesList->size(); counteri++) {
-        ShapeMatrix* r_temp = (*shapesList)[counteri];
-
-        if (board->placePiece(c, r, nextIndex, *r_temp)) {
-          if (recursiveSolver(board, pieces, nextIndex,iterations)) {
-	    /******Comment/ Un-comment "return true;" to include/remove all solutions search: *****/
-      //cout<< "Solution found after " << iterations << " iterations."<< endl;
-
-        return true;
-
-          }
-          board->removePiece(c, r, nextIndex, *r_temp); // revert
-        }
-      }
-    }
-  }
-  cleanup_list(shapesList);
-  return false;
-}
-
-
 
 /**
  * Function which attempts to solve the puzzle implied by the give matrices.
