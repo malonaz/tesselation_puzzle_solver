@@ -399,6 +399,6 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes, vector<Shape
   }
 
   
-  return true;
+  return false;
   
 }
