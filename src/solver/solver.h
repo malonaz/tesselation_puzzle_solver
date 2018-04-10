@@ -13,19 +13,19 @@
 PuzzleBoard* createBoard(const vector<ShapeMatrix> &matrices,
     vector<ShapeMatrix> &pieces, int& containerArea, int& totalPieceArea);
 
-bool recursiveSolver (PuzzleBoard* board,
-  const vector<ShapeMatrix> &pieces,
-  unsigned int currentIndex);
+bool recursive_solver (PuzzleBoard* board,
+		       const vector<ShapeMatrix> &pieces,
+		       unsigned int currentIndex);
 
-int** copyBoard(PuzzleBoard* board);
+int** copy_board(PuzzleBoard* board);
 
-void deleteCopy(uint height, int** copyBoard);
+void delete_2d_array(uint height, int** copyBoard);
 
-bool solvableConfig(PuzzleBoard* board,const vector<ShapeMatrix> &pieces,
-    uint currentIndex);
-
-int** puzzleSolver(const vector<ShapeMatrix> &matrices, int& returnCode,
+int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& returnCode,
       uint& board_height, uint& board_width);
+
+bool solvable_config(PuzzleBoard* board,const vector<ShapeMatrix> &pieces,
+    uint currentIndex);
 
 int** partialSolver(char* directoryName, int* partialBoard, int count, const vector<ShapeMatrix> &allPieces, int& returnCode,
       uint& board_height, uint& board_width);
