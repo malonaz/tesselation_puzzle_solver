@@ -66,12 +66,15 @@ string matrix_to_string (int** solution, uint height, uint width) {
 }
 
 
+/**
+ * Helper function which returns true if the given identifier already exists in the partial board.
+ */
 bool shape_already_used(int current_identifier, int* partial_board, int partial_board_size){
-  for (int i = 2; i < partial_board_size; i++){
-    if (current_identifier == partial_board[i]) {
+
+  for (int i = 2; i < partial_board_size; i++)
+    if (current_identifier == partial_board[i]) 
       return true;
-    }
-  }
+    
   return false;
 }
 
