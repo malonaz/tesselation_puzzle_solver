@@ -118,37 +118,35 @@ PuzzleBoard* createPartialBoard(int* partialBoard, int count, const vector<Shape
     return board;
 }
 
-//this is only called by when the solver is used for the first time.
-PuzzleBoard* createBoard(const vector<ShapeMatrix> &matrices,
-    vector<ShapeMatrix> &pieces, int& containerArea, int& totalPieceArea) {
-  int maxArea = matrices[0].getShapeArea();
-  int maxAreaIdx = 0;
-  int accumArea = 0;
-  int matricesSize = (int)matrices.size();
+/**
+ * Creates a PuzzleBoard objects using the pieces contained in matrices.
+ *   @params: matrices: a list of ShapeMatrix representing shapes of a puzzle, including the puzzle container
+ *   @params: pieces: will contain all pieces in param matrices except the container piece
+ *   @params: container_area: will hold the area of the container of the puzzle board
+ *   @params: pieces_area: will contain the area of all pieces of the puzzle (excluding the container's)
+ */
+PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices,
+    vector<ShapeMatrix> &pieces, int& container_area, int& pieces_area) {
 
-  //Saving the pieces to a folder called "pieces", the name of the folder needs to be updated
-    shape_matrix_write("output_data/pieces.txt", matrices);
+  // set output parameter to 0. used to keep track of the cumulative areas of all the pieces
+  pieces_area = 0;
 
-  for (int i = 1; i < matricesSize; i++) {
-    int tempArea = matrices[i].getShapeArea();
-    int pushIdx = i;
-    if (tempArea > maxArea) {
-      //places the previous largest piece into the puzzle pieces vector
-      pushIdx = maxAreaIdx;
-      accumArea += maxArea;
-      maxArea = tempArea;
-      maxAreaIdx = i;
-      accumArea -= tempArea;
-    }
-    accumArea += tempArea;
-    //pushIdx will either be the current i, or the previous maxArea
-    pieces.push_back(matrices[pushIdx]);
+  // set pieces equal to matrices, then sort it in descending order
+  pieces = matrices;
+  std::sort(pieces.rbegin(), pieces.rend());
 
-  }
-  ShapeMatrix container = matrices[maxAreaIdx];
+  // extract container (last piece) and save its area
+  ShapeMatrix container = pieces[0];
+  pieces.erase(pieces.begin());
+  container_area = container.getShapeArea();
+	       
+  // find total area of pieces
+  for (uint i = 0; i < pieces.size(); i++) 
+    pieces_area += pieces[i].getShapeArea();
+    
+  // use container to create a new puzzle board
   PuzzleBoard* board = new PuzzleBoard(container);
-  containerArea = maxArea; // return container area as a reference
-  totalPieceArea = accumArea; // return total area of puzzle pieces
+
   return board;
 }
 
