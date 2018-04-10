@@ -8,17 +8,19 @@ typedef unsigned int uint;
 */
 class ShapeMatrix {
 private:
-  /**
-    A board-unique identifier of the piece
-  */
-  uint identifier;
 
+  /**
+   * A board-unique identifier of the piece
+   */
+  uint identifier;
+  
+  
   /**
     The width of the matrix
   */
   uint width;
 
-  /**
+  /** 
     The height of the matrix
   */
   uint height;
@@ -59,32 +61,34 @@ public:
   /**
     Creates a new copy of the shape matrix that is rotated clockwise by
     90 degrees.
-
+    
     \return The pointer to the new copy of the rotated matrix.
   */
-  ShapeMatrix* rotate() const;
+  ShapeMatrix rotate() const;
 
   /**
     Creates a new copy of the shape matrix that is rotated clockwise by
     n * 90 degrees.
-
+    
     \param n The number of 90 degree transpose to rotate
     \return The pointer to the new copy of the rotated matrix.
   */
-  ShapeMatrix* rotate(int n) const;
-
+  //  ShapeMatrix* rotate(int n) const;
+  
   /**
     Creates a copy of the shape matrix that is mirrored row-wise.
-
+    
     \return The pointer to the new copy of the mirroed matrix.
   */
-  ShapeMatrix* mirror() const;
+  ShapeMatrix flip() const;
 
   ShapeMatrix& operator=(const ShapeMatrix& shape);
-
+  
   bool operator==(const ShapeMatrix& rhs) const;
-
+  
   bool operator!=(const ShapeMatrix& rhs) const;
+
+  friend bool operator< (const ShapeMatrix& a, const ShapeMatrix& b);
 
   virtual ~ShapeMatrix();
 
