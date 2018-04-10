@@ -165,23 +165,40 @@ bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix>
 }
 
 
-vector<ShapeMatrix*>* combinations(const ShapeMatrix &temp) {
 
-  vector<ShapeMatrix*>* combi = new vector<ShapeMatrix*>();
-  ShapeMatrix* r_temp = new ShapeMatrix(temp);
+/**
+ * Helper function which takes a piece and returns all possible variation of this piece,
+ * rotations and flips (mirrors). Does not return any duplicates.
+ */
+vector<ShapeMatrix> get_variations(const ShapeMatrix &piece) {
+  
+  // will hold all the possible rotations and mirrors of this piece
+  vector<ShapeMatrix> variations = vector<ShapeMatrix>();
 
-  for (uint i = 0; i < 8; i++) {
-    if (!isShapeMatrixInList(*r_temp, *combi)) {
-      combi->push_back(r_temp);
-    }
+  // create a copy of the given piece
+  ShapeMatrix current_variation = ShapeMatrix(piece);
 
-    r_temp = r_temp->rotate();
-    if (i == 3) {
-      r_temp = r_temp->mirror();
-    }
+  // vector keeps track of duplicates within variations
+  vector<int> duplicates = vector<int>();
+  
+  for (uint i = 0; i < 8; i++){
+
+    if (i == 4)
+      // create a flipped version of the piece
+      current_variation = current_variation.flip();
+
+    // add current variation if is is not already in the variations list
+    if (!is_shape_matrix_in_list(current_variation, variations))
+       variations.push_back(current_variation);
+    
+    // now rotate the shape
+    current_variation = current_variation.rotate();
   }
-  return combi;
+
+  return variations;
 }
+
+
 
 /* function to get empty area */
 int getAdjacentEmptyArea(uint r, uint c, uint height, uint width, int** copiedBoard) {
