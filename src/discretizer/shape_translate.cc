@@ -313,7 +313,7 @@ void shape_translate(const vector<Point> &shape, ShapeMatrix &matrix) {
 
 
 bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes,
-				vector<ShapeMatrix>& matrices, int unit_length) {
+				vector<ShapeMatrix>& matrices, float unit_length) {
   
   if (unit_length == 0 || shapes.size() == 0) {
     // avoid division by zero
@@ -361,9 +361,8 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes, vector<Shape
   // get raw unit length implied by the shapes
   float raw_unit_length = find_unit_length(shapes);
 
-
   // setup scaling factors
-  vector<float> scaling_factors = {1.0};
+  vector<float> scaling_factors = {1.10};
 
   for (int i = 1; i < 15; i++){
     scaling_factors.push_back(scaling_factors[0] + i * 0.01);
@@ -372,11 +371,15 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes, vector<Shape
   
   for (uint i = 0; i < scaling_factors.size(); i++){      
 
+    // clear matrices
+    matrices.clear();
+    
     // compute unit_length
     float unit_length = raw_unit_length * scaling_factors[i];
     
     // translate shapes
-    shape_translate_all_shapes(shapes, matrices, unit_length);
+    if (!shape_translate_all_shapes(shapes, matrices, unit_length))
+      continue;
     
     // sort shapes in descending area shape
     sort(matrices.rbegin(), matrices.rend());
@@ -393,9 +396,6 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes, vector<Shape
       // scaling factor is correct
       return true;
 
-
-    // clear matrices
-    matrices.clear();
   }
 
   
