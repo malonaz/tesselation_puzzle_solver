@@ -243,21 +243,28 @@ void get_areas_permutations(unordered_set<int>& possible_areas, const vector<Sha
 
 
 
-/* helper function to copy current state of board into 2D array */
-int** copyBoard(PuzzleBoard* const board) {
+/**
+ * Helper function which returns a copy of the given board as a 2D integer array
+ */
+int** copy_board(PuzzleBoard* const board) {
+
+  // get board dimensions
   uint height = board->getHeight();
   uint width = board->getWidth();
-  int** copiedBoard = new int*[height];
-  for (uint i = 0; i < height; i++){
-      copiedBoard[i] = new int[width];
-  }
-  for (uint i = 0; i < height; i++){
-    for (uint j = 0; j < width; j++ ){
-      copiedBoard[i][j]= (board->getCurrentBoard())[i][j];
-    }
-  }
-  return copiedBoard;
+
+  // create a 2d array on the heap, with the board's dimensions
+  int** board_copy = new int*[height];
+  for (uint i = 0; i < height; i++)
+      board_copy[i] = new int[width];
+  
+  // copy each square's value into the 2d array
+  for (uint row = 0; row < height; row++)
+    for (uint col = 0; col < width; col++ )
+      board_copy[row][col]= (board->getCurrentBoard())[row][col];
+     
+  return board_copy;
 }
+
 
 /* helper function to delete dynamically allocated 2D array */
 void deleteCopy(uint height, int** copyBoard) {
