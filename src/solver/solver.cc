@@ -220,33 +220,28 @@ int get_adjacent_empty_area(uint row, uint col, uint height, uint width, int** b
 }
 
 
+/**
+ * Helper functions which copies into possible_areas all the possible permutations of the area of the 
+ * pieces starting at current index
+ */
+void get_areas_permutations(unordered_set<int>& possible_areas, const vector<ShapeMatrix>& pieces, uint current_index, int sum = 0){
 
-/* function to generate all possible area combinations from remaining pieces */
-void generatePossibleAreas(int* answerArray,
-    long int maxCombinations,
-    const vector<ShapeMatrix> &pieces,
-    uint currentIndex) {
-  int sizeArray = pieces.size() - currentIndex;
-  int* generativeArray = new int[sizeArray]();
-  for (long int sequencei = 0; sequencei < maxCombinations; sequencei++) {
-    int answer=0;
-    long int copyi = sequencei;
-    for (int countj = sizeArray-1; countj >= 0; countj--) {
-      generativeArray[countj] = copyi % 2 ;
-      copyi /= 2;
-    }
-    for (int countk = 0; countk < sizeArray; countk++) {
-      if (generativeArray[countk]) {
-        answer += pieces[countk + currentIndex].getShapeArea(); // size instead}
-      }
-    }
-    answerArray[sequencei] = answer;
-    for (int countl = 0; countl < sizeArray; countl++) {
-      generativeArray[countl] =0;
-    }
-  }
-  delete[] generativeArray;
+  // check current_index is positive
+  if (current_index >= pieces.size())
+    return;
+
+  // get area of shape at current index
+  int area = pieces[current_index].getShapeArea();
+
+  // add sum + area to possible areas
+  possible_areas.insert(sum + pieces[current_index].getShapeArea());
+
+  // recursive calls. two choices: use this piece's area or not
+  get_areas_permutations(possible_areas, pieces, current_index + 1, sum + area);
+  get_areas_permutations(possible_areas, pieces, current_index + 1, sum);
 }
+
+
 
 /* helper function to copy current state of board into 2D array */
 int** copyBoard(PuzzleBoard* const board) {
