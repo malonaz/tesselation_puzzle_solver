@@ -40,10 +40,15 @@ void shape_matrix_print(const ShapeMatrix& shape) {
   }
 } // shape_matrix_print(ShapeMatrix&)
 
-void shape_matrix_write(const char* filename, const vector<ShapeMatrix> &list) {
+void shape_matrix_write(const char* filename, const vector<ShapeMatrix> &list, bool correct_area) {
   ofstream output_file;
   output_file.open(filename);
   if (output_file.fail()) {
+    return;
+  }
+  if (!correct_area){
+    output_file << -1 << endl;
+    output_file.close();
     return;
   }
   vector<ShapeMatrix>::const_iterator iterator;
@@ -59,6 +64,8 @@ void shape_matrix_write(const char* filename, const vector<ShapeMatrix> &list) {
     }
     output_file << endl;
   }
+
+  output_file.close();
 } // shape_matrix_write(const char*, const vector<ShapeMatrix> &)
 
 void shape_matrix_read(const char* filename, vector<ShapeMatrix> &list, bool mute_debugging_messages) {

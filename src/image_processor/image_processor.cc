@@ -14,6 +14,7 @@
 #include <iostream>
 #include <vector>
 #include <cstring>
+#include <algorithm>
 
 using namespace std;
 
@@ -52,11 +53,26 @@ int main(int argc, char** argv) { //  ./ip <input_filename> <upload_dir>
     return 1;
   }
 
+  // find container (first piece) and save its area
+  std::sort(pieces.rbegin(), pieces.rend());
+
+  uint pieces_area = 0;
+  uint container_area = pieces[0].getShapeArea();
+  bool correct_area = true;
+  for (uint i = 1; i < pieces.size(); i++) {
+    pieces_area += pieces[i].getShapeArea();
+  }
+
+  if (pieces_area != container_area) {
+    correct_area = false;
+  }
+
   const char* name = "/processing";
   char* processing_file = new char[length + 1];
   strcpy(processing_file, upload_dir);
   processing_file = strcat(processing_file, name);
   cout << "file to remove: "<< processing_file <<endl;
+
   if( remove( processing_file ) != 0 ){
     cout << "Error deleting file" <<endl;
     return 0;
@@ -67,7 +83,7 @@ int main(int argc, char** argv) { //  ./ip <input_filename> <upload_dir>
     char* pieces_file = new char[length + 1];
     strcpy(pieces_file, upload_dir);
     pieces_file = strcat(pieces_file, pieces_file_name);
-    shape_matrix_write(pieces_file, pieces);
+    shape_matrix_write(pieces_file, pieces, correct_area);
     cout << "pieces file created at " << pieces_file <<endl;
   };
 
