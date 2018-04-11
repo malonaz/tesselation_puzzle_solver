@@ -16,22 +16,30 @@
 
 using namespace std;
 
-int main(int argc, char** argv) { //  bin/sp directory state
+int main(int argc, char** argv) { //  bin/sp directory state mute_debugging_messages
   /* READ FILE */
-  if (argc != 3){
-    cout << "Error: input arguments not 3" <<endl;
+  if (argc != 4){
+    cout << "Error: input arguments not 4" <<endl;
     return 0;
   }
+  int temp = *(argv[3]) - int('0');
+  bool mute_debugging_messages = temp; //argv[3];
+
   //Read and load information of the puzzle pieces
   int length = strlen(argv[1]);
   char pieces_file[(length + 1)];
   strcpy(pieces_file, argv[1]);
   strcat(pieces_file, "/pieces");
 
-  cout << " Reading file ....." <<endl;
+  if (!mute_debugging_messages) {
+    cout << " Reading file ....." <<endl;
+  }
   vector<ShapeMatrix> allPieces;
-  shape_matrix_read(pieces_file, allPieces);
-  cout << "File Read Complete!" << endl;
+  shape_matrix_read(pieces_file, allPieces, mute_debugging_messages);
+
+  if (!mute_debugging_messages) {
+    cout << " File read complete!" <<endl;
+  }
 
   /* SOLVER MODULE */
   int solve_success = UNSOLVED;
@@ -90,33 +98,69 @@ int main(int argc, char** argv) { //  bin/sp directory state
 
   for (int i = 0; i < count; i++){
       stream1 >> partial_board[i];
-      cout << partial_board[i] << endl;
+      if (!mute_debugging_messages) {
+        cout << partial_board[i] << endl;
+      }
   }
 
-  solution = partial_solver(argv[1], partial_board, count, allPieces, solve_success, board_height, board_width);
+  solution = partial_solver(argv[1], partial_board, count, allPieces, solve_success, board_height, board_width, mute_debugging_messages);
 
   /* Return Message */
   switch (solve_success) {
     case SOLVED:
-      cout << endl;
-      cout << "Puzzle is solved !!" << endl;
+      // cout << endl;
+      // cout << "Puzzle is solved !!" << endl;
+
+      if (!mute_debugging_messages) {
+        print_solution_board(solution, board_height, board_width);
+      }
+
+      for (uint r = 0; r < board_height; r++) {
+        for (uint c = 0; c < board_width; c++) {
+          cout << solution[r][c] << " ";
+        }
+      }
+      //cout << endl;
+      delete_2d_array(board_height, solution);
+
       break;
     case UNDERSIZED:
-      cout << "Puzzle pieces cannot fit the container: potentially more pieces than required!!" << endl;
+      if (!mute_debugging_messages) {
+        cout << "Puzzle pieces cannot fit the container: potentially more pieces than required!!" << endl;
+      }
+      cout << UNDERSIZED;
       break;
     case OVERSIZED:
-      cout << "Container not fully filled: potentially less pieces than required!!" << endl;
+      if (!mute_debugging_messages) {
+        cout << "Container not fully filled: potentially less pieces than required!!" << endl;
+      }
+      cout << OVERSIZED;
       break;
     case UNSOLVED:
-      cout << "Puzzle cannot be solved !!" << endl;
+      if (!mute_debugging_messages) {
+        cout << "Puzzle cannot be solved !!" << endl;
+      }
+      cout << UNSOLVABLE;
       break;
     default:
-      cout << "INTERNAL ERROR: SOLVER ERROR" << endl;
+      if (!mute_debugging_messages) {
+        cout << "INTERNAL ERROR: SOLVER ERROR" << endl;
+      }
+      cout << INTERNALERROR;
   }
-
-  if (solve_success == SOLVED) {
-    print_solution_board(solution, board_height, board_width);
-    delete_2d_array(board_height, solution);
-  }
+  //
+  // if (solve_success == SOLVED) {
+  //   if (!mute_debugging_messages) {
+  //     print_solution_board(solution, board_height, board_width);
+  //   }
+  //
+  //   for (uint r = 0; r < board_height; r++) {
+  //     for (uint c = 0; c < board_width; c++) {
+  //       cout << solution[r][c] << " ";
+  //     }
+  //   }
+  //
+  //   delete_2d_array(board_height, solution);
+  // }
   return 0;
 }

@@ -7,6 +7,8 @@
 
 #define UNDERSIZED -1
 #define OVERSIZED -2
+#define UNSOLVABLE -3
+#define INTERNALERROR -4
 #define SOLVED 1
 #define UNSOLVED 0
 
@@ -32,5 +34,5 @@ int** partial_board(char* directoryName, int* partialBoard, int count, const vec
 
 
 int** partial_solver(char* directoryName, int* partial_board, int count, const vector<ShapeMatrix> &pieces, int& returnCode,
-		     uint& board_height, uint& board_width);
+		     uint& board_height, uint& board_width, bool mute_debugging_messages);
 #endif

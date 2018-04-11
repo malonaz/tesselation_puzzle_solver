@@ -34,6 +34,6 @@ void shape_matrix_write(const char* filename, const vector<ShapeMatrix> &list);
   \param filename The path name to the file to read from.
   \param list The list to add the newly read in shapes to.
 */
-void shape_matrix_read(const char* filename, vector<ShapeMatrix> &list);
+void shape_matrix_read(const char* filename, vector<ShapeMatrix> &list, bool mute_debugging_messages);
 
 #endif

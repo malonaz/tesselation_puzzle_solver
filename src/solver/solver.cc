@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <sstream>
 #include <iomanip>
+#include <glob.h>
 
 using std::cout;
 using std::endl;
@@ -36,17 +37,17 @@ using std::unordered_set;
  * This standard sha256 initialization function was adapted from an online reference.
  */
 string sha256(string str){
-  
+
   unsigned char hash[SHA256_DIGEST_LENGTH];
   SHA256_CTX sha256;
   SHA256_Init(&sha256);
   SHA256_Update(&sha256, str.c_str(), str.size());
   SHA256_Final(hash, &sha256);
   stringstream strstream;
-  
+
   for(int i = 0; i < SHA256_DIGEST_LENGTH; i++)
     strstream << hex << setw(2) << setfill('0') << (int)hash[i];
-  
+
   return strstream.str();
 }
 
@@ -60,10 +61,10 @@ string matrix_to_string (int** solution, uint height, uint width) {
   string str = "";
 
   // copy each cell into str
-  for (uint r = 0; r < height; r++) 
-    for (uint c = 0; c < width; c++) 
+  for (uint r = 0; r < height; r++)
+    for (uint c = 0; c < width; c++)
       str+= to_string(solution[r][c]);
-    
+
   return str;
 }
 
@@ -74,15 +75,15 @@ string matrix_to_string (int** solution, uint height, uint width) {
 bool shape_already_used(int current_identifier, int* partial_board, int partial_board_size){
 
   for (int i = 2; i < partial_board_size; i++)
-    if (current_identifier == partial_board[i]) 
+    if (current_identifier == partial_board[i])
       return true;
-    
+
   return false;
 }
 
 
 PuzzleBoard* create_partial_board(int* partial_board, int count, const vector<ShapeMatrix> &pieces,
-      vector<ShapeMatrix> &unusedPieces) {
+      vector<ShapeMatrix> &unusedPieces, bool mute_debugging_messages) {
 
   // create copy of all_pieces and sort it in descending order
   vector<ShapeMatrix> pieces_copy = pieces;
@@ -90,31 +91,54 @@ PuzzleBoard* create_partial_board(int* partial_board, int count, const vector<Sh
 
   // find container (first piece) and save its area and identification
   ShapeMatrix container = pieces_copy[0];
-  int container_area = container.getShapeArea();
+  uint container_area = container.getShapeArea();
+
+
+  int containerIdentifier;
+
+  for (uint i = 0; i < pieces.size(); i++) {
+      if (pieces[i].getShapeArea() == container_area) {
+            containerIdentifier = pieces[i].getIdentifier();
+        break;
+      }
+  }
+
+  if (!mute_debugging_messages) {
+    cout<<"container identifier is"<<containerIdentifier<<endl;
+  }
 
   int partial_board_size = count;
-  cout << "the size of partial board is " << partial_board_size << endl;
-  
+
+  if (!mute_debugging_messages) {
+    cout << "the size of partial board is " << partial_board_size << endl;
+  }
+
   //copying the partial_board into tapered_partial_board
   int tapered_partial_board[container_area];
   int difference = partial_board_size - container_area;
-  
-  for (int i = 0; i < container_area; i++)
+
+  for (uint i = 0; i < container_area; i++){
     tapered_partial_board[i] = partial_board[difference + i];
-  
+    if (!mute_debugging_messages) {
+      cout << tapered_partial_board[i];
+    }
+  }
+
   //constructs the board, and then fill in based on the partial_board array
   PuzzleBoard* board = new PuzzleBoard(tapered_partial_board, container);
-  
+
   for (uint j = 1; j < pieces_copy.size(); j++) {
-    
+
     // get identifer of current piece
     int current_identifier = pieces[j].getIdentifier();
-    
-    if (!shape_already_used(current_identifier, partial_board, partial_board_size)){
+
+    if ((!shape_already_used(current_identifier, partial_board, partial_board_size) && (current_identifier != containerIdentifier))){
       unusedPieces.push_back(pieces[j]);
-      cout <<"pushing in piece number"<<pieces[j].getIdentifier()<<endl;
+      if (!mute_debugging_messages) {
+        cout <<"pushing in piece number "<<pieces[j].getIdentifier()<<endl;
+      }
     }
-    
+
   }
   return board;
 }
@@ -140,11 +164,11 @@ PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices, vector<ShapeMatri
   ShapeMatrix container = pieces[0];
   pieces.erase(pieces.begin());
   container_area = container.getShapeArea();
-	       
+
   // find total area of pieces
-  for (uint i = 0; i < pieces.size(); i++) 
+  for (uint i = 0; i < pieces.size(); i++)
     pieces_area += pieces[i].getShapeArea();
-    
+
   // use container to create a new puzzle board
   PuzzleBoard* board = new PuzzleBoard(container);
 
@@ -157,11 +181,11 @@ PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices, vector<ShapeMatri
  */
 bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix> &list) {
 
-  for (uint j = 0; j < list.size(); j++) 
+  for (uint j = 0; j < list.size(); j++)
     if (shape == list[j])
       // the shape matrix is in the list
       return true;
-  
+
   return false;
 }
 
@@ -172,7 +196,7 @@ bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix>
  * rotations and flips (mirrors). Does not return any duplicates.
  */
 vector<ShapeMatrix> get_variations(const ShapeMatrix &piece) {
-  
+
   // will hold all the possible rotations and mirrors of this piece
   vector<ShapeMatrix> variations = vector<ShapeMatrix>();
 
@@ -181,7 +205,7 @@ vector<ShapeMatrix> get_variations(const ShapeMatrix &piece) {
 
   // vector keeps track of duplicates within variations
   vector<int> duplicates = vector<int>();
-  
+
   for (uint i = 0; i < 8; i++){
 
     if (i == 4)
@@ -191,15 +215,13 @@ vector<ShapeMatrix> get_variations(const ShapeMatrix &piece) {
     // add current variation if is is not already in the variations list
     if (!is_shape_matrix_in_list(current_variation, variations))
        variations.push_back(current_variation);
-    
+
     // now rotate the shape
     current_variation = current_variation.rotate();
   }
 
   return variations;
 }
-
-
 
 /**
  * Helper function which returns the empty area near the square at (row, col) in the given board
@@ -212,7 +234,7 @@ int get_adjacent_empty_area(uint row, uint col, uint height, uint width, int** b
 
   // set this square equal to -1
   board[row][col] = -1;
-  
+
   // make recursive call
   return 1 + get_adjacent_empty_area(row, col + 1, height, width, board)
     + get_adjacent_empty_area(row, col - 1, height, width,board)
@@ -222,7 +244,7 @@ int get_adjacent_empty_area(uint row, uint col, uint height, uint width, int** b
 
 
 /**
- * Helper functions which copies into possible_areas all the possible permutations of the area of the 
+ * Helper functions which copies into possible_areas all the possible permutations of the area of the
  * pieces starting at current index
  */
 void get_areas_permutations(unordered_set<int>& possible_areas, const vector<ShapeMatrix>& pieces, uint current_index, int sum = 0){
@@ -242,8 +264,6 @@ void get_areas_permutations(unordered_set<int>& possible_areas, const vector<Sha
   get_areas_permutations(possible_areas, pieces, current_index + 1, sum);
 }
 
-
-
 /**
  * Helper function which returns a copy of the given board as a 2D integer array
  */
@@ -257,12 +277,12 @@ int** copy_board(PuzzleBoard* const board) {
   int** board_copy = new int*[height];
   for (uint i = 0; i < height; i++)
       board_copy[i] = new int[width];
-  
+
   // copy each square's value into the 2d array
   for (uint row = 0; row < height; row++)
     for (uint col = 0; col < width; col++ )
       board_copy[row][col]= (board->getCurrentBoard())[row][col];
-     
+
   return board_copy;
 }
 
@@ -291,7 +311,7 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
   // get board dimensions
   uint height = board->getHeight();
   uint width = board->getWidth();
-  
+
   // get all possible area variations.
   unordered_set<int> possible_areas = unordered_set<int>();
   get_areas_permutations(possible_areas, pieces, currentIndex);
@@ -299,15 +319,15 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
   // get a copy of the board's 2D array
   int** board_copy = copy_board(board);
 
-  for (uint row = 0; row < height; row++) 
+  for (uint row = 0; row < height; row++)
     for (uint col = 0; col < width; col++) {
-      
+
       // get area near current square
       int area = get_adjacent_empty_area(row, col, height, width, board_copy);
 
       // if area is zero, continue
       if (area == 0)
-	continue; 
+	continue;
 
       // if area is not in the possible permutations of area, then config is unsolvable
       if (std::find(possible_areas.begin(), possible_areas.end(), area) == possible_areas.end()){
@@ -323,7 +343,7 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
 
 
 void test_print(int** board_solution, char* file_name, uint height, uint width){
-  ofstream out(file_name, ios_base::app);
+  ofstream out(file_name);
   for (uint r = 0; r < height; r++) {
     for (uint c = 0; c < width; c++) {
       out << board_solution[r][c] << " ";
@@ -347,11 +367,11 @@ bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> pieces, uin
   iterations++;
 
   // check if board is complete
-  if (board->getRemainingArea() == 0 || current_index >= pieces.size()) 
+  if (board->getRemainingArea() == 0 || current_index >= pieces.size())
     return true;
 
   // check if board is solvable
-  if (!solvable_config(board, pieces, current_index)) 
+  if (!solvable_config(board, pieces, current_index))
     return false;
 
   // get board dimensions
@@ -362,8 +382,8 @@ bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> pieces, uin
   ShapeMatrix current_piece = pieces[current_index];
   vector<ShapeMatrix> current_piece_variations = get_variations(current_piece);
 
-  for (uint row = 0; row < height; row++) 
-    for (uint col = 0; col < width; col++) 
+  for (uint row = 0; row < height; row++)
+    for (uint col = 0; col < width; col++)
       for (uint i = 0; i < current_piece_variations.size(); i++) {
 
 	// get the ith variation of the current piece
@@ -380,11 +400,9 @@ bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> pieces, uin
 	// backtrack
 	board->removePiece(col, row, current_index + 1, current_piece_variation);
         }
-      
+
   return false;
 }
-
-
 
 /**
  * Function which attempts to solve the puzzle implied by the give matrices.
@@ -398,9 +416,9 @@ bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> pieces, uin
  *     board_width: width of the board implied by the given matrices
  *   @returns: the solution of the board found as a 2D array.
  * Encodes the solution found into
- */ 
+ */
 int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint& board_height, uint& board_width) {
-  
+
   vector<ShapeMatrix> shapes;
 
   // set variables used by recursive solver
@@ -409,15 +427,15 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint&
 
   // create a board
   PuzzleBoard* board = create_board(matrices, shapes, container_area, pieces_area);
-  
+
   // check for undersized container case
-  if (pieces_area > container_area) { 
+  if (pieces_area > container_area) {
     return_code = UNDERSIZED;
     return NULL;
   }
 
   // check for oversized container case
-  if (pieces_area < container_area) { 
+  if (pieces_area < container_area) {
     return_code = OVERSIZED;
     return NULL;
   }
@@ -428,7 +446,7 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint&
 
   // set output parameters
   return_code = success? SOLVED: UNSOLVED;
-  board_height = board->getHeight(); 
+  board_height = board->getHeight();
   board_width = board->getWidth();
 
   // set return param
@@ -441,29 +459,45 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint&
   return board_solution;
 }
 
+inline vector<string> glob(const string& pat){
+    glob_t glob_result;
+    glob(pat.c_str(),GLOB_TILDE,NULL,&glob_result);
+    vector<string> ret;
+    for(unsigned int i=0;i<glob_result.gl_pathc;++i){
+        ret.push_back(string(glob_result.gl_pathv[i]));
+    }
+    globfree(&glob_result);
+    return ret;
+}
 
-bool search_existing_solutions(PuzzleBoard* board) {
+bool search_existing_solutions(PuzzleBoard* board, char* directory_name, bool mute_debugging_messages) {
   uint height = board-> getHeight();
   uint width = board-> getWidth();
-  int matrixSize = height*width;
+  int matrixSize = height * width;
 
-  ifstream input("output_data/solution.txt");
-  if (input.fail()){
-    cout<< "Solution file does not exist yet!"<<endl;
-    return false;
-  }
-
-  int previousSolution[matrixSize];
+  int existingSolution[matrixSize];
 
   int** currentBoard = copy_board(board);
 
   bool success = false;
 
-  int row = 0;
+  //Based on directory_name, create a vector containing all the file names existing in that directory
+  vector <string> all_solutions_file;
+  string search_pattern = directory_name;
+  search_pattern += "/solutions/*";
+  all_solutions_file = glob (search_pattern);
 
-  while (!input.eof() && !success){
-    bool correctRow = true;
-    cout << "At existing sols row number: " << row <<endl;
+  //find all existing solution files in folder and read
+  for (uint file_num = 0; file_num < all_solutions_file.size(); file_num++ ){
+    if (success) {
+      break;
+    }
+    if (!mute_debugging_messages){
+      cout <<"checking file named: "<< all_solutions_file[file_num] <<endl;
+    }
+
+    // for each file, read content and check:
+    ifstream input(all_solutions_file[file_num]);
     for (int i = 0; i < matrixSize; i++){
       int temp;
       input >> temp;
@@ -471,48 +505,102 @@ bool search_existing_solutions(PuzzleBoard* board) {
       uint colNum = i % width;
       int difference = temp - currentBoard[rowNum][colNum];
       if (difference == 0 || difference == temp) {
-        previousSolution[i] = temp;
+        existingSolution[i] = temp;
+        //all the numbers in the file are consistent with the existing board
+        if (i == (matrixSize - 1)) {
+            success = true;
+            if (!mute_debugging_messages){
+              cout<<"Found in this file!"<<endl;
+            }
+          PuzzleBoard* tempBoard = new PuzzleBoard (existingSolution, board->getContainer()); // work on this.
+          *board = *tempBoard; //copy assignment operator
+          delete tempBoard;
+        }
       } else {
-        correctRow = false;
+          if (!mute_debugging_messages){
+            cout<<"For element number: " << i <<"current board's element is " <<  currentBoard[rowNum][colNum] << ", while files's element is " << temp <<endl;
+            cout<<"Difference is "<< difference;
+            cout<<"Not in this file."<<endl;
+          }
+        break;
       }
     }
-    if (correctRow) {
-      input.close();
-      cout << "Existing solution found~~~~~~~~: " << endl;
-      success = true;
-      PuzzleBoard* tempBoard = new PuzzleBoard (previousSolution, board->getContainer()); // work on this.
-      *board = *tempBoard; //copy assignment operator
-
-      delete_2d_array(height, currentBoard);
-      delete tempBoard;
-      return true;
-    }
-    row ++;
+    input.close();
   }
-  input.close();
   delete_2d_array(height, currentBoard);
-  cout << "Existing solution not found~~~~~~~~: " << endl;
-  return false;
+
+  return success;
+
 }
 
-int** partial_solver(char* directoryName, int* partial_board, int count, const vector<ShapeMatrix> &pieces, int& returnCode,
-      uint& board_height, uint& board_width) {
+  // ifstream input("output_data/solution.txt");
+  // if (input.fail()){
+  //   cout<< "Solution file does not exist yet!"<<endl;
+  //   return false;
+  // }
+
+
+  //
+  //
+  // while (!input.eof() && !success){
+  //   bool correctRow = true;
+  //   cout << "At existing sols row number: " << row <<endl;
+  //   for (int i = 0; i < matrixSize; i++){
+  //     int temp;
+  //     input >> temp;
+  //     uint rowNum = i / width;
+  //     uint colNum = i % width;
+  //     int difference = temp - currentBoard[rowNum][colNum];
+  //     if (difference == 0 || difference == temp) {
+  //       previousSolution[i] = temp;
+  //     } else {
+  //       correctRow = false;
+  //     }
+  //   }
+  //   if (correctRow) {
+  //     input.close();
+  //     cout << "Existing solution found~~~~~~~~: " << endl;
+  //     success = true;
+  //     PuzzleBoard* tempBoard = new PuzzleBoard (previousSolution, board->getContainer()); // work on this.
+  //     *board = *tempBoard; //copy assignment operator
+  //
+  //     delete_2d_array(height, currentBoard);
+  //     delete tempBoard;
+  //     return true;
+  //   }
+  //   row ++;
+  // }
+  // input.close();
+  // delete_2d_array(height, currentBoard);
+  // cout << "Existing solution not found~~~~~~~~: " << endl;
+
+
+
+
+int** partial_solver(char* directory_name, int* partial_board, int count, const vector<ShapeMatrix> &pieces, int& returnCode,
+      uint& board_height, uint& board_width, bool mute_debugging_messages) {
   returnCode = 0;
   vector<ShapeMatrix> unusedPieces;
   int** board_solution = NULL;
 
-  PuzzleBoard* board = create_partial_board(partial_board, count, pieces, unusedPieces);
+  PuzzleBoard* board = create_partial_board(partial_board, count, pieces, unusedPieces, mute_debugging_messages);
 
-  for (uint i = 0; i < unusedPieces.size(); i++) {
-    cout << unusedPieces[i].getIdentifier() << endl;
-    shape_matrix_print(unusedPieces[i]);
+  if (!mute_debugging_messages) {
+    for (uint i = 0; i < unusedPieces.size(); i++) {
+      cout << "unused piece with identifier:" << unusedPieces[i].getIdentifier() << endl;
+      shape_matrix_print(unusedPieces[i]);
+    }
   }
 
-  print_solution_board(board->getCurrentBoard(), board->getHeight(), board->getWidth());
+  if (!mute_debugging_messages) {
+    cout<< "The current board is:"<<endl;
+    print_solution_board(board->getCurrentBoard(), board->getHeight(), board->getWidth());
+  }
 
   //Strategy 1: look in the existing repository
   bool success = false;
-//  success = search_existing_solutions(board);
+  success = search_existing_solutions(board, directory_name, mute_debugging_messages);
+
   bool writeNewSolnFlag = false;
 
   //Strategy 2: look in the existing repository
@@ -531,16 +619,15 @@ int** partial_solver(char* directoryName, int* partial_board, int count, const v
     //HASH AND WRITE TO THE SOLUTIONS DIRECTORY
     if (writeNewSolnFlag){
       string strHashOfSoln = sha256(matrix_to_string(board_solution,board_height,board_width));
-      int n1 = strlen(directoryName);
-      int n2 = strlen("/Solutions/");
+      int n1 = strlen(directory_name);
+      int n2 = strlen("/solutions/");
       int n3 = strHashOfSoln.length();
       char hashFileName[(n1 + n2 + n3 + 1)];
-      strcpy(hashFileName, directoryName);
-      strncat(hashFileName, "/Solutions/", n2);
+      strcpy(hashFileName, directory_name);
+      strncat(hashFileName, "/solutions/", n2);
       strncat(hashFileName, strHashOfSoln.c_str(), n3);
 
       test_print(board_solution, hashFileName, board_height, board_width);
-
     }
   } else {
     returnCode = UNSOLVED;
