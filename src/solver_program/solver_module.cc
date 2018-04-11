@@ -115,6 +115,8 @@ int main(int argc, char** argv) { //  bin/sp directory state mute_debugging_mess
         print_solution_board(solution, board_height, board_width);
       }
 
+      cout << board_width << " " << board_height<< " ";
+
       for (uint r = 0; r < board_height; r++) {
         for (uint c = 0; c < board_width; c++) {
           cout << solution[r][c] << " ";
