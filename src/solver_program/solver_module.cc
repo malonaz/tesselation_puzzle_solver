@@ -18,12 +18,18 @@ using namespace std;
 
 int main(int argc, char** argv) { //  bin/sp directory state mute_debugging_messages
   /* READ FILE */
-  if (argc != 4){
-    cout << "Error: input arguments not 4" <<endl;
+  if (argc < 3 || argc > 4){
+    cout << "Error: provide either 3 or 4 inputs" <<endl;
     return 0;
   }
-  int temp = *(argv[3]) - int('0');
-  bool mute_debugging_messages = temp; //argv[3];
+  bool mute_debugging_messages; //argv[3];
+
+  if (argc ==3){
+    mute_debugging_messages = false;
+  } else{
+    int temp = *(argv[3]) - int('0');
+    mute_debugging_messages = temp;
+  }
 
   //Read and load information of the puzzle pieces
   int length = strlen(argv[1]);
