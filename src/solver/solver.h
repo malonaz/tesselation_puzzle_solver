@@ -30,4 +30,7 @@ bool solvable_config(PuzzleBoard* board,const vector<ShapeMatrix> &pieces,
 int** partial_board(char* directoryName, int* partialBoard, int count, const vector<ShapeMatrix> &allPieces, int& returnCode,
       uint& board_height, uint& board_width);
 
+
+int** partial_solver(char* directoryName, int* partial_board, int count, const vector<ShapeMatrix> &pieces, int& returnCode,
+		     uint& board_height, uint& board_width);
 #endif
