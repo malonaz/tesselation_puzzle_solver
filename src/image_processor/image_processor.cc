@@ -15,8 +15,25 @@
 #include <vector>
 #include <cstring>
 #include <algorithm>
+#include <cstdio>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <array>
 
 using namespace std;
+
+string exec(const char* cmd) {
+    array<char, 128> buffer;
+    string result;
+    shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
+    if (!pipe) throw std::runtime_error("popen() failed!");
+    while (!feof(pipe.get())) {
+        if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
+            result += buffer.data();
+    }
+    return result;
+}
 
 int main(int argc, char** argv) { //  ./ip <input_filename> <upload_dir>
   /* READ FILE */
@@ -86,6 +103,54 @@ int main(int argc, char** argv) { //  ./ip <input_filename> <upload_dir>
     shape_matrix_write(pieces_file, pieces, correct_area);
     cout << "pieces file created at " << pieces_file <<endl;
   };
+
+  // bin/sp directory_name state 1
+  string directory_name = argv[2];
+  // int n1 = strlen("bin/sp ");
+  // int n2 = strlen(directory_name);
+  // int n3 = (3 + container_area * 2 + 2);
+  //
+  // char [(n1 + n2 + n3 + 1)];
+  //
+  // strcpy(hashFileName, directory_name);
+  // strncat(hashFileName, "/solutions/", n2);
+  // strncat(hashFileName, strHashOfSoln.c_str(), n3);
+
+  string cmd = "bin/sp ";
+
+  cmd += directory_name;
+
+
+  uint width = pieces[0].getWidth();
+  uint height = pieces[0].getHeight();
+
+  cmd += " \"";
+  cmd += width + '0';
+  cmd += " ";
+  cmd += height + '0';
+
+  for (uint i = 0; i < container_area; i++) {
+    cmd += " 0";
+  }
+
+  cmd += "\" 1";
+
+  cout << cmd << endl;
+
+  int cmdLen = cmd.length();
+
+  char charCmd[(cmdLen + 1)];
+
+  for (int j = 0; j < cmdLen; j++) {
+    charCmd[j] = cmd[j];
+  }
+  charCmd[cmdLen] = '\0';
+
+  string result = exec(charCmd);
+
+  cout << result << endl;
+
+
 
   return 0;
 }

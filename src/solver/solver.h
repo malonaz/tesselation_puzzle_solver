@@ -9,6 +9,7 @@
 #define OVERSIZED -2
 #define UNSOLVABLE -3
 #define INTERNALERROR -4
+#define INCORRECT_STATE -5
 #define SOLVED 1
 #define UNSOLVED 0
 

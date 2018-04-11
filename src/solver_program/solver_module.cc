@@ -22,16 +22,19 @@ int main(int argc, char** argv) { //  bin/sp directory state mute_debugging_mess
     cout << "Error: provide either 3 or 4 inputs" <<endl;
     return 0;
   }
+
+  //This is a switch for whether debugging messages should be printed
   bool mute_debugging_messages; //argv[3];
 
-  if (argc ==3){
+  //If user does not indicate input for mute_debugging_messages,default is to not mute them
+  if (argc ==3) {
     mute_debugging_messages = false;
-  } else{
+  } else {
     int temp = *(argv[3]) - int('0');
     mute_debugging_messages = temp;
   }
 
-  //Read and load information of the puzzle pieces
+  //Read and load information of the puzzle pieces from argv[1]
   int length = strlen(argv[1]);
   char pieces_file[(length + 1)];
   strcpy(pieces_file, argv[1]);
@@ -47,7 +50,7 @@ int main(int argc, char** argv) { //  bin/sp directory state mute_debugging_mess
     cout << " File read complete!" <<endl;
   }
 
-  /* SOLVER MODULE */
+  /* Initialization of parameters*/
   int solve_success = UNSOLVED;
   int** solution = NULL;
   uint board_height = 0;
@@ -88,13 +91,14 @@ int main(int argc, char** argv) { //  bin/sp directory state mute_debugging_mess
   input_file.close();
 ***************End of read/convert 1D array from text file *******************/
 
+  /* Use stringstream to convert argv[2] to int array partial board */
   stringstream stream(argv[2]);
 
   int count = 0;
-  while(stream){
+  while(stream) {
       int n;
-      stream>>n;
-  count++;
+      stream >> n;
+      count++;
   }
 
   count--;
@@ -103,10 +107,18 @@ int main(int argc, char** argv) { //  bin/sp directory state mute_debugging_mess
   stringstream stream1(argv[2]);
 
   for (int i = 0; i < count; i++){
-      stream1 >> partial_board[i];
-      if (!mute_debugging_messages) {
-        cout << partial_board[i] << endl;
-      }
+    stream1 >> partial_board[i];
+    if (!mute_debugging_messages) {
+      cout << partial_board[i] << endl;
+    }
+  }
+
+  if ((partial_board[0]*partial_board[1]) != (count - 2)){
+    if (!mute_debugging_messages) {
+      cout << "Error with current state provided!" << endl;
+    }
+    cout << INCORRECT_STATE << endl;
+    return 0;
   }
 
   solution = partial_solver(argv[1], partial_board, count, allPieces, solve_success, board_height, board_width, mute_debugging_messages);
