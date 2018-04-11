@@ -84,16 +84,16 @@ int main(int argc, char** argv) { //  bin/sp directory state
   }
 
   count--;
-  int partialBoard[count];
+  int partial_board[count];
 
   stringstream stream1(argv[2]);
 
   for (int i = 0; i < count; i++){
-      stream1>>partialBoard[i];
-      cout<<partialBoard[i]<<endl;
+      stream1 >> partial_board[i];
+      cout << partial_board[i] << endl;
   }
 
-  solution = partialSolver(argv[1], partialBoard, count, allPieces, solve_success, board_height, board_width);
+  solution = partial_solver(argv[1], partial_board, count, allPieces, solve_success, board_height, board_width);
 
   /* Return Message */
   switch (solve_success) {
@@ -116,7 +116,7 @@ int main(int argc, char** argv) { //  bin/sp directory state
 
   if (solve_success == SOLVED) {
     print_solution_board(solution, board_height, board_width);
-    deleteCopy(board_height, solution);
+    delete_2d_array(board_height, solution);
   }
   return 0;
 }
