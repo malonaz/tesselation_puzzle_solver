@@ -23,6 +23,7 @@
 
 using namespace std;
 
+/* This is a helper function to call shell commands. */
 string exec(const char* cmd) {
     array<char, 128> buffer;
     string result;
@@ -35,7 +36,8 @@ string exec(const char* cmd) {
     return result;
 }
 
-int main(int argc, char** argv) { //  ./ip <input_filename> <upload_dir>
+
+int main(int argc, char** argv) { // FORMAT:  bin/ip <input_filename> <upload_dir>
   /* READ FILE */
   if (argc !=  3){
     cout << "Not enough arguments!" <<endl;
@@ -70,12 +72,13 @@ int main(int argc, char** argv) { //  ./ip <input_filename> <upload_dir>
     return 1;
   }
 
-  // find container (first piece) and save its area
+  // find container (first piece) and save its area as container_area
   std::sort(pieces.rbegin(), pieces.rend());
 
   uint pieces_area = 0;
   uint container_area = pieces[0].getShapeArea();
   bool correct_area = true;
+
   for (uint i = 1; i < pieces.size(); i++) {
     pieces_area += pieces[i].getShapeArea();
   }
@@ -104,22 +107,14 @@ int main(int argc, char** argv) { //  ./ip <input_filename> <upload_dir>
     cout << "pieces file created at " << pieces_file <<endl;
   };
 
+
   // bin/sp directory_name state 1
+
+  /**** string manipulation functions to prepare cmd which will be used as
+  input for shell command***/
   string directory_name = argv[2];
-  // int n1 = strlen("bin/sp ");
-  // int n2 = strlen(directory_name);
-  // int n3 = (3 + container_area * 2 + 2);
-  //
-  // char [(n1 + n2 + n3 + 1)];
-  //
-  // strcpy(hashFileName, directory_name);
-  // strncat(hashFileName, "/solutions/", n2);
-  // strncat(hashFileName, strHashOfSoln.c_str(), n3);
-
   string cmd = "bin/sp ";
-
   cmd += directory_name;
-
 
   uint width = pieces[0].getWidth();
   uint height = pieces[0].getHeight();

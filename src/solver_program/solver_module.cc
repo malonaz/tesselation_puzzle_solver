@@ -16,25 +16,40 @@
 
 using namespace std;
 
-int main(int argc, char** argv) { //  bin/sp directory state mute_debugging_messages
+/*************** Overview of solver module ***************
+
+shell command format : bin/sp <directory> <state> <mute_debugging_messages>
+
+Major steps:
+  1) puzzle pieces, downloaded from <directory>:
+    - when bin/ip (image processor is called for the first time, all the identified shape
+    pieces would have been saved to a specific directory )
+    - when bin/sp is called,the information on the pieces previously saved in the directory will be downloaded
+
+  2) current state of the board: obtained from <state>
+
+  3) puzzle pieces and current state of board are fed as inputs into partial solver.
+
+*************** End of overview ***************/
+
+int main(int argc, char** argv) {
   /* READ FILE */
   if (argc < 3 || argc > 4){
     cout << "Error: provide either 3 or 4 inputs" <<endl;
     return 0;
   }
 
-  //This is a switch for whether debugging messages should be printed
+  /*This is a switch for whether debugging messages should be printed. Provided by argv[3] */
   bool mute_debugging_messages; //argv[3];
 
-  //If user does not indicate input for mute_debugging_messages,default is to not mute them
   if (argc ==3) {
-    mute_debugging_messages = false;
+    mute_debugging_messages = false; //if user does not indicate 4th input, default is to NOT mute (ie print messages)
   } else {
     int temp = *(argv[3]) - int('0');
     mute_debugging_messages = temp;
   }
 
-  //Read and load information of the puzzle pieces from argv[1]
+  /* Read and load information of ALL puzzle pieces from argv[1] */
   int length = strlen(argv[1]);
   char pieces_file[(length + 1)];
   strcpy(pieces_file, argv[1]);
@@ -49,14 +64,15 @@ int main(int argc, char** argv) { //  bin/sp directory state mute_debugging_mess
   if (!mute_debugging_messages) {
     cout << " File read complete!" <<endl;
   }
+  /* End of reading and loading of information of ALL puzzle pieces from argv[1] */
 
-  /* Initialization of parameters*/
+  /* Initialization of parameters to default values*/
   int solve_success = UNSOLVED;
   int** solution = NULL;
   uint board_height = 0;
   uint board_width = 0;
 
-/***********Reading  and converting 1D array from text file *******************
+/*********** Reading  and converting 1D array from text file (NOT IN USE FOR NOW) *******************
   ifstream input_file;
   input_file.open(argv[2]);
   if (input_file.fail()) {
@@ -92,20 +108,24 @@ int main(int argc, char** argv) { //  bin/sp directory state mute_debugging_mess
 ***************End of read/convert 1D array from text file *******************/
 
   /* Use stringstream to convert argv[2] to int array partial board */
-  stringstream stream(argv[2]);
 
+  /* count number of integers within <state> */
+  stringstream stream(argv[2]);
   int count = 0;
+
   while(stream) {
       int n;
       stream >> n;
       count++;
   }
 
-  count--;
-  int partial_board[count];
+  count--;   // adjustment for double count of last input.
 
+  /* allocation of space for int array based on number of integers within <state> */
+  int partial_board[count];
   stringstream stream1(argv[2]);
 
+  /* copying of <state> into partial_board (as int array) */
   for (int i = 0; i < count; i++){
     stream1 >> partial_board[i];
     if (!mute_debugging_messages) {
@@ -113,6 +133,7 @@ int main(int argc, char** argv) { //  bin/sp directory state mute_debugging_mess
     }
   }
 
+  /* checking there is no conflict between dimensions of container, and the number of integers within <state>*/
   if ((partial_board[0]*partial_board[1]) != (count - 2)){
     if (!mute_debugging_messages) {
       cout << "Error with current state provided!" << endl;
@@ -121,15 +142,14 @@ int main(int argc, char** argv) { //  bin/sp directory state mute_debugging_mess
     return 0;
   }
 
+  /* calls partial solver based on prepared inputs*/
   solution = partial_solver(argv[1], partial_board, count, allPieces, solve_success, board_height, board_width, mute_debugging_messages);
 
   /* Return Message */
   switch (solve_success) {
     case SOLVED:
-      // cout << endl;
-      // cout << "Puzzle is solved !!" << endl;
-
       if (!mute_debugging_messages) {
+        cout << "Puzzle is solved !!" << endl;
         print_solution_board(solution, board_height, board_width);
       }
 
@@ -140,7 +160,6 @@ int main(int argc, char** argv) { //  bin/sp directory state mute_debugging_mess
           cout << solution[r][c] << " ";
         }
       }
-      //cout << endl;
       delete_2d_array(board_height, solution);
 
       break;
@@ -168,19 +187,6 @@ int main(int argc, char** argv) { //  bin/sp directory state mute_debugging_mess
       }
       cout << INTERNALERROR;
   }
-  //
-  // if (solve_success == SOLVED) {
-  //   if (!mute_debugging_messages) {
-  //     print_solution_board(solution, board_height, board_width);
-  //   }
-  //
-  //   for (uint r = 0; r < board_height; r++) {
-  //     for (uint c = 0; c < board_width; c++) {
-  //       cout << solution[r][c] << " ";
-  //     }
-  //   }
-  //
-  //   delete_2d_array(board_height, solution);
-  // }
+
   return 0;
 }

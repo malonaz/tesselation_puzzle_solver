@@ -57,7 +57,7 @@ string sha256(string str){
  */
 string matrix_to_string (int** solution, uint height, uint width) {
 
-  // used to store the output
+  // str will be used to store the output
   string str = "";
 
   // copy each cell into str
@@ -81,7 +81,10 @@ bool shape_already_used(int current_identifier, int* partial_board, int partial_
   return false;
 }
 
-
+/**
+ * Helper function which processes two main inputs :(i) all pieces, (ii) current state of board
+ * and produce two main outputs: (i) all unused pieces, (ii) a partially filled board
+ */
 PuzzleBoard* create_partial_board(int* partial_board, int count, const vector<ShapeMatrix> &pieces,
       vector<ShapeMatrix> &unusedPieces, bool mute_debugging_messages) {
 
@@ -89,13 +92,14 @@ PuzzleBoard* create_partial_board(int* partial_board, int count, const vector<Sh
   vector<ShapeMatrix> pieces_copy = pieces;
   std::sort(pieces_copy.rbegin(), pieces_copy.rend());
 
-  // find container (first piece) and save its area and identification
+  // find container (first piece within pieces_copy[]) and save its area
   ShapeMatrix container = pieces_copy[0];
   uint container_area = container.getShapeArea();
 
-
+  /* obtain container identifier by iterating through pieces[] and finding the
+  piece with corresponding container area. Then using getIdentifier method. Note:
+  might not be safe to directly call pieces_copy[0].getIdentifier */
   int containerIdentifier;
-
   for (uint i = 0; i < pieces.size(); i++) {
       if (pieces[i].getShapeArea() == container_area) {
             containerIdentifier = pieces[i].getIdentifier();
@@ -108,14 +112,13 @@ PuzzleBoard* create_partial_board(int* partial_board, int count, const vector<Sh
   }
 
   int partial_board_size = count;
-
   if (!mute_debugging_messages) {
     cout << "the size of partial board is " << partial_board_size << endl;
   }
 
-  //copying the partial_board into tapered_partial_board
+  //copying the relevant integers (all excluding first few width, height) in partial_board[] into tapered_partial_board
   int tapered_partial_board[container_area];
-  int difference = partial_board_size - container_area;
+  int difference = partial_board_size - container_area; // difference is usually 2, representing width and height
 
   for (uint i = 0; i < container_area; i++){
     tapered_partial_board[i] = partial_board[difference + i];
@@ -128,10 +131,11 @@ PuzzleBoard* create_partial_board(int* partial_board, int count, const vector<Sh
   PuzzleBoard* board = new PuzzleBoard(tapered_partial_board, container);
 
   for (uint j = 1; j < pieces_copy.size(); j++) {
-
     // get identifer of current piece
     int current_identifier = pieces[j].getIdentifier();
 
+    /* if a piece (i) is NOT already placed on the partial board, and
+    (ii) is NOT the container piece, then it will be pushed into the unusedPieces vector */
     if ((!shape_already_used(current_identifier, partial_board, partial_board_size) && (current_identifier != containerIdentifier))){
       unusedPieces.push_back(pieces[j]);
       if (!mute_debugging_messages) {
@@ -341,7 +345,9 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
 }
 
 
-
+/**
+ * Helper function which writes solution in a 1-D int array into <file_name>
+ */
 void test_print(int** board_solution, char* file_name, uint height, uint width){
   ofstream out(file_name);
   for (uint r = 0; r < height; r++) {
@@ -385,21 +391,20 @@ bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> pieces, uin
   for (uint row = 0; row < height; row++)
     for (uint col = 0; col < width; col++)
       for (uint i = 0; i < current_piece_variations.size(); i++) {
-
-	// get the ith variation of the current piece
+	       // get the ith variation of the current piece
         ShapeMatrix current_piece_variation = current_piece_variations[i];
 
-	// if this variation cannot be placed, try the next
+	       // if this variation cannot be placed, try the next
         if (!board->placePiece(col, row, current_index + 1, current_piece_variation))
-	  continue;
+	       continue;
 
-	// check that puzzle can be solved after placing the piece
-	if (recursive_solver(board, pieces, current_index + 1,iterations))
-	  return true;
+      	// check that puzzle can be solved after placing the piece
+      	if (recursive_solver(board, pieces, current_index + 1,iterations))
+      	  return true;
 
-	// backtrack
-	board->removePiece(col, row, current_index + 1, current_piece_variation);
-        }
+    	  // backtrack
+    	  board->removePiece(col, row, current_index + 1, current_piece_variation);
+      }
 
   return false;
 }
@@ -459,17 +464,25 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint&
   return board_solution;
 }
 
+/**
+ * Glob is a file management helper function which returns the name of all
+ * the files stored within a directory pattern
+ */
 inline vector<string> glob(const string& pat){
-    glob_t glob_result;
-    glob(pat.c_str(),GLOB_TILDE,NULL,&glob_result);
-    vector<string> ret;
-    for(unsigned int i=0;i<glob_result.gl_pathc;++i){
-        ret.push_back(string(glob_result.gl_pathv[i]));
-    }
-    globfree(&glob_result);
-    return ret;
+  glob_t glob_result;
+  glob(pat.c_str(),GLOB_TILDE,NULL,&glob_result);
+  vector<string> ret;
+  for(unsigned int i=0;i<glob_result.gl_pathc;++i){
+      ret.push_back(string(glob_result.gl_pathv[i]));
+  }
+  globfree(&glob_result);
+  return ret;
 }
 
+/**
+ * Helper function to search whether the existing state of the board has a
+ * congruent solution that has already been solved before within the solutions directory
+ */
 bool search_existing_solutions(PuzzleBoard* board, char* directory_name, bool mute_debugging_messages) {
   uint height = board-> getHeight();
   uint width = board-> getWidth();
@@ -481,13 +494,15 @@ bool search_existing_solutions(PuzzleBoard* board, char* directory_name, bool mu
 
   bool success = false;
 
-  //Based on directory_name, create a vector containing all the file names existing in that directory
+  /*Based on directory_name, create a vector containing all the file names
+  existing in that <directory>/solutions. This is importanct because each solution
+  file is named based on a hash, and not a pre-set pattern */
   vector <string> all_solutions_file;
   string search_pattern = directory_name;
   search_pattern += "/solutions/*";
   all_solutions_file = glob (search_pattern);
 
-  //find all existing solution files in folder and read
+  /* Read through each existing solution file within folder:  */
   for (uint file_num = 0; file_num < all_solutions_file.size(); file_num++ ){
     if (success) {
       break;
@@ -496,7 +511,7 @@ bool search_existing_solutions(PuzzleBoard* board, char* directory_name, bool mu
       cout <<"checking file named: "<< all_solutions_file[file_num] <<endl;
     }
 
-    // for each file, read content and check:
+    // for each solution file, read content and check for consistency:
     ifstream input(all_solutions_file[file_num]);
     for (int i = 0; i < matrixSize; i++){
       int temp;
@@ -504,9 +519,12 @@ bool search_existing_solutions(PuzzleBoard* board, char* directory_name, bool mu
       uint rowNum = i / width;
       uint colNum = i % width;
       int difference = temp - currentBoard[rowNum][colNum];
+
+      /* Consistency: The value in the specified position of the currentBoard should either
+      be zero (unfilled), or the same as the corresponding value in solutions file */
       if (difference == 0 || difference == temp) {
         existingSolution[i] = temp;
-        //all the numbers in the file are consistent with the existing board
+        //if ALL the numbers in thec currentBoard are consistent with the solution file
         if (i == (matrixSize - 1)) {
             success = true;
             if (!mute_debugging_messages){
@@ -575,7 +593,9 @@ bool search_existing_solutions(PuzzleBoard* board, char* directory_name, bool mu
   // cout << "Existing solution not found~~~~~~~~: " << endl;
 
 
-
+/**
+ * Partial solver is called by bin/sp module, and finds solution given a partially solved state
+ */
 
 int** partial_solver(char* directory_name, int* partial_board, int count, const vector<ShapeMatrix> &pieces, int& returnCode,
       uint& board_height, uint& board_width, bool mute_debugging_messages) {
@@ -583,16 +603,18 @@ int** partial_solver(char* directory_name, int* partial_board, int count, const 
   vector<ShapeMatrix> unusedPieces;
   int** board_solution = NULL;
 
+  /* calls create_partial_board to produce two major outputs: (i) unusedPieces
+  (vector of all unused shapes), (ii) initialization of 'board' based on current
+  state of the puzzle board  */
   PuzzleBoard* board = create_partial_board(partial_board, count, pieces, unusedPieces, mute_debugging_messages);
 
+  /* prints debugging messages */
   if (!mute_debugging_messages) {
     for (uint i = 0; i < unusedPieces.size(); i++) {
       cout << "unused piece with identifier:" << unusedPieces[i].getIdentifier() << endl;
       shape_matrix_print(unusedPieces[i]);
     }
-  }
 
-  if (!mute_debugging_messages) {
     cout<< "The current board is:"<<endl;
     print_solution_board(board->getCurrentBoard(), board->getHeight(), board->getWidth());
   }
@@ -603,13 +625,14 @@ int** partial_solver(char* directory_name, int* partial_board, int count, const 
 
   bool writeNewSolnFlag = false;
 
-  //Strategy 2: look in the existing repository
+  //Strategy 2: if there is no existing solution available, try to solve and produce a solution!
   if (!success){
     int iterations = 0;
     success = recursive_solver(board, unusedPieces, 0, iterations);
     writeNewSolnFlag = true;
   }
 
+  // return code
   if (success) {
     returnCode = SOLVED;
     board_height = board->getHeight(); //returns height of board
