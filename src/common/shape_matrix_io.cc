@@ -51,6 +51,7 @@ void shape_matrix_write(const char* filename, const vector<ShapeMatrix> &list, b
     output_file.close();
     return;
   }
+
   vector<ShapeMatrix>::const_iterator iterator;
 
   for (iterator = list.begin(); iterator != list.end(); ++iterator) {

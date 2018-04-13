@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <cstring>
 #include <algorithm>
@@ -51,6 +52,13 @@ int main(int argc, char** argv) { // FORMAT:  bin/ip <input_filename> <upload_di
   while (upload_dir[length] != '\0') {
     length++;
   }
+
+  const char* pieces_file_name = "/pieces";
+  int length3 = strlen(pieces_file_name);
+  char* pieces_file = new char[length + length3 + 1];
+  strcpy(pieces_file, upload_dir);
+  pieces_file = strcat(pieces_file, pieces_file_name);
+
   vector<ListOfPoints> puzzle_pieces;
   find_coordinates(image_file, puzzle_pieces);
 
@@ -87,10 +95,21 @@ int main(int argc, char** argv) { // FORMAT:  bin/ip <input_filename> <upload_di
     correct_area = false;
   }
 
-  const char* name = "/processing";
-  char* processing_file = new char[length + 1];
-  strcpy(processing_file, upload_dir);
-  processing_file = strcat(processing_file, name);
+  cout << "here" <<endl;
+
+  // const char* name = "/processing";
+  // int length2 = strlen(name);
+  // char* processing_file = new char[length + length2 + 1];
+  // strcpy(processing_file, upload_dir);
+  // processing_file = strcat(processing_file, name);
+
+  string str_processing_file = argv[2];
+  str_processing_file += "/processing";
+
+  int process_file_len = str_processing_file.length();
+  char processing_file [(process_file_len + 1)];
+  strcpy (processing_file, str_processing_file.c_str());
+
   cout << "file to remove: "<< processing_file <<endl;
 
   if( remove( processing_file ) != 0 ){
@@ -99,53 +118,59 @@ int main(int argc, char** argv) { // FORMAT:  bin/ip <input_filename> <upload_di
   }
   else{
     cout<< "File successfully deleted" <<endl;
-    const char* pieces_file_name = "/pieces";
-    char* pieces_file = new char[length + 1];
-    strcpy(pieces_file, upload_dir);
-    pieces_file = strcat(pieces_file, pieces_file_name);
     shape_matrix_write(pieces_file, pieces, correct_area);
     cout << "pieces file created at " << pieces_file <<endl;
   };
 
+  bool solution_exists = false;
 
-  // bin/sp directory_name state 1
+  if (correct_area){
+    // make a call to sp module via bin/sp directory_name state 1
 
-  /**** string manipulation functions to prepare cmd which will be used as
-  input for shell command***/
-  string directory_name = argv[2];
-  string cmd = "bin/sp ";
-  cmd += directory_name;
+    /**** string manipulation functions to prepare cmd which will be used as
+    input for shell command***/
+    string directory_name = argv[2];
+    string cmd = "bin/sp ";
+    cmd += directory_name;
 
-  uint width = pieces[0].getWidth();
-  uint height = pieces[0].getHeight();
+    uint width = pieces[0].getWidth();
+    uint height = pieces[0].getHeight();
 
-  cmd += " \"";
-  cmd += width + '0';
-  cmd += " ";
-  cmd += height + '0';
+    cmd += " \"";
+    cmd += width + '0';
+    cmd += " ";
+    cmd += height + '0';
+    for (uint i = 0; i < container_area; i++) {
+      cmd += " 0";
+    }
+    cmd += "\" 1";
+    cout << cmd << endl;
+    int cmdLen = cmd.length();
+    char charCmd[(cmdLen + 1)];
+    for (int j = 0; j < cmdLen; j++) {
+      charCmd[j] = cmd[j];
+    }
+    charCmd[cmdLen] = '\0';
+    string result = exec(charCmd);
+    /**** end of string manipulation***/
 
-  for (uint i = 0; i < container_area; i++) {
-    cmd += " 0";
+    //    cout << result << endl;
+    stringstream ansstream(result);
+    int first_int;
+    // while (ansstream){
+    ansstream >> first_int;
+    //  cout << first_int << endl;
+    // }
+    if (first_int > 0) {
+      solution_exists = true;
+    }
+
+    if (!solution_exists){
+      ofstream output_file(pieces_file);
+      output_file << -3 << endl;
+      output_file.close();
+    }
   }
-
-  cmd += "\" 1";
-
-  cout << cmd << endl;
-
-  int cmdLen = cmd.length();
-
-  char charCmd[(cmdLen + 1)];
-
-  for (int j = 0; j < cmdLen; j++) {
-    charCmd[j] = cmd[j];
-  }
-  charCmd[cmdLen] = '\0';
-
-  string result = exec(charCmd);
-
-  cout << result << endl;
-
-
 
   return 0;
 }

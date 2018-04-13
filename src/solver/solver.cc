@@ -488,10 +488,6 @@ bool search_existing_solutions(PuzzleBoard* board, char* directory_name, bool mu
   uint width = board-> getWidth();
   int matrixSize = height * width;
 
-  int existingSolution[matrixSize];
-
-  int** currentBoard = copy_board(board);
-
   bool success = false;
 
   /*Based on directory_name, create a vector containing all the file names
@@ -501,6 +497,14 @@ bool search_existing_solutions(PuzzleBoard* board, char* directory_name, bool mu
   string search_pattern = directory_name;
   search_pattern += "/solutions/*";
   all_solutions_file = glob (search_pattern);
+
+  if (all_solutions_file.size() == 0 ) {
+    return success;
+  }
+
+  int existingSolution[matrixSize];
+
+  int** currentBoard = copy_board(board);
 
   /* Read through each existing solution file within folder:  */
   for (uint file_num = 0; file_num < all_solutions_file.size(); file_num++ ){
