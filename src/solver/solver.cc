@@ -58,12 +58,12 @@ void rotate_soln(int** board_solution, int& copy_height, int& copy_width) {
   // create a temporary 2D int array on the stack, containing the rotated values
   int temp_copy[copy_width][copy_height];
 
-  cout << "original: ";
+  //cout << "original: ";
   for(int i = 0;  i < copy_height; i++){
-    cout << endl;
+    //cout << endl;
     for(int j = 0; j < copy_width; j++){
       temp_copy[j][(copy_height - i - 1)] = board_solution[i][j];
-      cout << board_solution[i][j] << " ";
+      //cout << board_solution[i][j] << " ";
     }
   }
 
@@ -75,13 +75,13 @@ void rotate_soln(int** board_solution, int& copy_height, int& copy_width) {
 
   board_solution = new int*[new_height];
 
-  cout << "copy: ";
+  //cout << "copy: ";
   for (int i = 0; i < new_height; i++) {
     board_solution[i] = new int[new_width];
-    cout << endl;
+    //cout << endl;
     for (int j = 0; j < new_width; j++) {
       board_solution[i][j] = temp_copy[i][j];
-      cout << board_solution[i][j] << " ";
+    //  cout << board_solution[i][j] << " ";
     }
   }
 

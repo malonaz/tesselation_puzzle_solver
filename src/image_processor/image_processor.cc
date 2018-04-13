@@ -77,6 +77,15 @@ int main(int argc, char** argv) { // FORMAT:  bin/ip <input_filename> <upload_di
 
   if (translate_success == false){
     cout << "INTERNAL ERROR: SHAPE TRANSLATE FAIL" <<endl;
+    ofstream output_file;
+    output_file.open(pieces_file);
+    output_file << -2 << endl;
+    output_file.close();
+
+    if( remove( processing_file ) != 0 ){
+        cout << "Error deleting file" <<endl;
+        return 0;
+    }
     return 1;
   }
 
@@ -149,10 +158,10 @@ int main(int argc, char** argv) { // FORMAT:  bin/ip <input_filename> <upload_di
     string result = exec(charCmd);
     /**** end of string manipulation***/
 
-    //cout << result << endl;
+    cout << result << endl;
     stringstream ansstream(result);
     int first_int;
-    // while (ansstream){
+    //while (ansstream){
     ansstream >> first_int;
     cout << "first integer is: " << first_int << endl;
     // }
@@ -161,7 +170,8 @@ int main(int argc, char** argv) { // FORMAT:  bin/ip <input_filename> <upload_di
     }
 
     if (!solution_exists){
-      ofstream output_file(pieces_file);
+      ofstream output_file;
+      output_file.open(pieces_file);
       output_file << -3 << endl;
       output_file.close();
     }
