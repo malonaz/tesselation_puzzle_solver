@@ -1,6 +1,7 @@
 #include "image_read.h"
 
 #include <cmath>
+#include <math.h>
 #include <iostream>
 #include <vector>
 
@@ -34,26 +35,28 @@ using cv::circle;
 using cv::Size;
 
 #define ADAPTIVE_THRESHOLD_VALUE 100
-#define SCALE_DOWN_IMAGE_WIDTH 800
+#define SCALE_DOWN_IMAGE_HEIGHT 800
+#define SCALE_DOWN_IMAGE_WIDTH 1280
 #define MIN_CONTOUR_AREA 1200
 
-void scaleDownImage(const Mat& source, Mat& target, double width) {
-  double scale = width / source.size().width;
+void scaleDownImage(const Mat& source, Mat& target, double height,  double width) {
+  double image_diag = sqrt(pow(source.size().height,2.0) + pow(source.size().width, 2.0));
+  double process_diag = sqrt(pow(height,2.0) + pow(width, 2.0));
+  double scale = process_diag / image_diag;
   Size size(scale * source.size().width, scale * source.size().height);
   resize(source, target, size);
 }
 
 void find_coordinates(const char* input, vector<ListOfPoints> &list) {
-  Mat src, src_gray;
+  Mat src, src_gray, src_processed;
 
   src = imread(input);
   if (src.empty()) {
     cout << "Could not open or find the image!\n" << endl;
     return;
   }
-  Mat src_processed;
-
-  scaleDownImage(src, src_processed, SCALE_DOWN_IMAGE_WIDTH);
+  
+  scaleDownImage(src, src_processed,SCALE_DOWN_IMAGE_HEIGHT, SCALE_DOWN_IMAGE_WIDTH);
   cv::bitwise_not(src_processed, src_processed);
   cvtColor(src_processed, src_gray, COLOR_BGR2GRAY);
   adaptiveThreshold(src_gray, src_gray, ADAPTIVE_THRESHOLD_VALUE,
@@ -85,7 +88,7 @@ void debug_coordinates(const char* filename, const vector<ListOfPoints> &list){
     cout << "Could not open or find image!\n" << endl;
   }
 
-  scaleDownImage(src, src, SCALE_DOWN_IMAGE_WIDTH);
+  scaleDownImage(src, src, SCALE_DOWN_IMAGE_HEIGHT, SCALE_DOWN_IMAGE_WIDTH);
   namedWindow( "Debug window", WINDOW_AUTOSIZE );
 
   /*****prints out coordinates of corners*****/
