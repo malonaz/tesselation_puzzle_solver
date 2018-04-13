@@ -149,12 +149,12 @@ int main(int argc, char** argv) { // FORMAT:  bin/ip <input_filename> <upload_di
     string result = exec(charCmd);
     /**** end of string manipulation***/
 
-    //    cout << result << endl;
+    //cout << result << endl;
     stringstream ansstream(result);
     int first_int;
     // while (ansstream){
     ansstream >> first_int;
-    //  cout << first_int << endl;
+    cout << "first integer is: " << first_int << endl;
     // }
     if (first_int > 0) {
       solution_exists = true;
