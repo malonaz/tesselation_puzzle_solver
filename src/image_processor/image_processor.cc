@@ -59,6 +59,14 @@ int main(int argc, char** argv) { // FORMAT:  bin/ip <input_filename> <upload_di
   strcpy(pieces_file, upload_dir);
   pieces_file = strcat(pieces_file, pieces_file_name);
 
+
+  string str_processing_file = argv[2];
+  str_processing_file += "/processing";
+
+  int process_file_len = str_processing_file.length();
+  char processing_file [(process_file_len + 1)];
+  strcpy (processing_file, str_processing_file.c_str());
+
   vector<ListOfPoints> puzzle_pieces;
   find_coordinates(image_file, puzzle_pieces);
 
@@ -111,13 +119,6 @@ int main(int argc, char** argv) { // FORMAT:  bin/ip <input_filename> <upload_di
   // char* processing_file = new char[length + length2 + 1];
   // strcpy(processing_file, upload_dir);
   // processing_file = strcat(processing_file, name);
-
-  string str_processing_file = argv[2];
-  str_processing_file += "/processing";
-
-  int process_file_len = str_processing_file.length();
-  char processing_file [(process_file_len + 1)];
-  strcpy (processing_file, str_processing_file.c_str());
 
   cout << "file to remove: "<< processing_file <<endl;
 
