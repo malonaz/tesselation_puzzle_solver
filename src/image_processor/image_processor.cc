@@ -112,15 +112,10 @@ int main(int argc, char** argv) { // FORMAT:  bin/ip <input_filename> <upload_di
 
   cout << "file to remove: "<< processing_file <<endl;
 
-  if( remove( processing_file ) != 0 ){
-    cout << "Error deleting file" <<endl;
-    return 0;
-  }
-  else{
     cout<< "File successfully deleted" <<endl;
     shape_matrix_write(pieces_file, pieces, correct_area);
     cout << "pieces file created at " << pieces_file <<endl;
-  };
+
 
   bool solution_exists = false;
 
@@ -170,6 +165,11 @@ int main(int argc, char** argv) { // FORMAT:  bin/ip <input_filename> <upload_di
       output_file << -3 << endl;
       output_file.close();
     }
+  }
+
+  if( remove( processing_file ) != 0 ){
+      cout << "Error deleting file" <<endl;
+      return 0;
   }
 
   return 0;
