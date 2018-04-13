@@ -51,6 +51,45 @@ string sha256(string str){
   return strstream.str();
 }
 
+/**
+  * This helper function rotates a 2D-int array clockwise 90degrees
+  */
+void rotate_soln(int** board_solution, int& copy_height, int& copy_width) {
+  // create a temporary 2D int array on the stack, containing the rotated values
+  int temp_copy[copy_width][copy_height];
+
+  cout << "original: ";
+  for(int i = 0;  i < copy_height; i++){
+    cout << endl;
+    for(int j = 0; j < copy_width; j++){
+      temp_copy[j][(copy_height - i - 1)] = board_solution[i][j];
+      cout << board_solution[i][j] << " ";
+    }
+  }
+
+  delete board_solution;
+
+  int new_height = copy_width;
+  int new_width = copy_height;
+
+
+  board_solution = new int*[new_height];
+
+  cout << "copy: ";
+  for (int i = 0; i < new_height; i++) {
+    board_solution[i] = new int[new_width];
+    cout << endl;
+    for (int j = 0; j < new_width; j++) {
+      board_solution[i][j] = temp_copy[i][j];
+      cout << board_solution[i][j] << " ";
+    }
+  }
+
+  copy_width = new_width;
+  copy_height = new_height;
+
+}
+
 
 /**
  * Helper function which returns a string version of the given solution.
@@ -542,7 +581,7 @@ bool search_existing_solutions(PuzzleBoard* board, char* directory_name, bool mu
           if (!mute_debugging_messages){
             cout<<"For element number: " << i <<"current board's element is " <<  currentBoard[rowNum][colNum] << ", while files's element is " << temp <<endl;
             cout<<"Difference is "<< difference;
-            cout<<"Not in this file."<<endl;
+            cout<<". Solution is not in this file."<<endl;
           }
         break;
       }
@@ -645,16 +684,21 @@ int** partial_solver(char* directory_name, int* partial_board, int count, const 
 
     //HASH AND WRITE TO THE SOLUTIONS DIRECTORY
     if (writeNewSolnFlag){
-      string strHashOfSoln = sha256(matrix_to_string(board_solution,board_height,board_width));
       int n1 = strlen(directory_name);
       int n2 = strlen("/solutions/");
-      int n3 = strHashOfSoln.length();
-      char hashFileName[(n1 + n2 + n3 + 1)];
-      strcpy(hashFileName, directory_name);
-      strncat(hashFileName, "/solutions/", n2);
-      strncat(hashFileName, strHashOfSoln.c_str(), n3);
+      int copy_height = board_height;
+      int copy_width = board_width;
+      for (int i = 0; i < 4; i++){
+        rotate_soln(board_solution, copy_height, copy_width);
+        string strHashOfSoln = sha256(matrix_to_string(board_solution,copy_height,copy_width));
+        int n3 = strHashOfSoln.length();
+        char hashFileName[(n1 + n2 + n3 + 1)];
+        strcpy(hashFileName, directory_name);
+        strncat(hashFileName, "/solutions/", n2);
+        strncat(hashFileName, strHashOfSoln.c_str(), n3);
 
-      test_print(board_solution, hashFileName, board_height, board_width);
+        test_print(board_solution, hashFileName, copy_height, copy_width);
+      }
     }
   } else {
     returnCode = UNSOLVED;
