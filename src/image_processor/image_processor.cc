@@ -134,7 +134,7 @@ int main(int argc, char** argv) {
     // make a call to sp module via bin/sp directory_name state 1
 
     // quote sign will be used a lot
-    string quote(" \"");
+    string quote(" \" ");
     
     // compute command
     string command = string("bin/sp ") + upload_directory;
@@ -169,7 +169,7 @@ int main(int argc, char** argv) {
   // remove processing file
   cout << "attempting to remove file: " << processing_flag_filename << endl;
   if (remove(processing_flag_filename.c_str()) != 0){
-    cout << "Error deleting file" <<endl;
+    cout << "Error deleting file" << endl;
     return -1;
   } 
   cout<< "File successfully deleted" << endl;
