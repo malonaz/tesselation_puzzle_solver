@@ -647,8 +647,7 @@ bool solution_is_consistent_with_board(PuzzleBoard* puzzle, string solution_file
 bool search_existing_solutions(PuzzleBoard* board, char* puzzle_hash, bool debug) {
 
   // find all solution files
-  string search_pattern = puzzle_hash;
-  search_pattern += "/solutions/*";
+  string search_pattern = puzzle_hash + string("/solution/*");
   vector <string> solutions_filenames = glob(search_pattern);
 
   // if no files match, return false as there are no solutions to this puzzle
