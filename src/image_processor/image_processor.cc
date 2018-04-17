@@ -83,7 +83,11 @@ string execute_command(const char* command) {
 /**
  * Image Processor Module
  *  @steps:
- *   1)
+ *   1) process arguments
+ *   2) extract pieces from image
+ *   3) discretize pieces
+ *   4) save discretized pieces info
+ *   5) find solution using partial solver
  *  @shellCommandFormat: bin/ip <image_filename> <upload_directory>
  *  @params:
  *   <image_filename>: the path to the image we wish to process
@@ -154,7 +158,7 @@ int main(int argc, char** argv) {
   cout << "pieces file created at " << pieces_filename << endl;
   
 
-  /////////// PART 5: FIND SOLUTIONS USING PARTIAL SOLVER ///////////////////
+  /////////// PART 5: FIND SOLUTION USING PARTIAL SOLVER ///////////////////
   if (areas_match){
     // make a call to sp module via bin/sp directory_name state 1
     

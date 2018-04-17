@@ -26,7 +26,7 @@ using namespace std;
  * solves a puzzle from an image if possible.
  *  @steps:
  *   1) process arguments
- *   2) get pieces from image
+ *   2) extract pieces from image
  *   3) discretize pieces
  *   4) solve puzzle
  *   5) interpret return code
@@ -43,7 +43,7 @@ int main(int argc, char** argv){
   const string image_filename(argv[1]);
 
 
-  //////////// PART 2: GET PIECES FROM IMAGE /////////////////////////////
+  //////////// PART 2: EXTRACT PIECES FROM IMAGE /////////////////////////////
   vector<ListOfPoints> puzzle_pieces;
   find_coordinates(image_filename.c_str(), puzzle_pieces);
   debug_coordinates(image_filename.c_str(), puzzle_pieces);
