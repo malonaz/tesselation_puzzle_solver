@@ -53,7 +53,7 @@ string execute_command(const char* command) {
 }
 
 /**
- * Image Processor Module:
+ * Image Processor Module
  *  @shellCommandFormat: bin/ip <image_filename> <upload_directory>
  *  @params:
  *   <image_filename>: the path to the image we wish to process
