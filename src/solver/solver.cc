@@ -457,7 +457,11 @@ void test_print(int** board_solution, char* file_name, uint height, uint width){
 
 
 /**
- * Helper function which recursively attempts to place a piece to solve the puzzle. depth-first!
+ * Helper function which recursively attempts to place a piece to solve the puzzle, in a depth-first search.
+ *  @params: 
+ *   board: board of the puzzle
+ *   pieces: the pieces of the puzzle as a list of logical matrices
+ *   current_index: index of the piece that we will place next
  */
 bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> pieces, uint current_index, int& iterations) {
 
@@ -502,17 +506,17 @@ bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> pieces, uin
 }
 
 /**
- * Function which attempts to solve the puzzle implied by the give matrices.
- *   @params:
- *     return_code:
- *       - SOLVED if the puzzle can be solved.
- *       - UNSOLVED if the puzzle cannot be solved
- *       - UNDERSIZED if the puzzle's container is too small for the pieces
- *       - OVERSIZED is the puzzle's container is too large for the pieces
- *     board_height: height of the board implied by the given matrices
- *     board_width: width of the board implied by the given matrices
- *   @returns: the solution of the board found as a 2D array.
- * Encodes the solution found into
+ * Function which attempts to solve the puzzle implied by the given shapes.
+ *  @params:
+ *   matrices: list of logical matrices representing a puzzle's pieces and container
+ *   return_code:
+ *     - SOLVED if the puzzle can be solved.
+ *     - UNSOLVED if the puzzle cannot be solved
+ *     - UNDERSIZED if the puzzle's container is too small for the pieces
+ *     - OVERSIZED is the puzzle's container is too large for the pieces
+ *   board_height: height of the board implied by the given matrices
+ *   board_width: width of the board implied by the given matrices
+ *  @returns: the solution of the board as a 2D array.
  */
 int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint& board_height, uint& board_width) {
 
@@ -558,17 +562,29 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint&
 
 /**
  * Glob is a file management helper function which returns the name of all
- * the files stored within a directory pattern
+ * the files stored within a directory. Inspired from an online 
+ * reference.
+ *  @params: 
+ *   path: the path to the directory we wish to search
+ *  @returns: 
+ *   the paths of the files inside the directory
  */
-inline vector<string> glob(const string& pat){
+vector<string> glob(const string& path){
+  
   glob_t glob_result;
-  glob(pat.c_str(),GLOB_TILDE,NULL,&glob_result);
-  vector<string> ret;
-  for(unsigned int i=0;i<glob_result.gl_pathc;++i){
-      ret.push_back(string(glob_result.gl_pathv[i]));
-  }
+  glob(path.c_str(), GLOB_TILDE, NULL, &glob_result);
+
+  // used to store the matched files paths
+  vector<string> file_paths;
+
+  // get the files that match
+  for(uint i = 0; i < glob_result.gl_pathc; i++)
+    file_paths.push_back(string(glob_result.gl_pathv[i]));
+
+  // free the glob result object from the heap
   globfree(&glob_result);
-  return ret;
+  
+  return file_paths;
 }
 
 /**
