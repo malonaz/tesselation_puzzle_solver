@@ -292,10 +292,17 @@ vector<ShapeMatrix> get_variations(const ShapeMatrix &shape) {
   return variations;
 }
 
+
 /**
  * Helper function which returns the empty area near the square at (row, col) in the given board
+ *  @params:
+ *   row: row of the square
+ *   col: column of the square
+ *   board: 2D-int array representing the puzzle board
+ *   height: height of the board
+ *   width: width of the board
  */
-int get_adjacent_empty_area(uint row, uint col, uint height, uint width, int** board) {
+int get_adjacent_empty_area(uint row, uint col, int** board, uint height, uint width){
 
   // return 0 if (row, col) is not a valid square on the board that is empty
   if (row >= height || col >= width || board[row][col] != 0)
@@ -305,10 +312,10 @@ int get_adjacent_empty_area(uint row, uint col, uint height, uint width, int** b
   board[row][col] = -1;
 
   // make recursive call
-  return 1 + get_adjacent_empty_area(row, col + 1, height, width, board)
-    + get_adjacent_empty_area(row, col - 1, height, width,board)
-    + get_adjacent_empty_area(row + 1, col,height, width, board)
-    + get_adjacent_empty_area(row - 1, col,height, width, board);
+  return 1 + get_adjacent_empty_area(row, col + 1, board, height, width)
+    + get_adjacent_empty_area(row, col - 1, board, height, width)
+    + get_adjacent_empty_area(row + 1, col, board, height, width)
+    + get_adjacent_empty_area(row - 1, col, board, height, width);
 }
 
 
@@ -392,7 +399,7 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
     for (uint col = 0; col < width; col++) {
 
       // get area near current square
-      int area = get_adjacent_empty_area(row, col, height, width, board_copy);
+      int area = get_adjacent_empty_area(row, col, board_copy, height, width);
 
       // if area is zero, continue
       if (area == 0)
