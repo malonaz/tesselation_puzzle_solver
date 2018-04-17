@@ -587,124 +587,98 @@ vector<string> glob(const string& path){
   return file_paths;
 }
 
+
+
 /**
- * Helper function to search whether the existing state of the board has a
- * congruent solution that has already been solved before within the solutions directory
+ * Helper function which reads the solution at the given filename and compares it 
+ * to the given current board.
+ *  @params:
+ *   puzzle: the current puzzle
+ *   solution_filename: the filename of a solution we wish to compare this to
+ *   solution: int array in which the solution will be copied if it is consistent with
+ *             the board
+ *  @returns:
+ *   true if the solution at the given filename is consistent with the board
  */
-bool search_existing_solutions(PuzzleBoard* board, char* directory_name, bool mute_debugging_messages) {
-  uint height = board-> getHeight();
-  uint width = board-> getWidth();
-  int matrixSize = height * width;
+bool solution_is_consistent_with_board(PuzzleBoard* puzzle, string solution_filename,
+				       int* board_solution){
 
-  bool success = false;
+  // get current board as a 2D int array
+  int** board = puzzle->getCurrentBoard();
 
-  /*Based on directory_name, create a vector containing all the file names
-  existing in that <directory>/solutions. This is importanct because each solution
-  file is named based on a hash, and not a pre-set pattern */
-  vector <string> all_solutions_file;
-  string search_pattern = directory_name;
-  search_pattern += "/solutions/*";
-  all_solutions_file = glob (search_pattern);
+  // get height and width of board
+  uint height = puzzle->getHeight();
+  uint width = puzzle->getWidth();
+  
+  // open current solution and copy it into existing_solution
+  ifstream solution_fstream(solution_filename);
 
-  if (all_solutions_file.size() == 0 ) {
-    return success;
-  }
-
-  int existingSolution[matrixSize];
-
-  int** currentBoard = copy_board(board);
-
-  /* Read through each existing solution file within folder:  */
-  for (uint file_num = 0; file_num < all_solutions_file.size(); file_num++ ){
-    if (success) {
+  // used for return value
+  bool solution_is_consistent = true;
+  
+  for (uint i = 0; i < height * width; i++){
+    
+    // copy next integer into existing solution
+    solution_fstream >> board_solution[i];
+    
+    // next integer must be unfilled (0) or equal to the current board state's same integer
+    if (board_solution[i] != 0 && board_solution[i] != board[i/width][i%width]){
+      solution_is_consistent = false;
       break;
     }
-    if (!mute_debugging_messages){
-      cout <<"checking file named: "<< all_solutions_file[file_num] <<endl;
-    }
-
-    // for each solution file, read content and check for consistency:
-    ifstream input(all_solutions_file[file_num]);
-    for (int i = 0; i < matrixSize; i++){
-      int temp;
-      input >> temp;
-      uint rowNum = i / width;
-      uint colNum = i % width;
-      int difference = temp - currentBoard[rowNum][colNum];
-
-      /* Consistency: The value in the specified position of the currentBoard should either
-      be zero (unfilled), or the same as the corresponding value in solutions file */
-      if (difference == 0 || difference == temp) {
-        existingSolution[i] = temp;
-        //if ALL the numbers in thec currentBoard are consistent with the solution file
-        if (i == (matrixSize - 1)) {
-            success = true;
-            if (!mute_debugging_messages){
-              cout<<"Found in this file!"<<endl;
-            }
-          PuzzleBoard* tempBoard = new PuzzleBoard (existingSolution, board->getContainer()); // work on this.
-          *board = *tempBoard; //copy assignment operator
-          delete tempBoard;
-        }
-      } else {
-          if (!mute_debugging_messages){
-            cout<<"For element number: " << i <<"current board's element is " <<  currentBoard[rowNum][colNum] << ", while files's element is " << temp <<endl;
-            cout<<"Difference is "<< difference;
-            cout<<". Solution is not in this file."<<endl;
-          }
-        break;
-      }
-    }
-    input.close();
   }
-  delete_2d_array(currentBoard, height);
 
-  return success;
-
+  // close input stream
+  solution_fstream.close();
+  
+  return solution_is_consistent;
 }
 
-  // ifstream input("output_data/solution.txt");
-  // if (input.fail()){
-  //   cout<< "Solution file does not exist yet!"<<endl;
-  //   return false;
-  // }
 
+/**
+ * Helper function to search whether a given board state has a solution that has already
+ * been solved within the solutions directory.
+ *  @params:
+ *   board: current board state of the puzzle
+ *   puzzle_hash: hash of the boad
+ *  @returns:
+ *   true if there exists a solution to this board
+ */
+bool search_existing_solutions(PuzzleBoard* board, char* puzzle_hash, bool debug) {
 
-  //
-  //
-  // while (!input.eof() && !success){
-  //   bool correctRow = true;
-  //   cout << "At existing sols row number: " << row <<endl;
-  //   for (int i = 0; i < matrixSize; i++){
-  //     int temp;
-  //     input >> temp;
-  //     uint rowNum = i / width;
-  //     uint colNum = i % width;
-  //     int difference = temp - currentBoard[rowNum][colNum];
-  //     if (difference == 0 || difference == temp) {
-  //       previousSolution[i] = temp;
-  //     } else {
-  //       correctRow = false;
-  //     }
-  //   }
-  //   if (correctRow) {
-  //     input.close();
-  //     cout << "Existing solution found~~~~~~~~: " << endl;
-  //     success = true;
-  //     PuzzleBoard* tempBoard = new PuzzleBoard (previousSolution, board->getContainer()); // work on this.
-  //     *board = *tempBoard; //copy assignment operator
-  //
-  //     delete_2d_array(height, currentBoard);
-  //     delete tempBoard;
-  //     return true;
-  //   }
-  //   row ++;
-  // }
-  // input.close();
-  // delete_2d_array(height, currentBoard);
-  // cout << "Existing solution not found~~~~~~~~: " << endl;
+  // find all solution files
+  string search_pattern = puzzle_hash;
+  search_pattern += "/solutions/*";
+  vector <string> solutions_filenames = glob(search_pattern);
 
+  // if no files match, return false as there are no solutions to this puzzle
+  if (solutions_filenames.size() == 0)
+    return false;
+  
+  // will hold the existing solution if it exists
+  int existing_solution[board->getHeight() * board->getWidth()];
+  
+  // read through each existing solution file within folder
+  for (uint file_num = 0; file_num < solutions_filenames.size(); file_num++){
+    if (solution_is_consistent_with_board(board, solutions_filenames[file_num], existing_solution)){
+      
+      // get container of board
+      ShapeMatrix container = board->getContainer();
+      
+      // free incomplete board from the heap
+      delete board;
+      
+      // point board to a new PuzzleBoard with the correct solution
+      board = new PuzzleBoard(existing_solution, container);
 
+      return true;
+    }
+  }
+  
+  return false;
+}
+
+  
 /**
  * Partial solver is called by bin/sp module, and finds solution given a partially solved state
  */

@@ -160,7 +160,7 @@ int main(int argc, char** argv) {
           cout << solution[r][c] << " ";
         }
       }
-      delete_2d_array(board_height, solution);
+      delete_2d_array(solution, board_height);
 
       break;
     case UNDERSIZED:
