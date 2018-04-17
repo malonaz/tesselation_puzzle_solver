@@ -22,7 +22,7 @@ using std::vector;
 using std::sort;
 
 // used as threshold to decide if two lengths are similar
-#define THRESHOLD 0.20
+#define THRESHOLD 0.40
 
 
 /**
@@ -102,7 +102,7 @@ void process_row_filter(map<uint, vector<Edge>> &horizontal_edges, uint row, boo
   // this row has edges. let's loop through and perform the flips
   vector<Edge> edges = horizontal_edges[row];
 
-  for (uint i = 0; i < edges.size(); ++i) {
+  for (uint i = 0; i < edges.size(); i++) {
     // get current edge
     Edge current_edge = edges[i];
 
@@ -120,44 +120,46 @@ void process_row_filter(map<uint, vector<Edge>> &horizontal_edges, uint row, boo
 
 
 /**
- * Helper function which uses delta to figure out which lengths are similar
- * and returns the average of the shortest lengths
+ * Helper function which uses a threshold to find the average of the shortest lengths
+ * using this file's threshold constant
+ *  @params: 
+ *   lengths: a vector of floats
  */
 float get_average_shortest_length(vector<float> &lengths){
+  
   if (lengths.size() == 0) {
     // avoid division by zero
     return 0;
   }
 
-  // sort the vector
+  // sort the vector in ascending order
   sort(lengths.begin(), lengths.end());
 
-  // now we wish to keep track of all the lengths that are within delta of each other
+  // now we wish to keep track of all the lengths that are within a threshold of each other
   // and average them. Total will be used to keep a total count
-  int total = 0;
+  float total = lengths[0];
   
-  for (uint i = 0; i < lengths.size() - 1; ++i) {
+  for (uint i = 1; i < lengths.size(); i++) {
 
-    // add current length to total
-    total += lengths[i];
-
-    // gather information about length and the next
+    // gather information about previous and current lengths
+    float previous_length = static_cast<float>(lengths[i - 1]);
     float current_length = static_cast<float>(lengths[i]);
-    float next_length = static_cast<float>(lengths[i + 1]);
 
     // calculate the length change
-    float change = (next_length / current_length) - 1;
+    float change = (current_length / previous_length) - 1;
 
-    // stop if the percent change of the next edge's length is bigger than our delta. returns avg
+    // stop if the percent change of the next edge's length is bigger than our threshold. returns avg
     if (change > THRESHOLD) {
-      return total / (i + 1);
+      return total / i;
     }
+    
+    // add current length to total
+    total += lengths[i];
   }
 
   // we will get here if all the lengths are of similar proportions
   return total / lengths.size();
 }
-
 
 
 /**
@@ -198,6 +200,7 @@ float find_shortest_edge_in_shape(const ListOfPoints &shape) {
  * Helper function which returns the unit length implied by this set of shapes.
  */
 float find_unit_length(const vector<ListOfPoints> &shapes) {
+  
   if (shapes.size() == 0) {
     // avoid division by zero
     return 0;
@@ -218,7 +221,7 @@ float find_unit_length(const vector<ListOfPoints> &shapes) {
     // add this shape's shortest edge's length to the vector that holds them for all shapes
     shortest_edges_length.push_back(shortest_edge_length);
   }
-
+  
   return get_average_shortest_length(shortest_edges_length);
 }
 
@@ -361,7 +364,7 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes, vector<Shape
 
   // get raw unit length implied by the shapes
   float raw_unit_length = find_unit_length(shapes);
-
+  
   // setup scaling factors
   vector<float> scaling_factors = {1.10};
 
@@ -370,6 +373,7 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes, vector<Shape
     scaling_factors.push_back(scaling_factors[0] - i * 0.01);
   }
   
+  
   for (uint i = 0; i < scaling_factors.size(); i++){      
 
     // clear matrices
@@ -377,7 +381,7 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes, vector<Shape
     
     // compute unit_length
     float unit_length = raw_unit_length * scaling_factors[i];
-    
+
     // attempt to translate shapes
     if (!shape_translate_all_shapes(shapes, matrices, unit_length))
       continue;
@@ -399,7 +403,7 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes, vector<Shape
 
   }
 
-  
+  matrices.clear();
   return false;
   
 }
