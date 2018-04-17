@@ -130,10 +130,10 @@ ListOfPoints fix_nearly_rotated_shape(ListOfPoints const &shape_points) {
  *  @params: 
  *   shape_points: shape as a list of points
  */
-int average_side_length(ListOfPoints const &shape_points){
+float average_side_length(ListOfPoints const &shape_points){
 
-  // used to store max side length
-  uint total_side_length = 0;
+  // used to store the length of all the shape's sides
+  float total_side_length = 0;
 
   for (uint i = 0; i < shape_points.size(); i++){
     
@@ -141,13 +141,17 @@ int average_side_length(ListOfPoints const &shape_points){
     Point start = shape_points[i];
     Point end = i == shape_points.size() - 1? shape_points[0]: shape_points[i + 1];
 
-    int current_side_length = start.distanceTo(end);
+    // compute current side's length
+    float current_side_length = start.distanceTo(end);
 
+    // add current side's length to the total
     total_side_length += current_side_length;
   }
 
+  // get num of sides
   uint num_sides = shape_points.size();
-  
+
+  // return the average side length as an integer
   return total_side_length/num_sides;
 }
 
