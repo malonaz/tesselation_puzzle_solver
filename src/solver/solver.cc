@@ -427,18 +427,23 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
 
 /**
  * Helper function which writes solution in a 1-D int array into <file_name>
+ *  @params:
+ *   board_solution: 2D-int array representing a board
+ *   filename: filename to which we want to write the board to
+ *   height: height of the board 
+ *   width: width of the board
  */
-void test_print(int** board_solution, char* file_name, uint height, uint width){
-  ofstream out(file_name);
-  for (uint r = 0; r < height; r++) {
-    for (uint c = 0; c < width; c++) {
-      out << board_solution[r][c] << " ";
-      // if (board_solution[r][c]<10){
-      //   out<<" ";
-      // }
-    }
-//    out << endl;
-  }
+void write_board_to_file(int** board_solution, char* filename, uint height, uint width){
+
+  // open stream 
+  ofstream out(filename);
+
+  // send board data to stream
+  for (uint row = 0; row < height; row++) 
+    for (uint col = 0; col < width; col++) 
+      out << board_solution[row][col] << " ";
+
+  // add line break and close stream
   out << endl;
   out.close();
 }
@@ -739,7 +744,7 @@ int** partial_solver(char* puzzle_hash, int* partial_board, int count, const vec
         strncat(hashFileName, "/solutions/", n2);
         strncat(hashFileName, strHashOfSoln.c_str(), n3);
 
-        test_print(board_solution, hashFileName, copy_height, copy_width);
+        write_board_to_file(board_solution, hashFileName, copy_height, copy_width);
       }
     }
   } else {
