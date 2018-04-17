@@ -690,10 +690,8 @@ bool search_existing_solutions(PuzzleBoard* board, char* puzzle_hash, bool debug
 int** partial_solver(char* puzzle_hash, int* partial_board, int count, const vector<ShapeMatrix> &pieces, int& return_code,
 		     uint& board_height, uint& board_width, bool debug) {
 
-  // set return code to 0 
-  return_code = 0;
+  // used by create_partial_board() call. will hold the unused pieces
   vector<ShapeMatrix> unused_pieces;
-  int** board_solution = NULL;
 
   // create partial board, which will initialize unused pieces
   PuzzleBoard* board = create_partial_board(partial_board, count, pieces, unused_pieces, debug);
@@ -715,50 +713,48 @@ int** partial_solver(char* puzzle_hash, int* partial_board, int count, const vec
 
   bool write_new_solution_flag = false;
 
-  //Strategy 2: if there is no existing solution available, try to solve and produce a solution!
+  // Strategy 2: if there is no existing solution available, try to solve and produce a solution!
   if (!success){
     int iterations = 0;
     success = recursive_solver(board, unused_pieces, 0, iterations);
     write_new_solution_flag = true;
   }
 
-  // return code
+  // set return code
   return_code = success? SOLVED: UNSOLVED;
 
   // set output parameters
   board_height = board->getHeight();
   board_width = board->getWidth();
 
+  // set return value
+  int** board_solution = success? copy_board(board): NULL;
   
-  if (success) {
-    return_code = SOLVED;
-    board_solution = copy_board(board); // returns a 2D int array of board (w soln)
-
-    // hash and write solutions to the appropriate directory 
-    if (write_new_solution_flag){
+  // hash and write solutions to the appropriate directory if appropriate
+  if (success && write_new_solution_flag) {
+    
+    int copy_height = board_height;
+    int copy_width = board_width;
+    
+    for (int i = 0; i < 3; i++){
       
-      int copy_height = board_height;
-      int copy_width = board_width;
-
-      for (int i = 0; i < 3; i++){
-
-	// hash the solution
-        string solution_hash = sha256(matrix_to_string(board_solution,copy_height,copy_width));
-	
-        // compute the filename
-        string filename = string(puzzle_hash) + string("/solutions/") + solution_hash;
-
-	// write the solution to the filename
-        write_board_to_file(board_solution, filename, copy_height, copy_width);
-
-	// rotate the board
-        rotate_board_solution(board_solution, copy_height, copy_width);
-      }
+      // hash the solution
+      string solution_hash = sha256(matrix_to_string(board_solution, copy_height, copy_width));
       
+      // compute the filename
+      string filename = string(puzzle_hash) + string("/solutions/") + solution_hash;
+      
+      // write the solution to the filename
+      write_board_to_file(board_solution, filename, copy_height, copy_width);
+      
+      // rotate the board
+      rotate_board_solution(board_solution, copy_height, copy_width);
     }
-  } else {
-    return_code = UNSOLVED;
+    
   }
+
+  // free board from the heap
   delete board;
-  return board_solution;
+  
+  return success? board_solution: NULL;
 }
