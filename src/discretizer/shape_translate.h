@@ -10,14 +10,13 @@ using std::vector;
 
 
 /**
-  Translate a list of shapes (each defined by a list of (x, y)-coordinates)
-  into a list of ShapeMatrix (each defined by a logical matrix).
-
-  \param shapes The list of shapes (each is a list of int[2]) that defines all
-    the puzzle pieces in the image.
-  \param matrices The list of output matrices translated from the list of shapes.
-*/
+ * Translate a list of shapes (each represented as a list of points) 
+ * into a list of ShapeMatrix (each defined by a logical matrix).
+ *  @params:
+ *   shapes: list of shapes to be translated, as list of points.
+ *   matrices: output parameter containing the translated shapes as logical matrices.
+ */
 bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes,
-  vector<ShapeMatrix>& matrices);
+				vector<ShapeMatrix>& matrices);
 
 #endif

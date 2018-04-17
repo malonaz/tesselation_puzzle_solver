@@ -24,12 +24,6 @@ using std::sort;
 // used as threshold to decide if two lengths are similar
 #define THRESHOLD 0.20
 
-/*
-
-Steps:
-1) Normalize all points in the shape with the unit length
-2) translate the points into horizontal edges only
-*/
 
 /**
  * Computes the width and height of the shape inplied by the given shape's list of points. 
@@ -93,6 +87,10 @@ void shape_process_edge(Point edge_start, Point edge_end, map<uint, vector<Edge>
 /**
  * This function looks up the edges present at the given row and if any, updates the row filter
  * by flipping the boolean values of the blocks implied by these edges. 
+ *  @params:
+ *   horizontal_edges: a dictionary mapping a row number to its horizontal edges
+ *   row: current row being processed
+ *   row_filter: a boolean array that represents the state of the columns (filled or not filled)
  */
 void process_row_filter(map<uint, vector<Edge>> &horizontal_edges, uint row, bool* row_filter) {
 
@@ -309,6 +307,8 @@ void shape_translate(const vector<Point> &shape, ShapeMatrix &matrix) {
       matrix.set(row, col, row_filter[col]);
     }  
   }
+
+
 } 
 
 
