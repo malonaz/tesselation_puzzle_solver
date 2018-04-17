@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
   }
 
   // check that there no conflict between dimensions of container, and the number of integers within <state>*/
-  if ((partial_board[0]*partial_board[1]) != static_cast<int>(state_vector.size() - 2)){
+  if (partial_board[0] * partial_board[1] != static_cast<int>(state_vector.size() - 2)){
     if (debug) {
       cout << "Error: state input's dimensions don't match container area" << endl;
     }
@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
   }
   
   /* calls partial solver based on prepared inputs*/
-  solution = partial_solver(puzzle_directory, partial_board, state_vector.size(), pieces, return_code, board_height, board_width, debug);
+  solution = partial_solver(puzzle_directory, partial_board, pieces, return_code, board_height, board_width, debug);
 
   /* Return Message */
   switch (return_code) {

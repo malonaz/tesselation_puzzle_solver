@@ -687,14 +687,17 @@ bool search_existing_solutions(PuzzleBoard* board, string puzzle_directory, bool
  *   board_width: width of the board
  *   debug: if true, prints debugging messages
  */
-int** partial_solver(string puzzle_directory, int* partial_board, int count, const vector<ShapeMatrix> &pieces, int& return_code,
+int** partial_solver(string puzzle_directory, int* board_state, const vector<ShapeMatrix> &pieces, int& return_code,
 		     uint& board_height, uint& board_width, bool debug) {
 
   // used by create_partial_board() call. will hold the unused pieces
   vector<ShapeMatrix> unused_pieces;
 
+  // compute size of board
+  int board_state_size = board_state[0] * board_state[1];
+  
   // create partial board, which will initialize unused pieces
-  PuzzleBoard* board = create_partial_board(partial_board, count, pieces, unused_pieces, debug);
+  PuzzleBoard* board = create_partial_board(board_state, board_state_size, pieces, unused_pieces, debug);
 
   // prints debugging messages
   if (debug) {

@@ -5,6 +5,8 @@
 #include "common/puzzle_board.h"
 #include "common/types.h"
 
+#include <string>
+
 #define UNDERSIZED -1
 #define OVERSIZED -2
 #define UNSOLVABLE -3
@@ -13,6 +15,7 @@
 #define SOLVED 1
 #define UNSOLVED 0
 
+using std::string;
 
 PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices,
     vector<ShapeMatrix> &pieces, int& containerArea, int& totalPieceArea);
@@ -31,10 +34,7 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& returnCode,
 bool solvable_config(PuzzleBoard* board,const vector<ShapeMatrix> &pieces,
     uint currentIndex);
 
-int** partial_board(string puzzle_directory, int* partialBoard, int count, const vector<ShapeMatrix> &allPieces, int& returnCode,
-      uint& board_height, uint& board_width);
 
-
-int** partial_solver(string puzzle_directory, int* partial_board, int count, const vector<ShapeMatrix> &pieces, int& returnCode,
+int** partial_solver(string puzzle_directory, int* partial_board, const vector<ShapeMatrix> &pieces, int& returnCode,
 		     uint& board_height, uint& board_width, bool mute_debugging_messages);
 #endif
