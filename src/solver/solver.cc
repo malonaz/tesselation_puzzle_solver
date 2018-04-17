@@ -34,7 +34,11 @@ using std::vector;
 using std::unordered_set;
 
 /**
- * This standard sha256 initialization function was adapted from an online reference.
+ * Helper function which hashes a string. Adapted from an online reference.
+ *  @params: 
+ *   str: the string to hash
+ *  @returns:
+ *   the hash of the given string
  */
 string sha256(string str){
 
@@ -44,49 +48,54 @@ string sha256(string str){
   SHA256_Update(&sha256, str.c_str(), str.size());
   SHA256_Final(hash, &sha256);
   stringstream strstream;
-
+  
   for(int i = 0; i < SHA256_DIGEST_LENGTH; i++)
     strstream << hex << setw(2) << setfill('0') << (int)hash[i];
-
+  
   return strstream.str();
 }
 
 /**
-  * This helper function rotates a 2D-int array clockwise 90degrees
-  */
-void rotate_soln(int** board_solution, int& copy_height, int& copy_width) {
+ * Helper function which rotates a 2D-int array 90 degrees clockwise
+ *  @params:
+ *   board_solution: 2D-int array
+ *   height: the height of the board_solution param
+ *   width: the width of the board_solution param
+ */
+void rotate_board_solution(int** board_solution, int& height, int& width) {
+
+  // compute the height and width of the rotated board
+  int rotated_board_height = width;
+  int rotated_board_width = height;
+
   // create a temporary 2D int array on the stack, containing the rotated values
-  int temp_copy[copy_width][copy_height];
+  int rotated_board[rotated_board_width][rotated_board_height];
 
-  //cout << "original: ";
-  for(int i = 0;  i < copy_height; i++){
-    //cout << endl;
-    for(int j = 0; j < copy_width; j++){
-      temp_copy[j][(copy_height - i - 1)] = board_solution[i][j];
-      //cout << board_solution[i][j] << " ";
-    }
-  }
-
+  for (int i = 0;  i < height; i++)
+    for (int j = 0; j < width; j++)
+      rotated_board[j][height - i - 1] = board_solution[i][j];
+  
+  // free board_solution
+  for (int i = 0; i < height; i++)
+    delete board_solution[i];
   delete board_solution;
 
-  int new_height = copy_width;
-  int new_width = copy_height;
+  // reassign board_solution to a 2D array on the heap
+  board_solution = new int*[rotated_board_height];
+  
+  for (int i = 0; i < rotated_board_height; i++) {
 
+    // assign a row on the heap
+    board_solution[i] = new int[rotated_board_width];
 
-  board_solution = new int*[new_height];
-
-  //cout << "copy: ";
-  for (int i = 0; i < new_height; i++) {
-    board_solution[i] = new int[new_width];
-    //cout << endl;
-    for (int j = 0; j < new_width; j++) {
-      board_solution[i][j] = temp_copy[i][j];
-    //  cout << board_solution[i][j] << " ";
-    }
+    // copy rotated board's value into board solution
+    for (int j = 0; j < rotated_board_width; j++) 
+      board_solution[i][j] = rotated_board[i][j];
   }
 
-  copy_width = new_width;
-  copy_height = new_height;
+  // update the width and height
+  width = rotated_board_width;
+  height = rotated_board_height;
 
 }
 
@@ -689,7 +698,7 @@ int** partial_solver(char* directory_name, int* partial_board, int count, const 
       int copy_height = board_height;
       int copy_width = board_width;
       for (int i = 0; i < 4; i++){
-        rotate_soln(board_solution, copy_height, copy_width);
+        rotate_board_solution(board_solution, copy_height, copy_width);
         string strHashOfSoln = sha256(matrix_to_string(board_solution,copy_height,copy_width));
         int n3 = strHashOfSoln.length();
         char hashFileName[(n1 + n2 + n3 + 1)];
