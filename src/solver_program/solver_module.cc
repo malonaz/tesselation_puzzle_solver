@@ -53,6 +53,7 @@ int main(int argc, char** argv) {
   //////////// PART 1: LOAD PUZZLE PIECES /////////////////////////////
   // read and load information of all puzzle pieces
   string pieces_filename = puzzle_directory + string("/pieces");
+
   if (debug) {
     cout << " Reading file:" << pieces_filename <<  endl;
   }
@@ -102,7 +103,6 @@ int main(int argc, char** argv) {
 
   // calls partial solver based on prepared inputs 
   solution = partial_solver(puzzle_directory, partial_board, pieces, return_code, board_height, board_width, debug);
-
 
   //////////// PART 4: PROCESS RETURN CODE /////////////////////////////
   switch (return_code) {

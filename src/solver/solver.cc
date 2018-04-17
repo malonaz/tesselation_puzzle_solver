@@ -180,11 +180,11 @@ PuzzleBoard* create_partial_board(int* board_state, const vector<ShapeMatrix> &p
     int current_identifier = pieces[j].getIdentifier();
 
     // add piece to current piece if it is not used
-    if (shape_already_used(current_identifier, board_state, board_state_size)){
+    if (!shape_already_used(current_identifier, board_state, board_state_size)){
       unused_pieces.push_back(pieces[j]);
 
       if (debug) {
-	cout <<"pushing in piece number " << pieces[j].getIdentifier() << endl;
+	cout << "pushing in piece number " << pieces[j].getIdentifier() << endl;
       }
 
     }  
@@ -698,7 +698,7 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
   
   // create partial board, which will initialize unused pieces
   PuzzleBoard* board = create_partial_board(board_state, pieces, unused_pieces, debug);
-
+  
   // prints debugging messages
   if (debug) {
     for (uint i = 0; i < unused_pieces.size(); i++) {
@@ -710,16 +710,25 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
     print_solution_board(board->getCurrentBoard(), board->getHeight(), board->getWidth());
   }
 
-  // Strategy 1: look in the existing repository
+  // Strategy 1: look in the existing directory
   bool success = false;
   success = search_existing_solutions(board, puzzle_directory, debug);
 
+  if (success && debug)
+    cout << "Found solution in existing directory: " << puzzle_directory << endl;
+ 
+  // Strategy 2: if there is no existing solution available, try to solve and produce a solution!
   bool write_new_solution_flag = false;
 
-  // Strategy 2: if there is no existing solution available, try to solve and produce a solution!
   if (!success){
+
+    if (debug)
+      std::cout << "unused pieces: " << unused_pieces.size() << endl;
+    
     int iterations = 0;
     success = recursive_solver(board, unused_pieces, 0, iterations);
+    if (success)
+      cout << "Found solution using recursive solver" << endl;
     write_new_solution_flag = true;
   }
 
