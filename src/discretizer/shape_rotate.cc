@@ -36,22 +36,13 @@ Quadrant get_quadrant(int x, int y, int delta){
   if (abs(x) <= delta || abs(y) <= delta)
     return INVALID_QUADRANT;
 
-  if (x > 0){
-    if (y > 0) {
-      return I;
-    }
-    // y < 0
-    return II;
-  }
+  if (x > 0)
+    return y > 0? I: II;
 
   // x < 0
-  if (y > 0) {
-    return  IV;
-  }
-
-  // y < 0
-  return III;
+  return y > 0? IV: III;
 }
+
 
 
 /**
