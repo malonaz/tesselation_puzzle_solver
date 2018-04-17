@@ -102,18 +102,22 @@ void rotate_board_solution(int** board_solution, int& height, int& width) {
 
 /**
  * Helper function which returns a string version of the given solution.
+ *  @params:
+ *   board_solution: a 2D-int array representing a puzzle solution
+ *   height: the height of the board solution
+ *   width: the width of the board solution
  */
-string matrix_to_string (int** solution, uint height, uint width) {
+string matrix_to_string (int** board_solution, uint height, uint width) {
 
   // str will be used to store the output
-  string str = "";
+  string string_board_solution = "";
 
   // copy each cell into str
-  for (uint r = 0; r < height; r++)
-    for (uint c = 0; c < width; c++)
-      str+= to_string(solution[r][c]);
+  for (uint row = 0; row < height; row++)
+    for (uint col = 0; col < width; col++)
+      string_board_solution += to_string(board_solution[row][col]);
 
-  return str;
+  return string_board_solution;
 }
 
 
