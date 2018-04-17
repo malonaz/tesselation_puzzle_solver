@@ -242,6 +242,9 @@ PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices, vector<ShapeMatri
 
 /**
  * Helper function which returns true if shape is in the given list.
+ *  @params:
+ *   shape: shape we wish to search for in the list
+ *   list: a list of shapes 
  */
 bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix> &list) {
 
@@ -256,16 +259,18 @@ bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix>
 
 
 /**
- * Helper function which takes a piece and returns all possible variation of this piece,
+ * Helper function which takes a shape and returns all possible variation of this shape,
  * rotations and flips (mirrors). Does not return any duplicates.
+ *  @params: 
+ *   shape: the shape we wish to rotate
  */
-vector<ShapeMatrix> get_variations(const ShapeMatrix &piece) {
+vector<ShapeMatrix> get_variations(const ShapeMatrix &shape) {
 
-  // will hold all the possible rotations and mirrors of this piece
+  // will hold all the possible rotations and mirrors of this shape
   vector<ShapeMatrix> variations = vector<ShapeMatrix>();
 
-  // create a copy of the given piece
-  ShapeMatrix current_variation = ShapeMatrix(piece);
+  // create a copy of the given shape
+  ShapeMatrix current_variation = ShapeMatrix(shape);
 
   // vector keeps track of duplicates within variations
   vector<int> duplicates = vector<int>();
@@ -273,7 +278,7 @@ vector<ShapeMatrix> get_variations(const ShapeMatrix &piece) {
   for (uint i = 0; i < 8; i++){
 
     if (i == 4)
-      // create a flipped version of the piece
+      // create a flipped version of the shape
       current_variation = current_variation.flip();
 
     // add current variation if is is not already in the variations list
