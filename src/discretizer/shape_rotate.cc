@@ -46,7 +46,10 @@ Quadrant get_quadrant(int x, int y, int delta){
 
 
 /**
- * Helper function, which returns true if the given change of Quadrant implies a right turn.
+ * Helper function which returns true if the given change of Quadrant implies a right turn.
+ *  @params:
+ *   previous_quadrant: quadrant of shape's previous side
+ *   current_quadrant: quandra of shape's current side
  */
 bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant) {
   // assert quadrants are not equal
@@ -69,7 +72,11 @@ bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant) {
 
 
 /**
- * Helper function which, given a nearly_rotated_shape, rotates it completely and returns it.
+ * Helper function which completely rotates a nearly rotated shape.
+ *  @params:
+ *   shape_points: nearly rotated shape as a list of points
+ *  @returns:
+ *   list of points of completely rotated shape
  */
 ListOfPoints fix_nearly_rotated_shape(ListOfPoints const &shape_points) {
   
@@ -120,6 +127,8 @@ ListOfPoints fix_nearly_rotated_shape(ListOfPoints const &shape_points) {
 
 /**
  * Helper function which returns the average side length of the given shape.
+ *  @params: 
+ *   shape_points: shape as a list of points
  */
 int average_side_length(ListOfPoints const &shape_points){
 
