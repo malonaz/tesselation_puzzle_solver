@@ -633,14 +633,14 @@ bool solution_is_consistent_with_board(PuzzleBoard* puzzle, string solution_file
  * been solved within the solutions directory.
  *  @params:
  *   board: current board state of the puzzle
- *   puzzle_hash: hash of the boad
+ *   puzzle_directory: hash of the boad
  *  @returns:
  *   true if there exists a solution to this board
  */
-bool search_existing_solutions(PuzzleBoard* board, char* puzzle_hash, bool debug) {
+bool search_existing_solutions(PuzzleBoard* board, string puzzle_directory, bool debug) {
 
   // find all solution files
-  string search_pattern = puzzle_hash + string("/solution/");
+  string search_pattern = puzzle_directory + string("/solution/");
   vector <string> solutions_filenames = get_filenames(search_pattern);
 
   // if no files match, return false as there are no solutions to this puzzle
@@ -676,7 +676,7 @@ bool search_existing_solutions(PuzzleBoard* board, char* puzzle_hash, bool debug
 /**
  * Partial solver is called by bin/sp module. Finds a solution given a partially solved state.
  *  @params: 
- *   puzzle_hash: hash of the puzzle, used as directory
+ *   puzzle_directory: hash of the puzzle, used as directory
  *   partial_board: an integer array representing a partial board
  *   count: 
  *   pieces: the pieces of the puzzle
@@ -687,7 +687,7 @@ bool search_existing_solutions(PuzzleBoard* board, char* puzzle_hash, bool debug
  *   board_width: width of the board
  *   debug: if true, prints debugging messages
  */
-int** partial_solver(char* puzzle_hash, int* partial_board, int count, const vector<ShapeMatrix> &pieces, int& return_code,
+int** partial_solver(string puzzle_directory, int* partial_board, int count, const vector<ShapeMatrix> &pieces, int& return_code,
 		     uint& board_height, uint& board_width, bool debug) {
 
   // used by create_partial_board() call. will hold the unused pieces
@@ -709,7 +709,7 @@ int** partial_solver(char* puzzle_hash, int* partial_board, int count, const vec
 
   // Strategy 1: look in the existing repository
   bool success = false;
-  success = search_existing_solutions(board, puzzle_hash, debug);
+  success = search_existing_solutions(board, puzzle_directory, debug);
 
   bool write_new_solution_flag = false;
 
@@ -742,7 +742,7 @@ int** partial_solver(char* puzzle_hash, int* partial_board, int count, const vec
       string solution_hash = sha256(matrix_to_string(board_solution, copy_height, copy_width));
       
       // compute the filename
-      string filename = string(puzzle_hash) + string("/solutions/") + solution_hash;
+      string filename = puzzle_directory + string("/solutions/") + solution_hash;
       
       // write the solution to the filename
       write_board_to_file(board_solution, filename, copy_height, copy_width);

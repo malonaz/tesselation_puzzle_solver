@@ -31,10 +31,10 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& returnCode,
 bool solvable_config(PuzzleBoard* board,const vector<ShapeMatrix> &pieces,
     uint currentIndex);
 
-int** partial_board(char* directoryName, int* partialBoard, int count, const vector<ShapeMatrix> &allPieces, int& returnCode,
+int** partial_board(string puzzle_directory, int* partialBoard, int count, const vector<ShapeMatrix> &allPieces, int& returnCode,
       uint& board_height, uint& board_width);
 
 
-int** partial_solver(char* directoryName, int* partial_board, int count, const vector<ShapeMatrix> &pieces, int& returnCode,
+int** partial_solver(string puzzle_directory, int* partial_board, int count, const vector<ShapeMatrix> &pieces, int& returnCode,
 		     uint& board_height, uint& board_width, bool mute_debugging_messages);
 #endif
