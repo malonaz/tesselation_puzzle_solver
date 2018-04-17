@@ -64,12 +64,6 @@ int main(int argc, char** argv) {
   }
   
 
-  // set parameters to default values
-  int return_code = UNSOLVED;
-  int** solution = NULL;
-  uint board_height = 0;
-  uint board_width = 0;
-
 
   // extract the state into an integer array
   stringstream stream(state);
@@ -98,12 +92,19 @@ int main(int argc, char** argv) {
     cout << INCORRECT_STATE << endl;
     return -1;
   }
-  
-  /* calls partial solver based on prepared inputs*/
+
+  // Initialize parameters for partial solver call
+  int return_code; 
+  int** solution;
+  uint board_height;
+  uint board_width;
+
+  // calls partial solver based on prepared inputs 
   solution = partial_solver(puzzle_directory, partial_board, pieces, return_code, board_height, board_width, debug);
 
-  /* Return Message */
+  // process return code
   switch (return_code) {
+    
     case SOLVED:
       if (debug) {
         cout << "Puzzle is solved !!" << endl;
@@ -112,32 +113,35 @@ int main(int argc, char** argv) {
 
       cout << board_width << " " << board_height<< " ";
 
-      for (uint r = 0; r < board_height; r++) {
-        for (uint c = 0; c < board_width; c++) {
-          cout << solution[r][c] << " ";
+      for (uint row = 0; row < board_height; row++) {
+        for (uint col = 0; col < board_width; col++) {
+          cout << solution[row][col] << " ";
         }
       }
       delete_2d_array(solution, board_height);
-
       break;
+      
     case UNDERSIZED:
       if (debug) {
         cout << "Puzzle pieces cannot fit the container: potentially more pieces than required!!" << endl;
       }
       cout << UNDERSIZED;
       break;
+      
     case OVERSIZED:
       if (debug) {
         cout << "Container not fully filled: potentially less pieces than required!!" << endl;
       }
       cout << OVERSIZED;
       break;
+      
     case UNSOLVED:
       if (debug) {
         cout << "Puzzle cannot be solved !!" << endl;
       }
       cout << UNSOLVABLE;
       break;
+      
     default:
       if (debug) {
         cout << "INTERNAL ERROR: SOLVER ERROR" << endl;
