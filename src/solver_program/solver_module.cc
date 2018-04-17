@@ -24,19 +24,17 @@ using namespace std;
 
 /**
  * Partial Solver Module
+ *  @steps:
+ *   1) process arguments
+ *   2) load puzzle pieces
+ *   3) process board state
+ *   4) find solution using partial solver
+ *   5) process error code
  *  @shellCommandFormat: bin/sp <puzzle_directory> <state> <debug>
  *  @params:
- *   <directory>
- *   <state>
- *   <debug>
- *
- * major steps:
- *  1) puzzle pieces, downloaded from <puzzle_directory>:
- *   - when bin/ip (image processor is called for the first time, all the identified shape
- *     pieces would have been saved to a specific directory )
- *   - when bin/sp is called,the information on the pieces previously saved in the directory will be downloaded
- *  2) current state of the board: obtained from <state>
- *  3) puzzle pieces and current state of board are fed as inputs into partial solver.
+ *   <puzzle_directory>: path of directory of puzzle
+ *   <state>: a state representing a board as width, height, sq1, sq2 etc...
+ *   <debug>: prints out debug information if true
  */
 int main(int argc, char** argv) {
 
@@ -50,10 +48,9 @@ int main(int argc, char** argv) {
   
   // process debug argument. default is to mute
   bool debug = argc == 3? true: *argv[3] != '1' ;
+
   
-  std::cout << "\n debug is : " << debug << "\n";
-  
-  //////////// PART 1: LOAD PUZZLE PIECES /////////////////////////////
+  //////////// PART 2: LOAD PUZZLE PIECES /////////////////////////////
   // read and load information of all puzzle pieces
   string pieces_filename = puzzle_directory + string("/pieces");
 
@@ -69,7 +66,7 @@ int main(int argc, char** argv) {
   }
   
   
-  //////////// PART 2: PROCESS BOARD STATE /////////////////////////////
+  //////////// PART 3: PROCESS BOARD STATE /////////////////////////////
   // extract the state into an integer array
   stringstream stream(state);
   vector<int> state_vector;
@@ -97,7 +94,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  //////////// PART 3: CALL PARTIAL SOLVER /////////////////////////////
+  //////////// PART 4: CALL PARTIAL SOLVER /////////////////////////////
   // Initialize parameters for partial solver call
   int return_code; 
   int** solution;
@@ -107,7 +104,7 @@ int main(int argc, char** argv) {
   // calls partial solver based on prepared inputs 
   solution = partial_solver(puzzle_directory, partial_board, pieces, return_code, board_height, board_width, debug);
 
-  //////////// PART 4: PROCESS RETURN CODE /////////////////////////////
+  //////////// PART 5: PROCESS RETURN CODE /////////////////////////////
   switch (return_code) {
     
     case SOLVED:
