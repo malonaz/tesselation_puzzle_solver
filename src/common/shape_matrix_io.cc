@@ -69,7 +69,7 @@ void shape_matrix_write(const char* filename, const vector<ShapeMatrix> &list, b
   output_file.close();
 } // shape_matrix_write(const char*, const vector<ShapeMatrix> &)
 
-void shape_matrix_read(const char* filename, vector<ShapeMatrix> &list, bool mute_debugging_messages) {
+void shape_matrix_read(const char* filename, vector<ShapeMatrix> &list, bool debug) {
   ifstream input_file;
   input_file.open(filename);
   if (input_file.fail()) {
@@ -94,7 +94,7 @@ void shape_matrix_read(const char* filename, vector<ShapeMatrix> &list, bool mut
       shape.set(i, d == 1);
     }
     list.push_back(shape);
-    if (!mute_debugging_messages) {
+    if (debug) {
       cout<<identifier<<endl;
     }
     currentIdentifier++;

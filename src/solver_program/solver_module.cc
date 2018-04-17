@@ -18,7 +18,7 @@ using namespace std;
 
 /*************** Overview of solver module ***************
 
-shell command format : bin/sp <directory> <state> <mute_debugging_messages>
+shell command format : bin/sp <directory> <state> <debug>
 
 Major steps:
   1) puzzle pieces, downloaded from <directory>:
@@ -40,13 +40,12 @@ int main(int argc, char** argv) {
   }
 
   /*This is a switch for whether debugging messages should be printed. Provided by argv[3] */
-  bool mute_debugging_messages; //argv[3];
+  bool debug; //argv[3];
 
   if (argc ==3) {
-    mute_debugging_messages = false; //if user does not indicate 4th input, default is to NOT mute (ie print messages)
+    debug = true; //if user does not indicate 4th input, default is to NOT mute (ie print messages)
   } else {
-    int temp = *(argv[3]) - int('0');
-    mute_debugging_messages = temp;
+    debug = *(argv[3]) - int('0');
   }
 
   /* Read and load information of ALL puzzle pieces from argv[1] */
@@ -55,13 +54,13 @@ int main(int argc, char** argv) {
   strcpy(pieces_file, argv[1]);
   strcat(pieces_file, "/pieces");
 
-  if (!mute_debugging_messages) {
+  if (debug) {
     cout << " Reading file ....." <<endl;
   }
   vector<ShapeMatrix> allPieces;
-  shape_matrix_read(pieces_file, allPieces, mute_debugging_messages);
+  shape_matrix_read(pieces_file, allPieces, debug);
 
-  if (!mute_debugging_messages) {
+  if (debug) {
     cout << " File read complete!" <<endl;
   }
   /* End of reading and loading of information of ALL puzzle pieces from argv[1] */
@@ -128,14 +127,14 @@ int main(int argc, char** argv) {
   /* copying of <state> into partial_board (as int array) */
   for (int i = 0; i < count; i++){
     stream1 >> partial_board[i];
-    if (!mute_debugging_messages) {
+    if (debug) {
       cout << partial_board[i] << endl;
     }
   }
 
   /* checking there is no conflict between dimensions of container, and the number of integers within <state>*/
   if ((partial_board[0]*partial_board[1]) != (count - 2)){
-    if (!mute_debugging_messages) {
+    if (debug) {
       cout << "Error with current state provided!" << endl;
     }
     cout << INCORRECT_STATE << endl;
@@ -143,12 +142,12 @@ int main(int argc, char** argv) {
   }
 
   /* calls partial solver based on prepared inputs*/
-  solution = partial_solver(argv[1], partial_board, count, allPieces, solve_success, board_height, board_width, mute_debugging_messages);
+  solution = partial_solver(argv[1], partial_board, count, allPieces, solve_success, board_height, board_width, debug);
 
   /* Return Message */
   switch (solve_success) {
     case SOLVED:
-      if (!mute_debugging_messages) {
+      if (debug) {
         cout << "Puzzle is solved !!" << endl;
         print_solution_board(solution, board_height, board_width);
       }
@@ -164,25 +163,25 @@ int main(int argc, char** argv) {
 
       break;
     case UNDERSIZED:
-      if (!mute_debugging_messages) {
+      if (debug) {
         cout << "Puzzle pieces cannot fit the container: potentially more pieces than required!!" << endl;
       }
       cout << UNDERSIZED;
       break;
     case OVERSIZED:
-      if (!mute_debugging_messages) {
+      if (debug) {
         cout << "Container not fully filled: potentially less pieces than required!!" << endl;
       }
       cout << OVERSIZED;
       break;
     case UNSOLVED:
-      if (!mute_debugging_messages) {
+      if (debug) {
         cout << "Puzzle cannot be solved !!" << endl;
       }
       cout << UNSOLVABLE;
       break;
     default:
-      if (!mute_debugging_messages) {
+      if (debug) {
         cout << "INTERNAL ERROR: SOLVER ERROR" << endl;
       }
       cout << INTERNALERROR;
