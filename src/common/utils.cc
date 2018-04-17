@@ -8,10 +8,10 @@ using std::string;
 using std::cerr;
 using std::endl;
 
-bool valid_args(int argc, int expected_argc, string correct_format){
-
+bool valid_args(int argc, set<int> expected_args, string correct_format){
+  
   // check number of arguments 
-  if (argc - 1 == expected_argc)
+  if (expected_args.find(argc - 1) != expected_args.end())
     return true;
 
   // compute grammar of arguments
