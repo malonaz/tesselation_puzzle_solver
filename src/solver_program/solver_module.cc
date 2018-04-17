@@ -63,8 +63,8 @@ int main(int argc, char** argv) {
     cout << " File read complete!" <<endl;
   }
   
-
-
+  
+  //////////// PART 2: PROCESS BOARD STATE /////////////////////////////
   // extract the state into an integer array
   stringstream stream(state);
   vector<int> state_vector;
@@ -93,6 +93,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
+  //////////// PART 3: CALL PARTIAL SOLVER /////////////////////////////
   // Initialize parameters for partial solver call
   int return_code; 
   int** solution;
@@ -102,7 +103,8 @@ int main(int argc, char** argv) {
   // calls partial solver based on prepared inputs 
   solution = partial_solver(puzzle_directory, partial_board, pieces, return_code, board_height, board_width, debug);
 
-  // process return code
+
+  //////////// PART 4: PROCESS RETURN CODE /////////////////////////////
   switch (return_code) {
     
     case SOLVED:
@@ -126,27 +128,28 @@ int main(int argc, char** argv) {
         cout << "Puzzle pieces cannot fit the container: potentially more pieces than required!!" << endl;
       }
       cout << UNDERSIZED;
-      break;
+      return -1;
       
     case OVERSIZED:
       if (debug) {
         cout << "Container not fully filled: potentially less pieces than required!!" << endl;
       }
       cout << OVERSIZED;
-      break;
+      return -1;
       
     case UNSOLVED:
       if (debug) {
         cout << "Puzzle cannot be solved !!" << endl;
       }
       cout << UNSOLVABLE;
-      break;
+      return -1;
       
     default:
       if (debug) {
         cout << "INTERNAL ERROR: SOLVER ERROR" << endl;
       }
       cout << INTERNALERROR;
+      return -1;
   }
 
   return 0;
