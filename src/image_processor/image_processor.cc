@@ -4,6 +4,8 @@
 #include "common/shape_matrix_io.h"
 #include "common/shape_matrix.h"
 #include "common/types.h"
+#include "common/utils.h"
+
 #include "discretizer/shape_rotate.h"
 #include "discretizer/shape_translate.h"
 #include "imagereader/image_read.h"
@@ -22,7 +24,33 @@
 #include <string>
 #include <array>
 
+#define EXPECTED_ARG_NUM 2
+#define ARG_FORMAT "bin/ip <image_filename> <upload_directory>"
+#define NO_ERROR 0
+#define ERROR_DELETING_PROCESSING_FLAG -1
+
 using namespace std;
+
+/**
+ * Helper function which deletes the processing flag
+ *  @params:
+ *   processing_flag_filename: the filepath of the processing flag to delete
+ *  @returns:
+ *   NO_ERROR or ERROR_DELETING_PROCESSING_FLAG
+ */
+int delete_processing_flag(string processing_flag_filename){
+  
+  cout << "attempting to remove file: " << processing_flag_filename << endl;
+  if (remove(processing_flag_filename.c_str()) != 0){
+    cerr << "Error deleting file" << endl;
+    return ERROR_DELETING_PROCESSING_FLAG;
+  }
+  
+  cout << "File successfully deleted" << endl;
+
+  return NO_ERROR;
+}
+
 
 /**
  * Helper function used to call shell commands.
@@ -54,6 +82,8 @@ string execute_command(const char* command) {
 
 /**
  * Image Processor Module
+ *  @steps:
+ *   1)
  *  @shellCommandFormat: bin/ip <image_filename> <upload_directory>
  *  @params:
  *   <image_filename>: the path to the image we wish to process
@@ -62,29 +92,26 @@ string execute_command(const char* command) {
 int main(int argc, char** argv) {
 
   //////////// PART 1: PROCESS ARGUMENTS /////////////////////////////
-  if (argc !=  3){
-    cout << "There should be 3 arguments only!" << endl;
+  if (!valid_args(argc, EXPECTED_ARG_NUM, ARG_FORMAT))
     return -1;
-  }
 
-  // extract command line arguments
   const string image_filename(argv[1]);
   const string upload_directory(argv[2]);
 
-  // compute pieces filename
-  const string pieces_filename = upload_directory + string("/pieces");
-
-  // compute processing flag filename
-  string processing_flag_filename = upload_directory + string("/processing");
-
 
   /////////// PART 2: EXTRACT PIECES FROM THE IMAGE ///////////////////
+  // compute pieces filename
+  const string pieces_filename = upload_directory + string("/pieces");
+  
   // get the puzzle's pieces from the image
   vector<ListOfPoints> puzzle_pieces;
   find_coordinates(image_filename.c_str(), puzzle_pieces);
 
 
   /////////// PART 3: DISCRETIZE PIECES ///////////////////
+  // compute processing flag filename. We will remove it 
+    string processing_flag_filename = upload_directory + string("/processing");
+
   // rotate pieces
   cout << "Rotating Pieces..." << endl;
   vector<ListOfPoints> rotated_puzzle_pieces;
@@ -97,17 +124,12 @@ int main(int argc, char** argv) {
   bool translate_success = shape_translate_all_shapes(rotated_puzzle_pieces, pieces);
 
   if (translate_success == false){
-    cout << "INTERNAL ERROR: SHAPE TRANSLATE FAIL" << endl;
+    cerr << "INTERNAL ERROR: SHAPE TRANSLATE FAIL" << endl;
     ofstream output_file(pieces_filename.c_str());
     output_file << -2 << endl;
-    output_file.close();
+    output_file.close();    
 
-    if(!remove(processing_flag_filename.c_str())){
-      cout << "Error deleting file" << endl;
-      return -1;
-    }
-    
-    return -1;
+    return delete_processing_flag(processing_flag_filename);
   }
 
   
@@ -132,7 +154,7 @@ int main(int argc, char** argv) {
   cout << "pieces file created at " << pieces_filename << endl;
   
 
-  /////////// PART 5: FIND SOLUTIONS ///////////////////
+  /////////// PART 5: FIND SOLUTIONS USING PARTIAL SOLVER ///////////////////
   if (areas_match){
     // make a call to sp module via bin/sp directory_name state 1
     
@@ -168,15 +190,6 @@ int main(int argc, char** argv) {
       output_stream.close();
     }
   }
-
-  // remove processing file
-  cout << "attempting to remove file: " << processing_flag_filename << endl;
-  if (remove(processing_flag_filename.c_str()) != 0){
-    cout << "Error deleting file" << endl;
-    return -1;
-  } 
-  cout<< "File successfully deleted" << endl;
   
- 
-  return 0;
+  return delete_processing_flag(processing_flag_filename);
 }
