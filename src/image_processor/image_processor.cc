@@ -55,6 +55,9 @@ string execute_command(const char* command) {
 /**
  * Image Processor Module:
  *  @shellCommandFormat: bin/ip <image_filename> <upload_directory>
+ *  @params:
+ *   <image_filename>: the path to the image we wish to process
+ *   <upload_directory>: the directory to which we will store puzzle information
  */
 int main(int argc, char** argv) {
 
