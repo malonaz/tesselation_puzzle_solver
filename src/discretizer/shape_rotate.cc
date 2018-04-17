@@ -155,9 +155,14 @@ float average_side_length(ListOfPoints const &shape_points){
   return total_side_length/num_sides;
 }
 
+
 /**
  * Helper function which sets x equal to the the first integer in array that
  * is within delta of x. Otherwise, adds x to array.
+ *  @params: 
+ *   array: contain integers that we have already processed
+ *   delta: error threshold to compare two integers.
+ *   x: integer which we wish to compare to processed integers in array
  */
 void align_integer(std::vector<int> &array, int delta, int &x){
 
