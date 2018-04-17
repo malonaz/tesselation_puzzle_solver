@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
   if (argc ==3) {
     debug = true; //if user does not indicate 4th input, default is to NOT mute (ie print messages)
   } else {
-    debug = *(argv[3]) - int('0');
+    debug = !*(argv[3]) - int('0');
   }
 
   /* Read and load information of ALL puzzle pieces from argv[1] */
