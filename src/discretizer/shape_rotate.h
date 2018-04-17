@@ -9,9 +9,11 @@
 using std::vector;
 
 /**
- * At this stage, shapes are represented by a list of of point coordinates. This function
- * rotates these shapes such that the shapes's sides are vertical or horizontal. These
- * new shapes are stored in output parameter rotated shapes.
+ * This function rotates these shapes such that the shapes's sides are vertical or horizontal. 
+ * At this stage, shapes are represented by a list of of point coordinates. 
+ *  @params:
+ *   shapes: the shapes to be rotated
+ *   rotated_shapes: output parameter where new shapes will be stored
  */
 void rotate_shapes(const vector<ListOfPoints> &shapes,
 		   vector<ListOfPoints> &rotated_shapes);

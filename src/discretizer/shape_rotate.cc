@@ -24,7 +24,13 @@ enum Quadrant {I = 1, II = 2, III = 3, IV = 4, INVALID_QUADRANT};
 
 
 /**
- * Helper function which returns the Quadrant where (x, y) lies relative to the origin
+ * Helper function which returns the Quadrant where point (x, y) lies relative to the origin
+ *  @params:
+ *   x: x coordinate of the point
+ *   y: y coordinate of the point
+ *   delta: a threshold of uncertainty s.t. x and y must be larger in magnitude than delta
+ *  @returns:
+ *   Quadrant enum: I, II, III, IV or INVALID_QUADRANT
  */
 Quadrant get_quadrant(int x, int y, int delta){
   if (abs(x) <= delta || abs(y) <= delta)
