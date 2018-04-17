@@ -308,7 +308,8 @@ void shape_translate(const vector<Point> &shape, ShapeMatrix &matrix) {
     }  
   }
 
-
+  // free row_filter
+  delete row_filter;
 } 
 
 
