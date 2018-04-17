@@ -433,10 +433,10 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
  *   height: height of the board 
  *   width: width of the board
  */
-void write_board_to_file(int** board_solution, char* filename, uint height, uint width){
+void write_board_to_file(int** board_solution, string filename, uint height, uint width){
 
   // open stream 
-  ofstream out(filename);
+  ofstream out(filename.c_str());
 
   // send board data to stream
   for (uint row = 0; row < height; row++) 
@@ -698,54 +698,63 @@ int** partial_solver(char* puzzle_hash, int* partial_board, int count, const vec
   // create partial board, which will initialize unused pieces
   PuzzleBoard* board = create_partial_board(partial_board, count, pieces, unused_pieces, debug);
 
-  /* prints debugging messages */
+  // prints debugging messages
   if (debug) {
     for (uint i = 0; i < unused_pieces.size(); i++) {
       cout << "unused piece with identifier:" << unused_pieces[i].getIdentifier() << endl;
       shape_matrix_print(unused_pieces[i]);
     }
 
-    cout<< "The current board is:"<<endl;
+    cout<< "The current board is: " << endl;
     print_solution_board(board->getCurrentBoard(), board->getHeight(), board->getWidth());
   }
 
-  //Strategy 1: look in the existing repository
+  // Strategy 1: look in the existing repository
   bool success = false;
   success = search_existing_solutions(board, puzzle_hash, debug);
 
-  bool writeNewSolnFlag = false;
+  bool write_new_solution_flag = false;
 
   //Strategy 2: if there is no existing solution available, try to solve and produce a solution!
   if (!success){
     int iterations = 0;
     success = recursive_solver(board, unused_pieces, 0, iterations);
-    writeNewSolnFlag = true;
+    write_new_solution_flag = true;
   }
 
   // return code
+  return_code = success? SOLVED: UNSOLVED;
+
+  // set output parameters
+  board_height = board->getHeight();
+  board_width = board->getWidth();
+
+  
   if (success) {
     return_code = SOLVED;
-    board_height = board->getHeight(); //returns height of board
-    board_width = board->getWidth(); // returns width of board
     board_solution = copy_board(board); // returns a 2D int array of board (w soln)
 
-    //HASH AND WRITE TO THE SOLUTIONS DIRECTORY
-    if (writeNewSolnFlag){
-      int n1 = strlen(puzzle_hash);
-      int n2 = strlen("/solutions/");
+    // hash and write solutions to the appropriate directory 
+    if (write_new_solution_flag){
+      
       int copy_height = board_height;
       int copy_width = board_width;
-      for (int i = 0; i < 4; i++){
-        rotate_board_solution(board_solution, copy_height, copy_width);
-        string strHashOfSoln = sha256(matrix_to_string(board_solution,copy_height,copy_width));
-        int n3 = strHashOfSoln.length();
-        char hashFileName[(n1 + n2 + n3 + 1)];
-        strcpy(hashFileName, puzzle_hash);
-        strncat(hashFileName, "/solutions/", n2);
-        strncat(hashFileName, strHashOfSoln.c_str(), n3);
 
-        write_board_to_file(board_solution, hashFileName, copy_height, copy_width);
+      for (int i = 0; i < 3; i++){
+
+	// hash the solution
+        string solution_hash = sha256(matrix_to_string(board_solution,copy_height,copy_width));
+	
+        // compute the filename
+        string filename = string(puzzle_hash) + string("/solutions/") + solution_hash;
+
+	// write the solution to the filename
+        write_board_to_file(board_solution, filename, copy_height, copy_width);
+
+	// rotate the board
+        rotate_board_solution(board_solution, copy_height, copy_width);
       }
+      
     }
   } else {
     return_code = UNSOLVED;
