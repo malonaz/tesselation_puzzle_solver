@@ -13,6 +13,7 @@
 #define SOLVED 1
 #define UNSOLVED 0
 
+
 PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices,
     vector<ShapeMatrix> &pieces, int& containerArea, int& totalPieceArea);
 
@@ -22,7 +23,7 @@ bool recursive_solver (PuzzleBoard* board,
 
 int** copy_board(PuzzleBoard* board);
 
-void delete_2d_array(uint height, int** copyBoard);
+void delete_2d_array(uint height, int** array);
 
 int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& returnCode,
       uint& board_height, uint& board_width);

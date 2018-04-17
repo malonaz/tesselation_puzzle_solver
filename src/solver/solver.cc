@@ -320,8 +320,13 @@ int get_adjacent_empty_area(uint row, uint col, int** board, uint height, uint w
 
 
 /**
- * Helper functions which copies into possible_areas all the possible permutations of the area of the
- * pieces starting at current index
+ * Helper functions which generates all the permutations of the areas of the pieces starting at
+ * the given current_index.
+ *  @params:
+ *   possible_areas: output parameter which will contain all the permutations of areas
+ *   pieces: the pieces of the board
+ *   current_index: any pieces at a lower index has already been placed and should no be considered
+ *   sum: used for recursion. Do not use it. 
  */
 void get_areas_permutations(unordered_set<int>& possible_areas, const vector<ShapeMatrix>& pieces, uint current_index, int sum = 0){
 
@@ -342,6 +347,11 @@ void get_areas_permutations(unordered_set<int>& possible_areas, const vector<Sha
 
 /**
  * Helper function which returns a copy of the given board as a 2D integer array
+ *  @params:
+ *   board: the board that we want to copy
+ *  @returns:
+ *   a 2D-int array copy of the given board, created on the heap. Caller is responsible 
+ *   for deletion of board copy.
  */
 int** copy_board(PuzzleBoard* const board) {
 
@@ -365,8 +375,11 @@ int** copy_board(PuzzleBoard* const board) {
 
 /**
  * Helper function which frees a 2D array from the heap
+ *  @params:
+ *   array: 2D array we wish to free
+ *   height: height of the array
  */
-void delete_2d_array(uint height, int** copy_board) {
+void delete_2d_array(uint height, int** array) {
 
   // free each row
   for (uint i = 0; i < height; i++)
