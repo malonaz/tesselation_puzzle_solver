@@ -126,7 +126,7 @@ int main(int argc, char** argv) {
 
   // check if areas match
   bool areas_match = pieces_area == container_area? true: false;
-
+  
   // write pieces to the pieces file
   shape_matrix_write(pieces_filename.c_str(), pieces, areas_match);
   cout << "pieces file created at " << pieces_filename << endl;
@@ -135,17 +135,17 @@ int main(int argc, char** argv) {
   /////////// PART 5: FIND SOLUTIONS ///////////////////
   if (areas_match){
     // make a call to sp module via bin/sp directory_name state 1
-
+    
     // quote sign will be used a lot
-    string quote(" \" ");
+    string quote("\"");
     
     // compute command
-    string command = string("bin/sp ") + upload_directory;
-    command += quote + to_string(container_width) + " " + to_string(container_height);
+    string command = string("bin/sp ") + upload_directory + ' ';
+    command += quote + to_string(container_width) + ' ' + to_string(container_height);
     for (uint i = 0; i < container_area; i++) {
       command += " 0";
     }
-    command += quote +  to_string(1);
+    command += quote; // + to_string(1);
 
     // print command to std output stream
     cout << command << endl;
