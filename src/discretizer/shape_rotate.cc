@@ -28,12 +28,12 @@ enum Quadrant {I = 1, II = 2, III = 3, IV = 4, INVALID_QUADRANT};
  *  @params:
  *   x: x coordinate of the point
  *   y: y coordinate of the point
- *   delta: a threshold of uncertainty s.t. x and y must be larger in magnitude than delta
+ *   epsilon: a threshold of uncertainty s.t. x and y must be larger in magnitude than epsilon
  *  @returns:
  *   Quadrant enum: I, II, III, IV or INVALID_QUADRANT
  */
-Quadrant get_quadrant(int x, int y, int delta){
-  if (abs(x) <= delta || abs(y) <= delta)
+Quadrant get_quadrant(int x, int y, int epsilon){
+  if (abs(x) <= epsilon || abs(y) <= epsilon)
     return INVALID_QUADRANT;
 
   if (x > 0)
@@ -158,17 +158,17 @@ float average_side_length(ListOfPoints const &shape_points){
 
 /**
  * Helper function which sets x equal to the the first integer in array that
- * is within delta of x. Otherwise, adds x to array.
+ * is within epsilon of x. Otherwise, adds x to array.
  *  @params: 
  *   array: contain integers that we have already processed
- *   delta: error threshold to compare two integers.
+ *   epsilon: error threshold to compare two integers.
  *   x: integer which we wish to compare to processed integers in array
  */
-void align_integer(std::vector<int> &array, int delta, int &x){
+void align_integer(std::vector<int> &array, int epsilon, int &x){
 
   for (uint i = 0; i < array.size(); i++){
     
-    if (abs(array[i] - x) <= delta){
+    if (abs(array[i] - x) <= epsilon){
       // set x equal to the integer
       x = array[i];
       return;
@@ -184,9 +184,9 @@ void align_integer(std::vector<int> &array, int delta, int &x){
 
 /**
  * Helper function which corrects points that should be on the same line but 
- * are off within the given delta
+ * are off within the given epsilon
  */
-void align_points(ListOfPoints &shape_points, int delta){
+void align_points(ListOfPoints &shape_points, int epsilon){
 
   // used to save processed x and y coordinates;
   std::vector<int> processed_xs;
@@ -195,10 +195,10 @@ void align_points(ListOfPoints &shape_points, int delta){
   for (uint i = 0; i < shape_points.size(); i++){
 
     // align point x
-    align_integer(processed_xs, delta, shape_points[i].x);
+    align_integer(processed_xs, epsilon, shape_points[i].x);
 
     // align point y
-    align_integer(processed_ys, delta, shape_points[i].y);
+    align_integer(processed_ys, epsilon, shape_points[i].y);
     
   }
   
@@ -215,8 +215,8 @@ void rotate_shape(const ListOfPoints &shape_points, ListOfPoints &rotated_shape_
   assert(shape_points.size() >= 4);
   assert(shape_points.size() % 2 == 0);
 
-  // gather your delta for this shape
-  int delta = THRESHOLD * average_side_length(shape_points);
+  // gather your epsilon for this shape
+  int epsilon = THRESHOLD * average_side_length(shape_points);
 
   // gather information about first side
   Point start = shape_points[0];
@@ -230,7 +230,7 @@ void rotate_shape(const ListOfPoints &shape_points, ListOfPoints &rotated_shape_
   rotated_shape_points.push_back(Point(length, 0));
 
   // set previous quadrant to the first side's quadrant, and previous direction to East
-  Quadrant previous_quadrant = get_quadrant(end.x - start.x, end.y - start.y, delta);
+  Quadrant previous_quadrant = get_quadrant(end.x - start.x, end.y - start.y, epsilon);
   Direction previous_direction = EAST;
 
   // save the endpoint of the first side. This is the point we are moving from next
@@ -243,14 +243,14 @@ void rotate_shape(const ListOfPoints &shape_points, ListOfPoints &rotated_shape_
     end = shape_points[i + 1];
 
     // get quadrant
-    Quadrant current_quadrant = get_quadrant(end.x - start.x, end.y - start.y, delta);
+    Quadrant current_quadrant = get_quadrant(end.x - start.x, end.y - start.y, epsilon);
 
     if (current_quadrant == INVALID_QUADRANT){
       // shape is already rotated. only needs a bit of fix
       rotated_shape_points = fix_nearly_rotated_shape(shape_points);
 
       // now align points if needed
-      align_points(rotated_shape_points, delta); 
+      align_points(rotated_shape_points, epsilon); 
       return;
     }
 
@@ -291,7 +291,7 @@ void rotate_shape(const ListOfPoints &shape_points, ListOfPoints &rotated_shape_
   }
 
   // align points if needed
-  align_points(rotated_shape_points, delta); 
+  align_points(rotated_shape_points, epsilon); 
 }
 
 void rotate_shapes(const vector<ListOfPoints> &shapes,
