@@ -4,6 +4,7 @@
 #include <cstring>
 #include <string>
 #include <sstream>
+
 #include "common/coordinates_io.h"
 #include "common/debugger.h"
 #include "common/memory.h"
@@ -16,22 +17,22 @@
 
 using namespace std;
 
-/*************** Overview of solver module ***************
-
-shell command format : bin/sp <directory> <state> <debug>
-
-Major steps:
-  1) puzzle pieces, downloaded from <directory>:
-    - when bin/ip (image processor is called for the first time, all the identified shape
-    pieces would have been saved to a specific directory )
-    - when bin/sp is called,the information on the pieces previously saved in the directory will be downloaded
-
-  2) current state of the board: obtained from <state>
-
-  3) puzzle pieces and current state of board are fed as inputs into partial solver.
-
-*************** End of overview ***************/
-
+/**
+ * Partial Solver Module
+ *  @shellCommandFormat: bin/sp <directory> <state> <debug>
+ *  @params:
+ *   <directory>
+ *   <state>
+ *   <debug>
+ *
+ * major steps:
+ *  1) puzzle pieces, downloaded from <directory>:
+ *   - when bin/ip (image processor is called for the first time, all the identified shape
+ *     pieces would have been saved to a specific directory )
+ *   - when bin/sp is called,the information on the pieces previously saved in the directory will be downloaded
+ *  2) current state of the board: obtained from <state>
+ *  3) puzzle pieces and current state of board are fed as inputs into partial solver.
+ */
 int main(int argc, char** argv) {
   /* READ FILE */
   if (argc < 3 || argc > 4){
@@ -45,7 +46,7 @@ int main(int argc, char** argv) {
   if (argc ==3) {
     debug = true; //if user does not indicate 4th input, default is to NOT mute (ie print messages)
   } else {
-    debug = !*(argv[3]) - int('0');
+    debug = *(argv[3]) - int('0');
   }
 
   /* Read and load information of ALL puzzle pieces from argv[1] */
