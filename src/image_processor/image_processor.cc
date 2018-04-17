@@ -145,7 +145,7 @@ int main(int argc, char** argv) {
     for (uint i = 0; i < container_area; i++) {
       command += " 0";
     }
-    command += quote; // + to_string(1);
+    command += quote + ' ' + to_string(1);
 
     // print command to std output stream
     cout << command << endl;
