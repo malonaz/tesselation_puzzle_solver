@@ -48,6 +48,7 @@ int main(int argc, char** argv) {
   // process debug argument. default is to mute
   bool debug = argc == 3? true: *argv[3] != '1' ;
   
+  std::cout << "\n debug is : " << debug << "\n";
   
   //////////// PART 1: LOAD PUZZLE PIECES /////////////////////////////
   // read and load information of all puzzle pieces
@@ -68,13 +69,11 @@ int main(int argc, char** argv) {
   // extract the state into an integer array
   stringstream stream(state);
   vector<int> state_vector;
-  
-  do {
-    int current_integer;
-    stream >> current_integer;
+
+  int current_integer;
+  while (stream >> current_integer){
     state_vector.push_back(current_integer);
-  } while (stream);
-  
+  }
 
   /* allocation of space for int array based on number of integers within <state> */
   int partial_board[state_vector.size()];
@@ -83,9 +82,10 @@ int main(int argc, char** argv) {
   for (uint i = 0; i < state_vector.size(); i++){
     partial_board[i] = state_vector[i];
   }
-
+  
   // check that there no conflict between dimensions of container, and the number of integers within <state>*/
-  if (partial_board[0] * partial_board[1] != static_cast<int>(state_vector.size() - 2)){
+  
+  if (partial_board[0] * partial_board[1] != static_cast<int>(state_vector.size()) - 2){
     if (debug) {
       cout << "Error: state input's dimensions don't match container area" << endl;
     }
