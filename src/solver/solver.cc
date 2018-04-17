@@ -679,15 +679,16 @@ bool search_existing_solutions(PuzzleBoard* board, string puzzle_directory, bool
  * Partial solver is called by bin/sp module. Finds a solution given a partially solved state.
  *  @params: 
  *   puzzle_directory: hash of the puzzle, used as directory
- *   partial_board: an integer array representing a partial board
- *   count: 
+ *   board_state: an integer array representing a board state
  *   pieces: the pieces of the puzzle
  *   return_code:
  *     - SOLVED if the puzzle can be solved.
  *     - UNSOLVED if the puzzle cannot be solved
- *   board_height: height of the board
- *   board_width: width of the board
+ *   board_height: output parameter height of the board
+ *   board_width: output parameter width of the board
  *   debug: if true, prints debugging messages
+ *  @returns
+ *   a 2-d array represenging a solution of size board_height x board_width or NULL if no solution exists.
  */
 int** partial_solver(string puzzle_directory, int* board_state, const vector<ShapeMatrix> &pieces, int& return_code,
 		     uint& board_height, uint& board_width, bool debug) {
