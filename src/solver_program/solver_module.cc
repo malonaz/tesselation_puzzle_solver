@@ -34,119 +34,76 @@ using namespace std;
  *  3) puzzle pieces and current state of board are fed as inputs into partial solver.
  */
 int main(int argc, char** argv) {
-  /* READ FILE */
+
+  //////////// PART 1: PROCESS ARGUMENTS /////////////////////////////
   if (argc < 3 || argc > 4){
     cout << "Error: provide either 3 or 4 inputs" <<endl;
-    return 0;
+    return -1;
   }
 
-  /*This is a switch for whether debugging messages should be printed. Provided by argv[3] */
-  bool debug; //argv[3];
-
-  if (argc ==3) {
-    debug = true; //if user does not indicate 4th input, default is to NOT mute (ie print messages)
-  } else {
-    debug = *(argv[3]) - int('0');
-  }
-
-  /* Read and load information of ALL puzzle pieces from argv[1] */
-  int length = strlen(argv[1]);
-  char pieces_file[(length + 1)];
-  strcpy(pieces_file, argv[1]);
-  strcat(pieces_file, "/pieces");
-
+  // extract command line argument
+  const string puzzle_directory(argv[1]);
+  const string state(argv[2]);
+  
+  // process debug argument. default is to mute
+  bool debug = argc == 3? true: *argv[3] != '1' ;
+  
+  
+  //////////// PART 1: LOAD PUZZLE PIECES /////////////////////////////
+  // read and load information of all puzzle pieces
+  string pieces_filename = puzzle_directory + string("/pieces");
   if (debug) {
-    cout << " Reading file ....." <<endl;
+    cout << " Reading file:" << pieces_filename <<  endl;
   }
-  vector<ShapeMatrix> allPieces;
-  shape_matrix_read(pieces_file, allPieces, debug);
+  
+  vector<ShapeMatrix> pieces;
+  shape_matrix_read(pieces_filename.c_str(), pieces, debug);
 
   if (debug) {
     cout << " File read complete!" <<endl;
   }
-  /* End of reading and loading of information of ALL puzzle pieces from argv[1] */
+  
 
-  /* Initialization of parameters to default values*/
-  int solve_success = UNSOLVED;
+  // set parameters to default values
+  int return_code = UNSOLVED;
   int** solution = NULL;
   uint board_height = 0;
   uint board_width = 0;
 
-/*********** Reading  and converting 1D array from text file (NOT IN USE FOR NOW) *******************
-  ifstream input_file;
-  input_file.open(argv[2]);
-  if (input_file.fail()) {
-    cout<<"Failed to open the partialBoard file!!!";
-    return 1;
-  }
 
-  int count = 0;
-  while (!input_file.eof()) {
-    int temp;
-    input_file >> temp;
-    cout << temp;
-    count++;
-  }
-  count--; //Fix this, related to EOF issue.
-  cout << "There are " << count << " elements in file";
-  input_file.close();
-
-  input_file.open(argv[2]);
-  if (input_file.fail()) {
-    cout<<"Failed to open the partialBoard file!!!";
-    return 1;
-  }
-
-  int partialBoard[count];
-  int counter = 0;
-  while (!input_file.eof() && counter < count) {
-    input_file >> partialBoard[counter];
-    cout << counter << ":" << partialBoard[counter] << endl;
-    counter++;
-  }
-  input_file.close();
-***************End of read/convert 1D array from text file *******************/
-
-  /* Use stringstream to convert argv[2] to int array partial board */
-
-  /* count number of integers within <state> */
-  stringstream stream(argv[2]);
-  int count = 0;
-
-  while(stream) {
-      int n;
-      stream >> n;
-      count++;
-  }
-
-  count--;   // adjustment for double count of last input.
+  // extract the state into an integer array
+  stringstream stream(state);
+  vector<int> state_vector;
+  
+  do {
+    int current_integer;
+    stream >> current_integer;
+    state_vector.push_back(current_integer);
+  } while (stream);
+  
 
   /* allocation of space for int array based on number of integers within <state> */
-  int partial_board[count];
-  stringstream stream1(argv[2]);
+  int partial_board[state_vector.size()];
 
-  /* copying of <state> into partial_board (as int array) */
-  for (int i = 0; i < count; i++){
-    stream1 >> partial_board[i];
-    if (debug) {
-      cout << partial_board[i] << endl;
-    }
+  // copy state vector into the partial board array
+  for (uint i = 0; i < state_vector.size(); i++){
+    partial_board[i] = state_vector[i];
   }
 
-  /* checking there is no conflict between dimensions of container, and the number of integers within <state>*/
-  if ((partial_board[0]*partial_board[1]) != (count - 2)){
+  // check that there no conflict between dimensions of container, and the number of integers within <state>*/
+  if ((partial_board[0]*partial_board[1]) != (state_vector.size() - 2)){
     if (debug) {
-      cout << "Error with current state provided!" << endl;
+      cout << "Error: state input's dimensions don't match container area" << endl;
     }
     cout << INCORRECT_STATE << endl;
-    return 0;
+    return -1;
   }
-
+  
   /* calls partial solver based on prepared inputs*/
-  solution = partial_solver(argv[1], partial_board, count, allPieces, solve_success, board_height, board_width, debug);
+  solution = partial_solver(puzzle_directory, partial_board, state_vector.size(), pieces, return_code, board_height, board_width, debug);
 
   /* Return Message */
-  switch (solve_success) {
+  switch (return_code) {
     case SOLVED:
       if (debug) {
         cout << "Puzzle is solved !!" << endl;
@@ -190,3 +147,39 @@ int main(int argc, char** argv) {
 
   return 0;
 }
+
+
+/*********** Reading  and converting 1D array from text file (NOT IN USE FOR NOW) *******************
+  ifstream input_file;
+  input_file.open(argv[2]);
+  if (input_file.fail()) {
+    cout<<"Failed to open the partialBoard file!!!";
+    return 1;
+  }
+
+  int count = 0;
+  while (!input_file.eof()) {
+    int temp;
+    input_file >> temp;
+    cout << temp;
+    count++;
+  }
+  count--; //Fix this, related to EOF issue.
+  cout << "There are " << count << " elements in file";
+  input_file.close();
+
+  input_file.open(argv[2]);
+  if (input_file.fail()) {
+    cout<<"Failed to open the partialBoard file!!!";
+    return 1;
+  }
+
+  int partialBoard[count];
+  int counter = 0;
+  while (!input_file.eof() && counter < count) {
+    input_file >> partialBoard[counter];
+    cout << counter << ":" << partialBoard[counter] << endl;
+    counter++;
+  }
+  input_file.close();
+***************End of read/convert 1D array from text file *******************/
