@@ -138,68 +138,56 @@ bool shape_already_used(int current_identifier, int* partial_board, int partial_
 }
 
 /**
- * Helper function which processes two main inputs :(i) all pieces, (ii) current state of board
- * and produce two main outputs: (i) all unused pieces, (ii) a partially filled board
+ * Helper function which recreates a board from an input array of integers
+ *  @params:
+ *   board_input: an array width, height, sq1, sq1, ... etc representing a board
+ *   board_input_size: the size of the board input
+ *   pieces: a list of puzzle pieces as logical matrices
+ *   unused_pieces: output parameter which will contain all pieces that are not used in the puzzle board
+ *                  implied by the board input parameter.
+ *   debug: prints debugging information if true
+ *  @returns:
+ *   a pointer to a PuzzleBoard on the heap. Caller is responsible for deletion from the heap
  */
-PuzzleBoard* create_partial_board(int* partial_board, int count, const vector<ShapeMatrix> &pieces,
-      vector<ShapeMatrix> &unusedPieces, bool debug) {
+PuzzleBoard* create_partial_board(int* board_input, int board_input_size, const vector<ShapeMatrix> &pieces,
+				  vector<ShapeMatrix> &unused_pieces, bool debug) {
 
   // create copy of all_pieces and sort it in descending order
   vector<ShapeMatrix> pieces_copy = pieces;
   std::sort(pieces_copy.rbegin(), pieces_copy.rend());
 
-  // find container (first piece within pieces_copy[]) and save its area
+  // find container and extract its area and identifier
   ShapeMatrix container = pieces_copy[0];
   uint container_area = container.getShapeArea();
-
-  /* obtain container identifier by iterating through pieces[] and finding the
-  piece with corresponding container area. Then using getIdentifier method. Note:
-  might not be safe to directly call pieces_copy[0].getIdentifier */
-  int containerIdentifier;
-  for (uint i = 0; i < pieces.size(); i++) {
-      if (pieces[i].getShapeArea() == container_area) {
-            containerIdentifier = pieces[i].getIdentifier();
-        break;
-      }
+  int container_identifier = container.getIdentifier();
+  
+  if (debug){
+    cout << "container identifier is " << container_identifier << endl;
+    cout << "size of partial board is " << board_input_size << endl;
   }
+  
 
-  if (debug) {
-    cout<<"container identifier is"<<containerIdentifier<<endl;
-  }
-
-  int partial_board_size = count;
-  if (debug) {
-    cout << "the size of partial board is " << partial_board_size << endl;
-  }
-
-  //copying the relevant integers (all excluding first few width, height) in partial_board[] into tapered_partial_board
-  int tapered_partial_board[container_area];
-  int difference = partial_board_size - container_area; // difference is usually 2, representing width and height
-
-  for (uint i = 0; i < container_area; i++){
-    tapered_partial_board[i] = partial_board[difference + i];
-    if (debug) {
-      cout << tapered_partial_board[i];
-    }
-  }
-
-  //constructs the board, and then fill in based on the partial_board array
-  PuzzleBoard* board = new PuzzleBoard(tapered_partial_board, container);
+  // difference is usually 2, representing width and height
+  int board_input_extra_params = board_input_size - container_area; 
+  
+  // constructs the board. notice we have incremented board_input to skip the first parameters
+  PuzzleBoard* board = new PuzzleBoard(board_input + board_input_extra_params, container);
 
   for (uint j = 1; j < pieces_copy.size(); j++) {
     // get identifer of current piece
     int current_identifier = pieces[j].getIdentifier();
 
-    /* if a piece (i) is NOT already placed on the partial board, and
-    (ii) is NOT the container piece, then it will be pushed into the unusedPieces vector */
-    if ((!shape_already_used(current_identifier, partial_board, partial_board_size) && (current_identifier != containerIdentifier))){
-      unusedPieces.push_back(pieces[j]);
-      if (debug) {
-        cout <<"pushing in piece number "<<pieces[j].getIdentifier()<<endl;
-      }
-    }
+    // add piece to current piece if it is not used
+    if (shape_already_used(current_identifier, board_input, board_input_size)){
+      unused_pieces.push_back(pieces[j]);
 
+      if (debug) {
+	cout <<"pushing in piece number " << pieces[j].getIdentifier() << endl;
+      }
+
+    }  
   }
+  
   return board;
 }
 
@@ -677,27 +665,39 @@ bool search_existing_solutions(PuzzleBoard* board, char* puzzle_hash, bool debug
   return false;
 }
 
-  
-/**
- * Partial solver is called by bin/sp module, and finds solution given a partially solved state
- */
 
-int** partial_solver(char* directory_name, int* partial_board, int count, const vector<ShapeMatrix> &pieces, int& returnCode,
-      uint& board_height, uint& board_width, bool debug) {
-  returnCode = 0;
-  vector<ShapeMatrix> unusedPieces;
+
+
+/**
+ * Partial solver is called by bin/sp module. Finds a solution given a partially solved state.
+ *  @params: 
+ *   puzzle_hash: hash of the puzzle, used as directory
+ *   partial_board: an integer array representing a partial board
+ *   count: 
+ *   pieces: the pieces of the puzzle
+ *   return_code:
+ *     - SOLVED if the puzzle can be solved.
+ *     - UNSOLVED if the puzzle cannot be solved
+ *   board_height: height of the board
+ *   board_width: width of the board
+ *   debug: if true, prints debugging messages
+ */
+int** partial_solver(char* puzzle_hash, int* partial_board, int count, const vector<ShapeMatrix> &pieces, int& return_code,
+		     uint& board_height, uint& board_width, bool debug) {
+
+  // set return code to 0 
+  return_code = 0;
+  vector<ShapeMatrix> unused_pieces;
   int** board_solution = NULL;
 
-  /* calls create_partial_board to produce two major outputs: (i) unusedPieces
-  (vector of all unused shapes), (ii) initialization of 'board' based on current
-  state of the puzzle board  */
-  PuzzleBoard* board = create_partial_board(partial_board, count, pieces, unusedPieces, debug);
+  // create partial board, which will initialize unused pieces
+  PuzzleBoard* board = create_partial_board(partial_board, count, pieces, unused_pieces, debug);
 
   /* prints debugging messages */
   if (debug) {
-    for (uint i = 0; i < unusedPieces.size(); i++) {
-      cout << "unused piece with identifier:" << unusedPieces[i].getIdentifier() << endl;
-      shape_matrix_print(unusedPieces[i]);
+    for (uint i = 0; i < unused_pieces.size(); i++) {
+      cout << "unused piece with identifier:" << unused_pieces[i].getIdentifier() << endl;
+      shape_matrix_print(unused_pieces[i]);
     }
 
     cout<< "The current board is:"<<endl;
@@ -706,27 +706,27 @@ int** partial_solver(char* directory_name, int* partial_board, int count, const 
 
   //Strategy 1: look in the existing repository
   bool success = false;
-  success = search_existing_solutions(board, directory_name, debug);
+  success = search_existing_solutions(board, puzzle_hash, debug);
 
   bool writeNewSolnFlag = false;
 
   //Strategy 2: if there is no existing solution available, try to solve and produce a solution!
   if (!success){
     int iterations = 0;
-    success = recursive_solver(board, unusedPieces, 0, iterations);
+    success = recursive_solver(board, unused_pieces, 0, iterations);
     writeNewSolnFlag = true;
   }
 
   // return code
   if (success) {
-    returnCode = SOLVED;
+    return_code = SOLVED;
     board_height = board->getHeight(); //returns height of board
     board_width = board->getWidth(); // returns width of board
     board_solution = copy_board(board); // returns a 2D int array of board (w soln)
 
     //HASH AND WRITE TO THE SOLUTIONS DIRECTORY
     if (writeNewSolnFlag){
-      int n1 = strlen(directory_name);
+      int n1 = strlen(puzzle_hash);
       int n2 = strlen("/solutions/");
       int copy_height = board_height;
       int copy_width = board_width;
@@ -735,7 +735,7 @@ int** partial_solver(char* directory_name, int* partial_board, int count, const 
         string strHashOfSoln = sha256(matrix_to_string(board_solution,copy_height,copy_width));
         int n3 = strHashOfSoln.length();
         char hashFileName[(n1 + n2 + n3 + 1)];
-        strcpy(hashFileName, directory_name);
+        strcpy(hashFileName, puzzle_hash);
         strncat(hashFileName, "/solutions/", n2);
         strncat(hashFileName, strHashOfSoln.c_str(), n3);
 
@@ -743,7 +743,7 @@ int** partial_solver(char* directory_name, int* partial_board, int count, const 
       }
     }
   } else {
-    returnCode = UNSOLVED;
+    return_code = UNSOLVED;
   }
   delete board;
   return board_solution;
