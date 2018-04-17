@@ -394,8 +394,13 @@ void delete_2d_array(int** array, uint height) {
 /**
  * Helper function which checks empty areas to see if a combination of pieces can fit there.
  * used to prune search space
+ *  @params:
+ *   board: board state
+ *   pieces: the pieces of the board
+ *   current_index: Index of the next piece to be placed. Any piece with a lower index should be 
+ *                 disregarded
  */
-bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint currentIndex) {
+bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint current_index) {
 
   // get board dimensions
   uint height = board->getHeight();
@@ -403,7 +408,7 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
 
   // get all possible area variations.
   unordered_set<int> possible_areas = unordered_set<int>();
-  get_areas_permutations(possible_areas, pieces, currentIndex);
+  get_areas_permutations(possible_areas, pieces, current_index);
 
   // get a copy of the board's 2D array
   int** board_copy = copy_board(board);
@@ -425,7 +430,9 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
       }
     }
 
+  // free board copy from the heap
   delete_2d_array(board_copy, height);
+  
   return true;
 }
 
