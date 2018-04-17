@@ -123,7 +123,7 @@ void process_row_filter(map<uint, vector<Edge>> &horizontal_edges, uint row, boo
  * Helper function which uses a threshold to find the average of the shortest lengths
  * using this file's threshold constant
  *  @params: 
- *   lengths: a vector of floats
+ *   lengths: a vector of lengths
  */
 float get_average_shortest_length(vector<float> &lengths){
   
@@ -164,6 +164,8 @@ float get_average_shortest_length(vector<float> &lengths){
 
 /**
  * Helper function which returns the length of the shortest edge in the shape.
+ *  @params:
+ *   shape: shape as a list of points
  */
 float find_shortest_edge_in_shape(const ListOfPoints &shape) {
 
@@ -198,6 +200,8 @@ float find_shortest_edge_in_shape(const ListOfPoints &shape) {
 
 /**
  * Helper function which returns the unit length implied by this set of shapes.
+ *  @params:
+ *   shapes: a list of shapes (each define as a list of points)
  */
 float find_unit_length(const vector<ListOfPoints> &shapes) {
   
@@ -228,21 +232,29 @@ float find_unit_length(const vector<ListOfPoints> &shapes) {
 
 
 /**
- * Helper function which 
+ * Helper function which changing the coordinates of the given shape to normalize it.
+ *  @params: 
+ *   shape: a shape as a list of points
+ *   unit_length: the normalizing constant
  */
 void normalize_shape(vector<Point> &shape, float unit_length) {
+  
   for (uint i = 0; i < shape.size(); ++i) {
     // divide each coordinate by the unit length of each shape
     shape[i].x = round(static_cast<float>(shape[i].x) / unit_length);
     shape[i].y = round(static_cast<float>(shape[i].y) / unit_length);
   }
+  
 } 
 
 
 /**
  * Helper function which modifies the shapes' coordinate to move it in the first quadrant
+ *  @params:
+ *   shape: a shape as a list of points
  */
 void move_shape_to_first_quadrant(vector<Point> &shape) {
+  
   // set min_x and min_y to the first point of the shape
   int min_x = shape[0].x;
   int min_y = shape[0].y;
@@ -265,21 +277,19 @@ void move_shape_to_first_quadrant(vector<Point> &shape) {
 
 
 /**
- * Translate a given shape (defined by a list of (x, y)-coordinates) into
- * a ShapeMatrix (defined by a logical matrix).
- *    @param shape The list of int[2] that defines the shape.
- *    @param matrix The pointer to the output matrix.
- * Must be set to NULL before calling this method.
+ * Translate a given shape into a ShapeMatrix (logical matrix).
+ *  @params
+ *   shape: a shape as a list of points
+ *   matrix: output parameter which contains the logical matrix translation
  */
 void shape_translate(const vector<Point> &shape, ShapeMatrix &matrix) {
-  // create the row filter, initializing all values to false.
-  
-  // must use this format to ensure compatibility. Initialize all entries to false 
+
+  // create the row filter, initializing all values to false.  
   bool* row_filter = new bool[matrix.getWidth()];
   for (uint i = 0; i < matrix.getWidth(); ++i) {
     row_filter[i] = false;
   }
-
+  
   // used to store the map of edges organized by their row-value
   map<uint, vector<Edge>> horizontal_edges;
 
