@@ -185,6 +185,9 @@ void align_integer(std::vector<int> &array, int epsilon, int &x){
 /**
  * Helper function which corrects points that should be on the same line but 
  * are off within the given epsilon
+ *  @params:
+ *   shape_points: shape as a list of points
+ *   epsilon: an error threshold to compare two integers
  */
 void align_points(ListOfPoints &shape_points, int epsilon){
 
@@ -208,6 +211,10 @@ void align_points(ListOfPoints &shape_points, int epsilon){
 /**
  * Helper function which rotates the given shape's coordinates so that all sides
  * of the given shape are vertical or horizontal.
+ *  @params: 
+ *   shape_points: shape as a list of points
+ *   rotated_shape_points: output parameter that will contain the rotated shape as a list of points
+ *   
  */
 void rotate_shape(const ListOfPoints &shape_points, ListOfPoints &rotated_shape_points) {
   
@@ -254,15 +261,15 @@ void rotate_shape(const ListOfPoints &shape_points, ListOfPoints &rotated_shape_
       return;
     }
 
-    // get length
-    length = round(start.distanceTo(end));
-
     // are we turning right?
     bool turning_right = turn_right(previous_quadrant, current_quadrant);
 
-    // create new_point
+    // create new_point equal to the previous endpoint
     Point new_point = previous_endpoint;
 
+    // get length of current side
+    length = round(start.distanceTo(end));
+    
     if (previous_direction == EAST) {
       new_point.y += turning_right? -length: length;
       previous_direction = turning_right? SOUTH: NORTH;

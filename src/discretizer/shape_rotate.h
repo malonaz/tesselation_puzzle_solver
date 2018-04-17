@@ -13,9 +13,8 @@ using std::vector;
  * At this stage, shapes are represented by a list of of point coordinates. 
  *  @params:
  *   shapes: the shapes to be rotated
- *   rotated_shapes: output parameter where new shapes will be stored
+ *   rotated_shapes: output parameter where rotated shapes will be stored
  */
-void rotate_shapes(const vector<ListOfPoints> &shapes,
-		   vector<ListOfPoints> &rotated_shapes);
+void rotate_shapes(const vector<ListOfPoints> &shapes, vector<ListOfPoints> &rotated_shapes);
 
 #endif
