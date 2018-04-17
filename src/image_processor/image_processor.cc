@@ -24,7 +24,7 @@
 #include <string>
 #include <array>
 
-#define EXPECTED_ARG_NUM 2
+#define EXPECTED_ARG_NUM {2}
 #define ARG_FORMAT "bin/ip <image_filename> <upload_directory>"
 #define NO_ERROR 0
 #define ERROR_DELETING_PROCESSING_FLAG -1

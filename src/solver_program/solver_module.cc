@@ -13,7 +13,12 @@
 #include "common/shape_matrix_io.h"
 #include "common/shape_matrix.h"
 #include "common/types.h"
+#include "common/utils.h"
 #include "solver/solver.h"
+
+
+#define EXPECTED_ARG_NUM {2, 3}
+#define ARG_FORMAT "bin/demo <image_filename>"
 
 using namespace std;
 
@@ -36,11 +41,9 @@ using namespace std;
 int main(int argc, char** argv) {
 
   //////////// PART 1: PROCESS ARGUMENTS /////////////////////////////
-  if (argc < 3 || argc > 4){
-    cout << "Error: provide either 3 or 4 inputs" <<endl;
+  if (!valid_args(argc, EXPECTED_ARG_NUM, ARG_FORMAT))
     return -1;
-  }
-
+      
   // extract command line argument
   const string puzzle_directory(argv[1]);
   const string state(argv[2]);

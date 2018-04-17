@@ -16,7 +16,7 @@
 #include <iostream>
 #include <vector>
 
-#define EXPECTED_ARG_NUM 1
+#define EXPECTED_ARG_NUM {1}
 #define ARG_FORMAT "bin/demo <image_filename>"
 
 using namespace std;
