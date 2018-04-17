@@ -26,6 +26,10 @@ using namespace std;
  * solves a puzzle from an image if possible.
  *  @steps:
  *   1) process arguments
+ *   2) get pieces from image
+ *   3) discretize pieces
+ *   4) solve puzzle
+ *   5) interpret return code
  *  @shellCommandFormat: bin/demo <image_filename> 
  *  @params:
  *   <image_filename>: the path to the image we wish to process
