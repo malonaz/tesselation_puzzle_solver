@@ -18,20 +18,20 @@
 
 
 #define EXPECTED_ARG_NUM {2, 3}
-#define ARG_FORMAT "bin/demo <image_filename>"
+#define ARG_FORMAT "bin/sp <puzzle_directory> <state> <debug>"
 
 using namespace std;
 
 /**
  * Partial Solver Module
- *  @shellCommandFormat: bin/sp <directory> <state> <debug>
+ *  @shellCommandFormat: bin/sp <puzzle_directory> <state> <debug>
  *  @params:
  *   <directory>
  *   <state>
  *   <debug>
  *
  * major steps:
- *  1) puzzle pieces, downloaded from <directory>:
+ *  1) puzzle pieces, downloaded from <puzzle_directory>:
  *   - when bin/ip (image processor is called for the first time, all the identified shape
  *     pieces would have been saved to a specific directory )
  *   - when bin/sp is called,the information on the pieces previously saved in the directory will be downloaded
