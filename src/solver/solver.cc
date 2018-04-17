@@ -642,19 +642,29 @@ bool solution_is_consistent_with_board(PuzzleBoard* puzzle, string solution_file
 bool search_existing_solutions(PuzzleBoard* board, string puzzle_directory, bool debug) {
 
   // find all solution files
-  string search_pattern = puzzle_directory + string("/solution/");
+  string search_pattern = puzzle_directory + string("/solutions/");
   vector <string> solutions_filenames = get_filenames(search_pattern);
 
   // if no files match, return false as there are no solutions to this puzzle
-  if (solutions_filenames.size() == 0)
+  if (solutions_filenames.size() == 0){
+    if (debug)
+      cout << "there are no solution filenames matching this hash" << endl;
     return false;
+  }
   
   // will hold the existing solution if it exists
   int existing_solution[board->getHeight() * board->getWidth()];
   
   // read through each existing solution file within folder
   for (uint file_num = 0; file_num < solutions_filenames.size(); file_num++){
+
+    if (debug)
+      cout << "solution consistency check for file: " << solutions_filenames[file_num] << endl;
+      
     if (solution_is_consistent_with_board(board, solutions_filenames[file_num], existing_solution)){
+
+      if (debug)
+	cout << "solution is consistent" << endl;
       
       // get container of board
       ShapeMatrix container = board->getContainer();
