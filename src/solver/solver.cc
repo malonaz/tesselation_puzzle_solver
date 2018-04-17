@@ -554,7 +554,7 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint&
 }
 
 /**
- * Glob is a file management helper function which returns the name of all
+ * File management helper function which returns the name of all
  * the files stored within a directory. Inspired from an online 
  * reference.
  *  @params: 
@@ -562,22 +562,22 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint&
  *  @returns: 
  *   the paths of the files inside the directory
  */
-vector<string> glob(const string& path){
+vector<string> get_filenames(const string& path){
   
   glob_t glob_result;
-  glob(path.c_str(), GLOB_TILDE, NULL, &glob_result);
+  glob((path + "*").c_str(), GLOB_TILDE, NULL, &glob_result);
 
   // used to store the matched files paths
-  vector<string> file_paths;
+  vector<string> filenames;
 
   // get the files that match
   for(uint i = 0; i < glob_result.gl_pathc; i++)
-    file_paths.push_back(string(glob_result.gl_pathv[i]));
+    filenames.push_back(string(glob_result.gl_pathv[i]));
 
   // free the glob result object from the heap
   globfree(&glob_result);
   
-  return file_paths;
+  return filenames;
 }
 
 
@@ -640,8 +640,8 @@ bool solution_is_consistent_with_board(PuzzleBoard* puzzle, string solution_file
 bool search_existing_solutions(PuzzleBoard* board, char* puzzle_hash, bool debug) {
 
   // find all solution files
-  string search_pattern = puzzle_hash + string("/solution/*");
-  vector <string> solutions_filenames = glob(search_pattern);
+  string search_pattern = puzzle_hash + string("/solution/");
+  vector <string> solutions_filenames = get_filenames(search_pattern);
 
   // if no files match, return false as there are no solutions to this puzzle
   if (solutions_filenames.size() == 0)
