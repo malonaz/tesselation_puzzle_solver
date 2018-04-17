@@ -379,14 +379,14 @@ int** copy_board(PuzzleBoard* const board) {
  *   array: 2D array we wish to free
  *   height: height of the array
  */
-void delete_2d_array(uint height, int** array) {
+void delete_2d_array(int** array, uint height) {
 
   // free each row
   for (uint i = 0; i < height; i++)
-    delete[] copy_board[i];
+    delete[] array[i];
 
   // free array
-  delete[] copy_board;
+  delete[] array;
 }
 
 
@@ -420,12 +420,12 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
 
       // if area is not in the possible permutations of area, then config is unsolvable
       if (std::find(possible_areas.begin(), possible_areas.end(), area) == possible_areas.end()){
-	delete_2d_array(height, board_copy);
+	delete_2d_array(board_copy, height);
 	return false;
       }
     }
 
-  delete_2d_array(height, board_copy);
+  delete_2d_array(board_copy, height);
   return true;
 }
 
@@ -634,7 +634,7 @@ bool search_existing_solutions(PuzzleBoard* board, char* directory_name, bool mu
     }
     input.close();
   }
-  delete_2d_array(height, currentBoard);
+  delete_2d_array(currentBoard, height);
 
   return success;
 

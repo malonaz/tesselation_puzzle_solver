@@ -23,7 +23,7 @@ bool recursive_solver (PuzzleBoard* board,
 
 int** copy_board(PuzzleBoard* board);
 
-void delete_2d_array(uint height, int** array);
+void delete_2d_array(int** array, uint height);
 
 int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& returnCode,
       uint& board_height, uint& board_width);

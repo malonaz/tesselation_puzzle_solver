@@ -80,7 +80,7 @@ int main(int argc, char** argv) { //  ./demo <input_filename>
 
   if (solve_success == SOLVED) {
     print_solution_board(solution, board_height, board_width);
-    delete_2d_array(board_height, solution);
+    delete_2d_array(solution, board_height);
   }
   return 0;
 }
