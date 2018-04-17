@@ -3,7 +3,7 @@
 #include "common/shape_matrix.h"
 #include "common/types.h"
 #include "common/shape_matrix_io.h"
-#include "edge.h"
+#include "common/edge.h"
 
 #include <iostream>
 #include <algorithm>
