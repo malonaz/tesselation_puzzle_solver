@@ -123,6 +123,10 @@ string matrix_to_string (int** board_solution, uint height, uint width) {
 
 /**
  * Helper function which returns true if the given identifier already exists in the partial board.
+ *  @params:
+ *   current_identifier: the shape identifier we want to check
+ *   partial_board: integer array representing a partial board
+ *   partial_board_size: size of the partial_board param
  */
 bool shape_already_used(int current_identifier, int* partial_board, int partial_board_size){
 
@@ -201,10 +205,14 @@ PuzzleBoard* create_partial_board(int* partial_board, int count, const vector<Sh
 
 /**
  * Creates a PuzzleBoard objects using the pieces contained in matrices.
- *   @params: matrices: a list of ShapeMatrix representing shapes of a puzzle, including the puzzle container
- *   @params: pieces: will contain all pieces in param matrices except the container piece
- *   @params: container_area: will hold the area of the container of the puzzle board
- *   @params: pieces_area: will contain the area of all pieces of the puzzle (excluding the container's)
+ *   @params
+ *    matrices: a list of ShapeMatrix representing shapes of a puzzle, including the puzzle container
+ *    pieces: will contain all pieces in param matrices except the container piece
+ *    container_area: will hold the area of the container of the puzzle board
+ *    pieces_area: will contain the area of all pieces of the puzzle (excluding the container's)
+ *   @returns: 
+ *    A pointer to a PuzzleBoard object constructed as implied by the pieces. Object is constructed 
+ *    on the heap. Caller is responsible for deletion of object off the heap.
  */
 PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices, vector<ShapeMatrix> &pieces,
 			  int& container_area, int& pieces_area) {
@@ -221,7 +229,7 @@ PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices, vector<ShapeMatri
   pieces.erase(pieces.begin());
   container_area = container.getShapeArea();
 
-  // find total area of pieces
+  // find total area of pieces and set output parameter
   for (uint i = 0; i < pieces.size(); i++)
     pieces_area += pieces[i].getShapeArea();
 
