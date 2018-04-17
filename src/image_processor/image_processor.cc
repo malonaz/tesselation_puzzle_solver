@@ -24,17 +24,32 @@
 
 using namespace std;
 
-/* This is a helper function to call shell commands. */
-string exec(const char* cmd) {
-    array<char, 128> buffer;
-    string result;
-    shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
-    if (!pipe) throw std::runtime_error("popen() failed!");
-    while (!feof(pipe.get())) {
-        if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
-            result += buffer.data();
-    }
-    return result;
+/**
+ * Helper function used to call shell commands.
+ *  @params:
+ *   command: the command to execute
+ *  @returns:
+ *   a string containing the output of the command
+ */
+string execute_command(const char* command) {
+
+  // setup buffer
+  array<char, 128> buffer;
+
+  // contains the outputs
+  string output;
+
+  // attempt ot run the command
+  shared_ptr<FILE> pipe(popen(command, "r"), pclose);  
+  if (!pipe) throw std::runtime_error("popen() failed!");
+
+  // push output of command into buffer
+  while (!feof(pipe.get())) {
+    if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
+      output += buffer.data();
+  }
+  
+  return output;
 }
 
 
@@ -156,7 +171,7 @@ int main(int argc, char** argv) { // FORMAT:  bin/ip <input_filename> <upload_di
       charCmd[j] = cmd[j];
     }
     charCmd[cmdLen] = '\0';
-    string result = exec(charCmd);
+    string result = execute_command(charCmd);
     /**** end of string manipulation***/
 
     cout << result << endl;
