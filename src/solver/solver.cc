@@ -141,7 +141,6 @@ bool shape_already_used(int current_identifier, int* partial_board, int partial_
  * Helper function which recreates a board from an input array of integers
  *  @params:
  *   board_input: an array width, height, sq1, sq1, ... etc representing a board
- *   board_input_size: the size of the board input
  *   pieces: a list of puzzle pieces as logical matrices
  *   unused_pieces: output parameter which will contain all pieces that are not used in the puzzle board
  *                  implied by the board input parameter.
@@ -149,7 +148,7 @@ bool shape_already_used(int current_identifier, int* partial_board, int partial_
  *  @returns:
  *   a pointer to a PuzzleBoard on the heap. Caller is responsible for deletion from the heap
  */
-PuzzleBoard* create_partial_board(int* board_input, int board_input_size, const vector<ShapeMatrix> &pieces,
+PuzzleBoard* create_partial_board(int* board_state, const vector<ShapeMatrix> &pieces,
 				  vector<ShapeMatrix> &unused_pieces, bool debug) {
 
   // create copy of all_pieces and sort it in descending order
@@ -160,25 +159,28 @@ PuzzleBoard* create_partial_board(int* board_input, int board_input_size, const 
   ShapeMatrix container = pieces_copy[0];
   uint container_area = container.getShapeArea();
   int container_identifier = container.getIdentifier();
+
+  // compute size of board state
+  int board_state_size = board_state[0] * board_state[1] + 2;
   
   if (debug){
     cout << "container identifier is " << container_identifier << endl;
-    cout << "size of partial board is " << board_input_size << endl;
+    cout << "size of partial board is " << board_state_size << endl;
   }
   
 
   // difference is usually 2, representing width and height
-  int board_input_extra_params = board_input_size - container_area; 
+  int board_state_extra_params = board_state_size - container_area; 
   
-  // constructs the board. notice we have incremented board_input to skip the first parameters
-  PuzzleBoard* board = new PuzzleBoard(board_input + board_input_extra_params, container);
+  // constructs the board. notice we have incremented board_state to skip the first parameters
+  PuzzleBoard* board = new PuzzleBoard(board_state + board_state_extra_params, container);
 
   for (uint j = 1; j < pieces_copy.size(); j++) {
     // get identifer of current piece
     int current_identifier = pieces[j].getIdentifier();
 
     // add piece to current piece if it is not used
-    if (shape_already_used(current_identifier, board_input, board_input_size)){
+    if (shape_already_used(current_identifier, board_state, board_state_size)){
       unused_pieces.push_back(pieces[j]);
 
       if (debug) {
@@ -692,12 +694,9 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
 
   // used by create_partial_board() call. will hold the unused pieces
   vector<ShapeMatrix> unused_pieces;
-
-  // compute size of board
-  int board_state_size = board_state[0] * board_state[1];
   
   // create partial board, which will initialize unused pieces
-  PuzzleBoard* board = create_partial_board(board_state, board_state_size, pieces, unused_pieces, debug);
+  PuzzleBoard* board = create_partial_board(board_state, pieces, unused_pieces, debug);
 
   // prints debugging messages
   if (debug) {
