@@ -142,7 +142,7 @@ bool shape_already_used(int current_identifier, int* partial_board, int partial_
  * and produce two main outputs: (i) all unused pieces, (ii) a partially filled board
  */
 PuzzleBoard* create_partial_board(int* partial_board, int count, const vector<ShapeMatrix> &pieces,
-      vector<ShapeMatrix> &unusedPieces, bool mute_debugging_messages) {
+      vector<ShapeMatrix> &unusedPieces, bool debug) {
 
   // create copy of all_pieces and sort it in descending order
   vector<ShapeMatrix> pieces_copy = pieces;
@@ -163,12 +163,12 @@ PuzzleBoard* create_partial_board(int* partial_board, int count, const vector<Sh
       }
   }
 
-  if (!mute_debugging_messages) {
+  if (debug) {
     cout<<"container identifier is"<<containerIdentifier<<endl;
   }
 
   int partial_board_size = count;
-  if (!mute_debugging_messages) {
+  if (debug) {
     cout << "the size of partial board is " << partial_board_size << endl;
   }
 
@@ -178,7 +178,7 @@ PuzzleBoard* create_partial_board(int* partial_board, int count, const vector<Sh
 
   for (uint i = 0; i < container_area; i++){
     tapered_partial_board[i] = partial_board[difference + i];
-    if (!mute_debugging_messages) {
+    if (debug) {
       cout << tapered_partial_board[i];
     }
   }
@@ -194,7 +194,7 @@ PuzzleBoard* create_partial_board(int* partial_board, int count, const vector<Sh
     (ii) is NOT the container piece, then it will be pushed into the unusedPieces vector */
     if ((!shape_already_used(current_identifier, partial_board, partial_board_size) && (current_identifier != containerIdentifier))){
       unusedPieces.push_back(pieces[j]);
-      if (!mute_debugging_messages) {
+      if (debug) {
         cout <<"pushing in piece number "<<pieces[j].getIdentifier()<<endl;
       }
     }
@@ -684,7 +684,7 @@ bool search_existing_solutions(PuzzleBoard* board, char* puzzle_hash, bool debug
  */
 
 int** partial_solver(char* directory_name, int* partial_board, int count, const vector<ShapeMatrix> &pieces, int& returnCode,
-      uint& board_height, uint& board_width, bool mute_debugging_messages) {
+      uint& board_height, uint& board_width, bool debug) {
   returnCode = 0;
   vector<ShapeMatrix> unusedPieces;
   int** board_solution = NULL;
@@ -692,10 +692,10 @@ int** partial_solver(char* directory_name, int* partial_board, int count, const 
   /* calls create_partial_board to produce two major outputs: (i) unusedPieces
   (vector of all unused shapes), (ii) initialization of 'board' based on current
   state of the puzzle board  */
-  PuzzleBoard* board = create_partial_board(partial_board, count, pieces, unusedPieces, mute_debugging_messages);
+  PuzzleBoard* board = create_partial_board(partial_board, count, pieces, unusedPieces, debug);
 
   /* prints debugging messages */
-  if (!mute_debugging_messages) {
+  if (debug) {
     for (uint i = 0; i < unusedPieces.size(); i++) {
       cout << "unused piece with identifier:" << unusedPieces[i].getIdentifier() << endl;
       shape_matrix_print(unusedPieces[i]);
@@ -707,7 +707,7 @@ int** partial_solver(char* directory_name, int* partial_board, int count, const 
 
   //Strategy 1: look in the existing repository
   bool success = false;
-  success = search_existing_solutions(board, directory_name, mute_debugging_messages);
+  success = search_existing_solutions(board, directory_name, debug);
 
   bool writeNewSolnFlag = false;
 
