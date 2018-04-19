@@ -35,7 +35,7 @@ using std::unordered_set;
 
 /**
  * Helper function which hashes a string. Adapted from an online reference.
- *  @params: 
+ *  @params:
  *   str: the string to hash
  *  @returns:
  *   the hash of the given string
@@ -48,10 +48,10 @@ string sha256(string str){
   SHA256_Update(&sha256, str.c_str(), str.size());
   SHA256_Final(hash, &sha256);
   stringstream strstream;
-  
+
   for(int i = 0; i < SHA256_DIGEST_LENGTH; i++)
     strstream << hex << setw(2) << setfill('0') << (int)hash[i];
-  
+
   return strstream.str();
 }
 
@@ -74,7 +74,7 @@ void rotate_board_solution(int** board_solution, int& height, int& width) {
   for (int i = 0;  i < height; i++)
     for (int j = 0; j < width; j++)
       rotated_board[j][height - i - 1] = board_solution[i][j];
-  
+
   // free board_solution
   for (int i = 0; i < height; i++)
     delete board_solution[i];
@@ -82,14 +82,14 @@ void rotate_board_solution(int** board_solution, int& height, int& width) {
 
   // reassign board_solution to a 2D array on the heap
   board_solution = new int*[rotated_board_height];
-  
+
   for (int i = 0; i < rotated_board_height; i++) {
 
     // assign a row on the heap
     board_solution[i] = new int[rotated_board_width];
 
     // copy rotated board's value into board solution
-    for (int j = 0; j < rotated_board_width; j++) 
+    for (int j = 0; j < rotated_board_width; j++)
       board_solution[i][j] = rotated_board[i][j];
   }
 
@@ -162,16 +162,16 @@ PuzzleBoard* create_partial_board(int* board_state, const vector<ShapeMatrix> &p
 
   // compute size of board state
   int board_state_size = board_state[0] * board_state[1] + 2;
-  
+
   if (debug){
     cout << "container identifier is " << container_identifier << endl;
     cout << "size of partial board is " << board_state_size << endl;
   }
-  
+
 
   // difference is usually 2, representing width and height
-  int board_state_extra_params = board_state_size - container_area; 
-  
+  int board_state_extra_params = board_state_size - container_area;
+
   // constructs the board. notice we have incremented board_state to skip the first parameters
   PuzzleBoard* board = new PuzzleBoard(board_state + board_state_extra_params, container);
 
@@ -187,9 +187,9 @@ PuzzleBoard* create_partial_board(int* board_state, const vector<ShapeMatrix> &p
 	cout << "pushing in piece number " << pieces[j].getIdentifier() << endl;
       }
 
-    }  
+    }
   }
-  
+
   return board;
 }
 
@@ -200,8 +200,8 @@ PuzzleBoard* create_partial_board(int* board_state, const vector<ShapeMatrix> &p
  *    pieces: will contain all pieces in param matrices except the container piece
  *    container_area: will hold the area of the container of the puzzle board
  *    pieces_area: will contain the area of all pieces of the puzzle (excluding the container's)
- *   @returns: 
- *    A pointer to a PuzzleBoard object constructed as implied by the pieces. Object is constructed 
+ *   @returns:
+ *    A pointer to a PuzzleBoard object constructed as implied by the pieces. Object is constructed
  *    on the heap. Caller is responsible for deletion of object off the heap.
  */
 PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices, vector<ShapeMatrix> &pieces,
@@ -234,7 +234,7 @@ PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices, vector<ShapeMatri
  * Helper function which returns true if shape is in the given list.
  *  @params:
  *   shape: shape we wish to search for in the list
- *   list: a list of shapes 
+ *   list: a list of shapes
  */
 bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix> &list) {
 
@@ -251,7 +251,7 @@ bool is_shape_matrix_in_list(const ShapeMatrix &shape, const vector<ShapeMatrix>
 /**
  * Helper function which takes a shape and returns all possible variation of this shape,
  * rotations and flips (mirrors). Does not return any duplicates.
- *  @params: 
+ *  @params:
  *   shape: the shape we wish to rotate
  */
 vector<ShapeMatrix> get_variations(const ShapeMatrix &shape) {
@@ -316,7 +316,7 @@ int get_adjacent_empty_area(uint row, uint col, int** board, uint height, uint w
  *   possible_areas: output parameter which will contain all the permutations of areas
  *   pieces: the pieces of the board
  *   current_index: any pieces at a lower index has already been placed and should no be considered
- *   sum: used for recursion. Do not use it. 
+ *   sum: used for recursion. Do not use it.
  */
 void get_areas_permutations(unordered_set<int>& possible_areas, const vector<ShapeMatrix>& pieces, uint current_index, int sum = 0){
 
@@ -340,7 +340,7 @@ void get_areas_permutations(unordered_set<int>& possible_areas, const vector<Sha
  *  @params:
  *   board: the board that we want to copy
  *  @returns:
- *   a 2D-int array copy of the given board, created on the heap. Caller is responsible 
+ *   a 2D-int array copy of the given board, created on the heap. Caller is responsible
  *   for deletion of board copy.
  */
 int** copy_board(PuzzleBoard* const board) {
@@ -387,7 +387,7 @@ void delete_2d_array(int** array, uint height) {
  *  @params:
  *   board: board state
  *   pieces: the pieces of the board
- *   current_index: Index of the next piece to be placed. Any piece with a lower index should be 
+ *   current_index: Index of the next piece to be placed. Any piece with a lower index should be
  *                 disregarded
  */
 bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint current_index) {
@@ -422,7 +422,7 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
 
   // free board copy from the heap
   delete_2d_array(board_copy, height);
-  
+
   return true;
 }
 
@@ -432,17 +432,17 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
  *  @params:
  *   board_solution: 2D-int array representing a board
  *   filename: filename to which we want to write the board to
- *   height: height of the board 
+ *   height: height of the board
  *   width: width of the board
  */
 void write_board_to_file(int** board_solution, string filename, uint height, uint width){
 
-  // open stream 
+  // open stream
   ofstream out(filename.c_str());
 
   // send board data to stream
-  for (uint row = 0; row < height; row++) 
-    for (uint col = 0; col < width; col++) 
+  for (uint row = 0; row < height; row++)
+    for (uint col = 0; col < width; col++)
       out << board_solution[row][col] << " ";
 
   // add line break and close stream
@@ -453,7 +453,7 @@ void write_board_to_file(int** board_solution, string filename, uint height, uin
 
 /**
  * Helper function which recursively attempts to place a piece to solve the puzzle, in a depth-first search.
- *  @params: 
+ *  @params:
  *   board: board of the puzzle
  *   pieces: the pieces of the puzzle as a list of logical matrices
  *   current_index: index of the piece that we will place next
@@ -557,15 +557,15 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint&
 
 /**
  * File management helper function which returns the name of all
- * the files stored within a directory. Inspired from an online 
+ * the files stored within a directory. Inspired from an online
  * reference.
- *  @params: 
+ *  @params:
  *   path: the path to the directory we wish to search
- *  @returns: 
+ *  @returns:
  *   the paths of the files inside the directory
  */
 vector<string> get_filenames(const string& path){
-  
+
   glob_t glob_result;
   glob((path + "*").c_str(), GLOB_TILDE, NULL, &glob_result);
 
@@ -578,14 +578,14 @@ vector<string> get_filenames(const string& path){
 
   // free the glob result object from the heap
   globfree(&glob_result);
-  
+
   return filenames;
 }
 
 
 
 /**
- * Helper function which reads the solution at the given filename and compares it 
+ * Helper function which reads the solution at the given filename and compares it
  * to the given current board.
  *  @params:
  *   puzzle: the current puzzle
@@ -604,18 +604,18 @@ bool solution_is_consistent_with_board(PuzzleBoard* puzzle, string solution_file
   // get height and width of board
   uint height = puzzle->getHeight();
   uint width = puzzle->getWidth();
-  
+
   // open current solution and copy it into existing_solution
   ifstream solution_fstream(solution_filename);
 
   // used for return value
   bool solution_is_consistent = true;
-  
+
   for (uint i = 0; i < height * width; i++){
-    
+
     // copy next integer into existing solution
     solution_fstream >> board_solution[i];
-    
+
     // next integer must be unfilled (0) or equal to the current board state's same integer
     if (board_solution[i] != 0 && board_solution[i] != board[i/width][i%width]){
       solution_is_consistent = false;
@@ -625,7 +625,7 @@ bool solution_is_consistent_with_board(PuzzleBoard* puzzle, string solution_file
 
   // close input stream
   solution_fstream.close();
-  
+
   return solution_is_consistent;
 }
 
@@ -651,34 +651,34 @@ bool search_existing_solutions(PuzzleBoard* board, string puzzle_directory, bool
       cout << "there are no solution filenames matching this hash" << endl;
     return false;
   }
-  
+
   // will hold the existing solution if it exists
   int existing_solution[board->getHeight() * board->getWidth()];
-  
+
   // read through each existing solution file within folder
   for (uint file_num = 0; file_num < solutions_filenames.size(); file_num++){
 
     if (debug)
       cout << "solution consistency check for file: " << solutions_filenames[file_num] << endl;
-      
+
     if (solution_is_consistent_with_board(board, solutions_filenames[file_num], existing_solution)){
 
       if (debug)
 	cout << "solution is consistent" << endl;
-      
+
       // get container of board
       ShapeMatrix container = board->getContainer();
-      
+
       // free incomplete board from the heap
       delete board;
-      
+
       // point board to a new PuzzleBoard with the correct solution
       board = new PuzzleBoard(existing_solution, container);
 
       return true;
     }
   }
-  
+
   return false;
 }
 
@@ -687,7 +687,7 @@ bool search_existing_solutions(PuzzleBoard* board, string puzzle_directory, bool
 
 /**
  * Partial solver is called by bin/sp module. Finds a solution given a partially solved state.
- *  @params: 
+ *  @params:
  *   puzzle_directory: hash of the puzzle, used as directory
  *   board_state: an integer array representing a board state
  *   pieces: the pieces of the puzzle
@@ -705,10 +705,10 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
 
   // used by create_partial_board() call. will hold the unused pieces
   vector<ShapeMatrix> unused_pieces;
-  
+
   // create partial board, which will initialize unused pieces
   PuzzleBoard* board = create_partial_board(board_state, pieces, unused_pieces, debug);
-  
+
   // prints debugging messages
   if (debug) {
     for (uint i = 0; i < unused_pieces.size(); i++) {
@@ -726,7 +726,7 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
 
   if (success && debug)
     cout << "Found solution in existing directory: " << puzzle_directory << endl;
- 
+
   // Strategy 2: if there is no existing solution available, try to solve and produce a solution!
   bool write_new_solution_flag = false;
 
@@ -734,10 +734,10 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
 
     if (debug)
       std::cout << "unused pieces: " << unused_pieces.size() << endl;
-    
+
     int iterations = 0;
     success = recursive_solver(board, unused_pieces, 0, iterations);
-    if (success)
+    if (success && debug)
       cout << "Found solution using recursive solver" << endl;
     write_new_solution_flag = true;
   }
@@ -751,32 +751,32 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
 
   // set return value
   int** board_solution = success? copy_board(board): NULL;
-  
+
   // hash and write solutions to the appropriate directory if appropriate
   if (success && write_new_solution_flag) {
-    
+
     int copy_height = board_height;
     int copy_width = board_width;
-    
+
     for (int i = 0; i < 3; i++){
-      
+
       // hash the solution
       string solution_hash = sha256(matrix_to_string(board_solution, copy_height, copy_width));
-      
+
       // compute the filename
       string filename = puzzle_directory + string("/solutions/") + solution_hash;
-      
+
       // write the solution to the filename
       write_board_to_file(board_solution, filename, copy_height, copy_width);
-      
+
       // rotate the board
       rotate_board_solution(board_solution, copy_height, copy_width);
     }
-    
+
   }
 
   // free board from the heap
   delete board;
-  
+
   return success? board_solution: NULL;
 }
