@@ -39,11 +39,28 @@ using cv::Size;
 #define SCALE_DOWN_IMAGE_WIDTH 1280
 #define MIN_CONTOUR_AREA 1200
 
-void scaleDownImage(const Mat& source, Mat& target, double height,  double width) {
+
+/**
+ * Helper function which scales down a given image.
+ *  @params:
+ *   source: matrice representing the image we wish to scale down
+ *   target: output parameter which will contain the scaled down image
+ *   height:
+ *   width:
+ */
+void scale_down_image(const Mat& source, Mat& target, double height,  double width) {
+
+  // get diagonal of image
   double image_diag = sqrt(pow(source.size().height,2.0) + pow(source.size().width, 2.0));
   double process_diag = sqrt(pow(height,2.0) + pow(width, 2.0));
+
+  // compute scale 
   double scale = process_diag / image_diag;
+
+  // compute the size (height, width) using the scale
   Size size(scale * source.size().width, scale * source.size().height);
+
+  // resize photo
   resize(source, target, size);
 }
 
@@ -56,7 +73,7 @@ void find_coordinates(const char* input, vector<ListOfPoints> &list) {
     return;
   }
   
-  scaleDownImage(src, src_processed,SCALE_DOWN_IMAGE_HEIGHT, SCALE_DOWN_IMAGE_WIDTH);
+  scale_down_image(src, src_processed,SCALE_DOWN_IMAGE_HEIGHT, SCALE_DOWN_IMAGE_WIDTH);
   cv::bitwise_not(src_processed, src_processed);
   cvtColor(src_processed, src_gray, COLOR_BGR2GRAY);
   adaptiveThreshold(src_gray, src_gray, ADAPTIVE_THRESHOLD_VALUE,
@@ -88,7 +105,7 @@ void debug_coordinates(const char* filename, const vector<ListOfPoints> &list){
     cout << "Could not open or find image!\n" << endl;
   }
 
-  scaleDownImage(src, src, SCALE_DOWN_IMAGE_HEIGHT, SCALE_DOWN_IMAGE_WIDTH);
+  scale_down_image(src, src, SCALE_DOWN_IMAGE_HEIGHT, SCALE_DOWN_IMAGE_WIDTH);
   namedWindow( "Debug window", WINDOW_AUTOSIZE );
 
   /*****prints out coordinates of corners*****/
