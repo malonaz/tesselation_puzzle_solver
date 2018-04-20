@@ -770,9 +770,8 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
       // write the solution to the filename
       write_board_to_file(board_solution, filename, copy_height, copy_width);
 
-      // rotate the board except it if it the last turn
-      if (i != 3)
-	     rotate_board_solution(board_solution, copy_height, copy_width);
+      // rotate the board
+	    rotate_board_solution(board_solution, copy_height, copy_width);
     }
 
   }
