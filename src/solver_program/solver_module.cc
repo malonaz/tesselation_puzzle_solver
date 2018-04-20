@@ -18,6 +18,7 @@
 
 
 #define EXPECTED_ARG_NUM {2, 3}
+#define MAX_ARGS 3
 #define ARG_FORMAT "bin/sp <puzzle_directory> <state> <debug>"
 
 using namespace std;
@@ -46,8 +47,8 @@ int main(int argc, char** argv) {
   const string puzzle_directory(argv[1]);
   const string state(argv[2]);
   
-  // process debug argument. default is to mute
-  bool debug = argc == 3? true: *argv[3] != '1' ;
+  // process debug argument. default is true
+  bool debug = argc - 1 == MAX_ARGS? *argv[3] == '0': true ;
 
   
   //////////// PART 2: LOAD PUZZLE PIECES /////////////////////////////
