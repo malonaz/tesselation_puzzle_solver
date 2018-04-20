@@ -170,7 +170,7 @@ int main(int argc, char** argv) {
     string quote("\"");
     
     // compute command
-    string command = solver_program_filename + upload_directory + ' ';
+    string command = solver_program_filename + ' ' + upload_directory + ' ';
     command += quote + to_string(container_width) + ' ' + to_string(container_height);
     for (uint i = 0; i < container_area; i++) {
       command += " 0";
