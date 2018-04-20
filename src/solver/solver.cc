@@ -686,7 +686,40 @@ bool search_existing_solutions(PuzzleBoard* board, string puzzle_directory, bool
   return false;
 }
 
+/**
+ * Helper function is called to produce and write all four orientations of a found solution into cache
+ *  @params:
+ *   puzzle_directory: hash of the puzzle, used as directory
+ *   board: puzzleboard containing the found solution
+ *   board_height: height of the board
+ *   board_width: width of the board
+ */
+void update_solutions_cache(PuzzleBoard* board, int board_height, int board_width, string puzzle_directory) {
+  //we are making a copy of board_solution here because we try not to rotate the original board_solution.
+  int** board_solution_copy  = copy_board(board);
+  int copy_height = board_height;
+  int copy_width = board_width;
 
+  for (int i = 0; i < 4; i++){
+
+    // hash the solution
+    string solution_hash = sha256(matrix_to_string(board_solution_copy, copy_height, copy_width));
+
+    // compute the filename
+    string filename = puzzle_directory + string("/solutions/") + solution_hash;
+
+    // write the solution to the filename
+    write_board_to_file(board_solution_copy, filename, copy_height, copy_width);
+
+    // rotate the board
+    if (i != 3)
+      rotate_board_solution(board_solution_copy, copy_height, copy_width);
+  }
+  //free board_solution_copy from heap;
+  delete_2d_array(board_solution_copy, copy_height);
+  board_solution_copy = NULL;
+
+}
 
 
 /**
@@ -753,27 +786,9 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
   // set return value
   int** board_solution = success? copy_board(board): NULL;
 
-  // hash and write solutions to  <directory>/solutions/hash
+    // hash and write solutions to  <directory>/solutions/hash
   if (success && write_new_solution_flag) {
-
-    int copy_height = board_height;
-    int copy_width = board_width;
-
-    for (int i = 0; i < 4; i++){
-
-      // hash the solution
-      string solution_hash = sha256(matrix_to_string(board_solution, copy_height, copy_width));
-
-      // compute the filename
-      string filename = puzzle_directory + string("/solutions/") + solution_hash;
-
-      // write the solution to the filename
-      write_board_to_file(board_solution, filename, copy_height, copy_width);
-
-      // rotate the board
-	    rotate_board_solution(board_solution, copy_height, copy_width);
-    }
-
+    update_solutions_cache(board, board_height, board_width, puzzle_directory);
   }
 
   // free board from the heap
