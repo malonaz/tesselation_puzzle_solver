@@ -45,14 +45,12 @@ using cv::Size;
  *  @params:
  *   source: matrice representing the image we wish to scale down
  *   target: output parameter which will contain the scaled down image
- *   height:
- *   width:
  */
-void scale_down_image(const Mat& source, Mat& target, double height,  double width) {
+void scale_down_image(const Mat& source, Mat& target){
 
   // get diagonal of image
-  double image_diag = sqrt(pow(source.size().height,2.0) + pow(source.size().width, 2.0));
-  double process_diag = sqrt(pow(height,2.0) + pow(width, 2.0));
+  double image_diag = sqrt(pow(source.size().height, 2.0) + pow(source.size().width, 2.0));
+  double process_diag = sqrt(pow(SCALE_DOWN_IMAGE_HEIGHT, 2.0) + pow(SCALE_DOWN_IMAGE_WIDTH, 2.0));
 
   // compute scale 
   double scale = process_diag / image_diag;
@@ -75,7 +73,7 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
   }
 
   // scale down the image
-  scale_down_image(src, src,SCALE_DOWN_IMAGE_HEIGHT, SCALE_DOWN_IMAGE_WIDTH);
+  scale_down_image(src, src);
 
   // invert pixels 
   cv::bitwise_not(src, src);
@@ -119,7 +117,7 @@ void debug_coordinates(const char* image_filename, const vector<ListOfPoints> &p
   }
 
   // scale down the image
-  scale_down_image(src, src, SCALE_DOWN_IMAGE_HEIGHT, SCALE_DOWN_IMAGE_WIDTH);
+  scale_down_image(src, src);
 
   // name a window
   namedWindow("Debug window", WINDOW_AUTOSIZE);
