@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
   const string state(argv[2]);
   
   // process debug argument. default is true
-  bool debug = argc - 1 == MAX_ARGS? *argv[3] == '0': true ;
+  bool debug = argc - 1 == MAX_ARGS? *argv[3] == '1': true ;
 
   
   //////////// PART 2: LOAD PUZZLE PIECES /////////////////////////////
