@@ -755,7 +755,7 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
     int copy_height = board_height;
     int copy_width = board_width;
 
-    for (int i = 0; i < 3; i++){
+    for (int i = 0; i < 4; i++){
 
       // hash the solution
       string solution_hash = sha256(matrix_to_string(board_solution, copy_height, copy_width));
@@ -766,8 +766,9 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
       // write the solution to the filename
       write_board_to_file(board_solution, filename, copy_height, copy_width);
 
-      // rotate the board
-      rotate_board_solution(board_solution, copy_height, copy_width);
+      // rotate the board except it if it the last turn
+      if (i != 3)
+	rotate_board_solution(board_solution, copy_height, copy_width);
     }
 
   }
