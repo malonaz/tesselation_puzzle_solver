@@ -679,6 +679,9 @@ bool search_existing_solutions(PuzzleBoard* board, string puzzle_directory, bool
     }
   }
 
+  if (debug)
+    cout << "no consistent solution found" << endl;
+  
   return false;
 }
 
