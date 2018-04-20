@@ -613,11 +613,14 @@ bool solution_is_consistent_with_board(PuzzleBoard* puzzle, string solution_file
 
   for (uint i = 0; i < height * width; i++){
 
-    // copy next integer into existing solution
+    // copy next board integer into existing solution
     solution_fstream >> board_solution[i];
 
-    // next integer must be unfilled (0) or equal to the current board state's same integer
-    if (board_solution[i] != 0 && board_solution[i] != board[i/width][i%width]){
+    // get corresponding integer from the puzzle's board
+    int board_integer = board[i / width][i % width];
+    
+    // if the board_integer is not zero, it must match the potential solution's integer
+    if (board_integer && board_integer != board_solution[i]){
       solution_is_consistent = false;
       break;
     }
