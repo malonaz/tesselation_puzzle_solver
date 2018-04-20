@@ -664,7 +664,7 @@ bool search_existing_solutions(PuzzleBoard* board, string puzzle_directory, bool
     if (solution_is_consistent_with_board(board, solutions_filenames[file_num], existing_solution)){
 
       if (debug)
-	cout << "solution is consistent" << endl;
+	cout << "solution found in " << puzzle_directory << endl;
 
       // get container of board
       ShapeMatrix container = board->getContainer();
@@ -724,9 +724,6 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
   bool success = false;
   success = search_existing_solutions(board, puzzle_directory, debug);
 
-  if (success && debug)
-    cout << "Found solution in existing directory: " << puzzle_directory << endl;
-
   // Strategy 2: if there is no existing solution available, try to solve and produce a solution!
   bool write_new_solution_flag = false;
 
@@ -765,7 +762,7 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
 
       // compute the filename
       string filename = puzzle_directory + string("/solutions/") + solution_hash;
-
+      
       // write the solution to the filename
       write_board_to_file(board_solution, filename, copy_height, copy_width);
 
