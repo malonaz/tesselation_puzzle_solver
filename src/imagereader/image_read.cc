@@ -66,24 +66,34 @@ void scale_down_image(const Mat& source, Mat& target, double height,  double wid
 
 
 void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons_corner_coordinates){
-  Mat src, src_gray, src_processed;
 
-  src = imread(image_filename);
+  // attemp to get the matrice respresentation of the image
+  Mat src = imread(image_filename);
   if (src.empty()) {
     cout << "Could not open or find the image!\n" << endl;
     return;
   }
+
+  // scale down the image
+  scale_down_image(src, src,SCALE_DOWN_IMAGE_HEIGHT, SCALE_DOWN_IMAGE_WIDTH);
+
+  // invert pixels 
+  cv::bitwise_not(src, src);
+
+  // convert to grey scale
+  cvtColor(src, src, COLOR_BGR2GRAY);
+
+  // adaptive threshold?????
+  adaptiveThreshold(src, src, ADAPTIVE_THRESHOLD_VALUE,
+		    ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 13, 5);
   
-  scale_down_image(src, src_processed,SCALE_DOWN_IMAGE_HEIGHT, SCALE_DOWN_IMAGE_WIDTH);
-  cv::bitwise_not(src_processed, src_processed);
-  cvtColor(src_processed, src_gray, COLOR_BGR2GRAY);
-  adaptiveThreshold(src_gray, src_gray, ADAPTIVE_THRESHOLD_VALUE,
-    ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 13, 5);
 
+  // find the polygon's contours
   vector<vector<cv::Point>> contours;
-  findContours(src_gray, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+  findContours(src, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+  
+  
   vector<cv::Point> approx;
-
   for (uint i = 0; i < contours.size(); ++i) {
     approxPolyDP(Mat(contours[i]), approx, arcLength(Mat(contours[i]), true) * 0.02, true);
     if (fabs(contourArea(contours[i])) < MIN_CONTOUR_AREA || approx.size() % 2 == 1) {
@@ -102,10 +112,8 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
 
 void debug_coordinates(const char* image_filename, const vector<ListOfPoints> &polygons_corner_coordinates){
 
-  // get the matrice representation of the image
+  // attempt to get the matrice representation of the image
   Mat src = imread(image_filename);
-
-  // check that image was read correctly
   if (src.empty()) {
     cout << "Could not open or find image!\n" << endl;
   }
