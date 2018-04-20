@@ -101,25 +101,43 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
 }
 
 void debug_coordinates(const char* image_filename, const vector<ListOfPoints> &polygons_corner_coordinates){
+
+  // get the matrice representation of the image
   Mat src = imread(image_filename);
+
+  // check that image was read correctly
   if (src.empty()) {
     cout << "Could not open or find image!\n" << endl;
   }
 
+  // scale down the image
   scale_down_image(src, src, SCALE_DOWN_IMAGE_HEIGHT, SCALE_DOWN_IMAGE_WIDTH);
-  namedWindow( "Debug window", WINDOW_AUTOSIZE );
 
-  /*****prints out coordinates of corners*****/
+  // name a window
+  namedWindow("Debug window", WINDOW_AUTOSIZE);
+
+  // print out coordinates of corners to std output stream
   for (uint i = 0; i < polygons_corner_coordinates.size(); i++) {
+    
     cout << "Shape " << i << ": " << endl;
+
     for (uint j = 0; j < polygons_corner_coordinates[i].size(); j++) {
-      Point p = polygons_corner_coordinates[i][j];
+
+      // get point and print its coordinates
+      Point p = polygons_corner_coordinates[i][j];      
       cout << "\t(" << p.x << ", " << p.y << ")" << endl;
-      circle( src, cv::Point(p.x, p.y), 5, Scalar(255), 2, 8, 0 );
+
+      // add a small circle around the corner
+      circle(src, cv::Point(p.x, p.y), 5, Scalar(255), 2, 8, 0);
     }
+
+    // insert line break
     cout << endl;
+
+    // show the window
     imshow( "Debug window", src);
+
+    // wait for user to press a key to continue
     waitKey(0);
   }
-  //waitKey(0);
 }
