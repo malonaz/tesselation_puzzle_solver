@@ -64,10 +64,11 @@ void scale_down_image(const Mat& source, Mat& target, double height,  double wid
   resize(source, target, size);
 }
 
-void find_coordinates(const char* input, vector<ListOfPoints> &list) {
+
+void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons_corner_coordinates){
   Mat src, src_gray, src_processed;
 
-  src = imread(input);
+  src = imread(image_filename);
   if (src.empty()) {
     cout << "Could not open or find the image!\n" << endl;
     return;
@@ -95,12 +96,12 @@ void find_coordinates(const char* input, vector<ListOfPoints> &list) {
       shapeList.push_back(Point(approx[j].x,approx[j].y));
     }
 
-    list.push_back(shapeList);
+    polygons_corner_coordinates.push_back(shapeList);
   }
 }
 
-void debug_coordinates(const char* filename, const vector<ListOfPoints> &list){
-  Mat src = imread(filename);
+void debug_coordinates(const char* image_filename, const vector<ListOfPoints> &polygons_corner_coordinates){
+  Mat src = imread(image_filename);
   if (src.empty()) {
     cout << "Could not open or find image!\n" << endl;
   }
@@ -109,10 +110,10 @@ void debug_coordinates(const char* filename, const vector<ListOfPoints> &list){
   namedWindow( "Debug window", WINDOW_AUTOSIZE );
 
   /*****prints out coordinates of corners*****/
-  for (uint i = 0; i < list.size(); i++) {
+  for (uint i = 0; i < polygons_corner_coordinates.size(); i++) {
     cout << "Shape " << i << ": " << endl;
-    for (uint j = 0; j < list[i].size(); j++) {
-      Point p = list[i][j];
+    for (uint j = 0; j < polygons_corner_coordinates[i].size(); j++) {
+      Point p = polygons_corner_coordinates[i][j];
       cout << "\t(" << p.x << ", " << p.y << ")" << endl;
       circle( src, cv::Point(p.x, p.y), 5, Scalar(255), 2, 8, 0 );
     }
