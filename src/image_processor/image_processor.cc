@@ -24,8 +24,9 @@
 #include <string>
 #include <array>
 
-#define EXPECTED_ARG_NUM {2}
-#define ARG_FORMAT "bin/ip <image_filename> <upload_directory>"
+#define EXPECTED_ARG_NUM {2, 3}
+#define MAX_NUM_ARGS 3
+#define ARG_FORMAT "bin/ip <image_filename> <upload_directory> (<path_to_sp_bin>?)"
 #define NO_ERROR 0
 #define ERROR_DELETING_PROCESSING_FLAG -1
 
@@ -39,13 +40,13 @@ using namespace std;
  *   NO_ERROR or ERROR_DELETING_PROCESSING_FLAG
  */
 int delete_processing_flag(string processing_flag_filename){
-
+  
   cout << "attempting to remove file: " << processing_flag_filename << endl;
   if (remove(processing_flag_filename.c_str()) != 0){
     cerr << "Error deleting file" << endl;
     return ERROR_DELETING_PROCESSING_FLAG;
   }
-
+  
   cout << "File successfully deleted" << endl;
 
   return NO_ERROR;
@@ -68,7 +69,7 @@ string execute_command(const char* command) {
   string output;
 
   // attempt ot run the command
-  shared_ptr<FILE> pipe(popen(command, "r"), pclose);
+  shared_ptr<FILE> pipe(popen(command, "r"), pclose);  
   if (!pipe) throw std::runtime_error("popen() failed!");
 
   // push output of command into buffer
@@ -76,7 +77,7 @@ string execute_command(const char* command) {
     if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
       output += buffer.data();
   }
-
+  
   return output;
 }
 
@@ -92,6 +93,8 @@ string execute_command(const char* command) {
  *  @params:
  *   <image_filename>: the path to the image we wish to process
  *   <upload_directory>: the directory to which we will store puzzle information
+ *   (<path_to_sp_bin>?): optional param, path to the solver binary file
+ *                        if it is not provided, program will assume it is in bin/sp
  */
 int main(int argc, char** argv) {
 
@@ -102,18 +105,20 @@ int main(int argc, char** argv) {
   const string image_filename(argv[1]);
   const string upload_directory(argv[2]);
 
+  // check for optional parameter
+  const string solver_program_filename = argc - 1 == 3? argv[3]: "bin/sp";
 
   /////////// PART 2: EXTRACT PIECES FROM THE IMAGE ///////////////////
   // compute pieces filename
   const string pieces_filename = upload_directory + string("/pieces");
-
+  
   // get the puzzle's pieces from the image
   vector<ListOfPoints> puzzle_pieces;
   find_coordinates(image_filename.c_str(), puzzle_pieces);
 
 
   /////////// PART 3: DISCRETIZE PIECES ///////////////////
-  // compute processing flag filename. We will remove it
+  // compute processing flag filename. We will remove it 
     string processing_flag_filename = upload_directory + string("/processing");
 
   // rotate pieces
@@ -131,14 +136,14 @@ int main(int argc, char** argv) {
     cerr << "INTERNAL ERROR: SHAPE TRANSLATE FAIL" << endl;
     ofstream output_file(pieces_filename.c_str());
     output_file << -2 << endl;
-    output_file.close();
+    output_file.close();    
 
     return delete_processing_flag(processing_flag_filename);
   }
 
-
+  
   /////////// PART 4: SAVE DISCRETIZED PIECES INFO ///////////////////
-  // find container (first piece) and extract its height, width and area
+  // find container (first piece) and extract its height, width and area 
   std::sort(pieces.rbegin(), pieces.rend());
   uint container_height = pieces[0].getHeight();
   uint container_width = pieces[0].getWidth();
@@ -152,21 +157,20 @@ int main(int argc, char** argv) {
 
   // check if areas match
   bool areas_match = pieces_area == container_area? true: false;
-
+  
   // write pieces to the pieces file
   shape_matrix_write(pieces_filename.c_str(), pieces, areas_match);
   cout << "pieces file created at " << pieces_filename << endl;
+  
 
-
-  /////////// PART 5: FIND SOLUTION USING PARTIAL SOLVER ///////////////////
+  /////////// PART 5: FIND SOLUTION USING SOLVER PROGRAM BINARY ///////////////////
   if (areas_match){
-    // make a call to sp module via bin/sp directory_name state 1
-
+    
     // quote sign will be used a lot
     string quote("\"");
-
+    
     // compute command
-    string command = string("bin/sp ") + upload_directory + ' ';
+    string command = solver_program_filename + upload_directory + ' ';
     command += quote + to_string(container_width) + ' ' + to_string(container_height);
     for (uint i = 0; i < container_area; i++) {
       command += " 0";
@@ -175,7 +179,7 @@ int main(int argc, char** argv) {
 
     // print command to std output stream
     cout << command << endl;
-
+    
     // make the call to sp module, and send the output to std output stream
     string output = execute_command(command.c_str());
     cout << output << endl;
@@ -194,6 +198,6 @@ int main(int argc, char** argv) {
       output_stream.close();
     }
   }
-
+  
   return delete_processing_flag(processing_flag_filename);
 }
