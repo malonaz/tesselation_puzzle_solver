@@ -34,7 +34,7 @@ using std::vector;
 using std::unordered_set;
 
 /**
- * Helper function which hashes a string. Adapted from an online reference.
+ * Helper function which hashes a string. Standard template adapted from an online reference.
  *  @params:
  *   str: the string to hash
  *  @returns:
@@ -57,6 +57,7 @@ string sha256(string str){
 
 /**
  * Helper function which rotates a 2D-int array 90 degrees clockwise
+ * this is used to rotate a found solution (such that 4 solutions will be available with a single solution)
  *  @params:
  *   board_solution: 2D-int array
  *   height: the height of the board_solution param
@@ -76,15 +77,12 @@ void rotate_board_solution(int** board_solution, int& height, int& width) {
       rotated_board[j][height - i - 1] = board_solution[i][j];
 
   // free board_solution
-  for (int i = 0; i < height; i++)
-    delete board_solution[i];
-  delete board_solution;
+  delete_2d_array(board_solution, height);
 
-  // reassign board_solution to a 2D array on the heap
+  // reassign board_solution to a newly-created 2D array on the heap
   board_solution = new int*[rotated_board_height];
 
   for (int i = 0; i < rotated_board_height; i++) {
-
     // assign a row on the heap
     board_solution[i] = new int[rotated_board_width];
 
@@ -294,14 +292,14 @@ vector<ShapeMatrix> get_variations(const ShapeMatrix &shape) {
  */
 int get_adjacent_empty_area(uint row, uint col, int** board, uint height, uint width){
 
-  // return 0 if (row, col) is not a valid square on the board that is empty
+  // return 0 if board[row][col] is NOT (i) a valid square within boundaries of the board AND (ii) is empty
   if (row >= height || col >= width || board[row][col] != 0)
     return 0;
 
-  // set this square equal to -1
+  // mark this empty square equal to -1
   board[row][col] = -1;
 
-  // make recursive call
+  // make recursive call to check the remaining adjacent area
   return 1 + get_adjacent_empty_area(row, col + 1, board, height, width)
     + get_adjacent_empty_area(row, col - 1, board, height, width)
     + get_adjacent_empty_area(row + 1, col, board, height, width)
@@ -618,7 +616,7 @@ bool solution_is_consistent_with_board(PuzzleBoard* puzzle, string solution_file
 
     // get corresponding integer from the puzzle's board
     int board_integer = board[i / width][i % width];
-    
+
     // if the board_integer is not zero, it must match the potential solution's integer
     if (board_integer && board_integer != board_solution[i]){
       solution_is_consistent = false;
@@ -684,7 +682,7 @@ bool search_existing_solutions(PuzzleBoard* board, string puzzle_directory, bool
 
   if (debug)
     cout << "no consistent solution found" << endl;
-  
+
   return false;
 }
 
@@ -726,17 +724,17 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
     print_solution_board(board->getCurrentBoard(), board->getHeight(), board->getWidth());
   }
 
-  // Strategy 1: look in the existing directory
+  // Strategy 1: look in the existing directory which stores solution cache
   bool success = false;
   success = search_existing_solutions(board, puzzle_directory, debug);
 
-  // Strategy 2: if there is no existing solution available, try to solve and produce a solution!
+  // Strategy 2: if there is no existing solution available, try to solve and produce a new solution!
   bool write_new_solution_flag = false;
 
   if (!success){
 
     if (debug)
-      std::cout << "unused pieces: " << unused_pieces.size() << endl;
+      cout << "No existing solution available in cache, doing new solve. Unused pieces: " << unused_pieces.size() << endl;
 
     int iterations = 0;
     success = recursive_solver(board, unused_pieces, 0, iterations);
@@ -755,7 +753,7 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
   // set return value
   int** board_solution = success? copy_board(board): NULL;
 
-  // hash and write solutions to the appropriate directory if appropriate
+  // hash and write solutions to  <directory>/solutions/hash
   if (success && write_new_solution_flag) {
 
     int copy_height = board_height;
@@ -768,13 +766,13 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
 
       // compute the filename
       string filename = puzzle_directory + string("/solutions/") + solution_hash;
-      
+
       // write the solution to the filename
       write_board_to_file(board_solution, filename, copy_height, copy_width);
 
       // rotate the board except it if it the last turn
       if (i != 3)
-	rotate_board_solution(board_solution, copy_height, copy_width);
+	     rotate_board_solution(board_solution, copy_height, copy_width);
     }
 
   }
