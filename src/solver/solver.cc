@@ -786,7 +786,7 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
   // set return value
   int** board_solution = success? copy_board(board): NULL;
 
-    // hash and write solutions to  <directory>/solutions/hash
+  // hash and write solutions to  <directory>/solutions/hash
   if (success && write_new_solution_flag) {
     update_solutions_cache(board, board_height, board_width, puzzle_directory);
   }
