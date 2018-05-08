@@ -69,6 +69,8 @@ void shape_matrix_write(const char* filename, const vector<ShapeMatrix> &list, b
   output_file.close();
 } // shape_matrix_write(const char*, const vector<ShapeMatrix> &)
 
+
+
 void shape_matrix_read(const char* filename, vector<ShapeMatrix> &list, bool debug) {
   ifstream input_file;
   input_file.open(filename);

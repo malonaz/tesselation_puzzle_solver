@@ -3,6 +3,7 @@
 
 #include "shape_matrix.h"
 #include "types.h"
+#include <string>
 
 using namespace std;
 
@@ -27,6 +28,7 @@ void shape_matrix_print(const ShapeMatrix& shape);
   \param list The list of shapes.
 */
 void shape_matrix_write(const char* filename, const vector<ShapeMatrix> &list, bool correct_area);
+
 
 /**
   Read a list of shape matrices from a file
