@@ -1,4 +1,6 @@
 #include <cstddef>
+#include <cstring>
+#include <string>
 #include <gtest/gtest.h>
 #include "common/point.h"
 #include "common/types.h"
@@ -8,7 +10,10 @@
 #include <vector>
 #include "solver/solver.h"
 #include "common/memory.h"
+#include "common/shape_matrix_io.h"
+
 using namespace std;
+
 namespace {
 
       class SolverTest: public ::testing::Test{
@@ -57,10 +62,20 @@ namespace {
 
             board1 = create_board(matrices, shapes,
                 containerArea, totalPieceArea);
+
+            string pieces_file_name ="test/solver/test_files/pieces";
+            //char * cstr = new char [pieces_file_name.length()+1];
+            //strcpy (cstr, pieces_file_name.c_str());
+
+            shape_matrix_write(pieces_file_name.c_str(), matrices, true);
+
           }
+
 
           //teardown always called after the test ends
           virtual void TearDown(){
+
+            remove("test/solver/test_files/pieces");
             delete board1;
           }
 
@@ -73,8 +88,49 @@ namespace {
 
       TEST_F(SolverTest, testPop){
         EXPECT_EQ(9, board1->getRemainingArea());
+        //////////// PART 2: LOAD PUZZLE PIECES /////////////////////////////
+        // read and load information of all puzzle pieces
+        string puzzle_directory = "test/solver/test_files/";
+        string pieces_filename = puzzle_directory + string("/pieces");
+
+        vector<ShapeMatrix> pieces;
+        shape_matrix_read(pieces_filename.c_str(), pieces, false);
+
+
+        //////////// PART 3: PROCESS BOARD STATE /////////////////////////////
+        // extract the state into an integer array
+        stringstream stream("3 3 0 0 0 0 0 0 0 0 0");
+        vector<int> state_vector;
+
+        int current_integer;
+        while (stream >> current_integer){
+          state_vector.push_back(current_integer);
+        }
+
+        /* allocation of space for int array based on number of integers within <state> */
+        int partial_board[state_vector.size()];
+
+        // copy state vector into the partial board array
+        for (uint i = 0; i < state_vector.size(); i++){
+          partial_board[i] = state_vector[i];
+        }
+
+        //////////// PART 4: CALL PARTIAL SOLVER /////////////////////////////
+        // Initialize parameters for partial solver call
+        int return_code;
+        int** solution;
+        uint board_height;
+        uint board_width;
+
+        // calls partial solver based on prepared inputs
+        solution = partial_solver(puzzle_directory, partial_board, pieces, return_code, board_height, board_width, false);
+
+
 
       }
+
+
+
 
 
       TEST(SolverTest1, BoardCreation_Solvable) {

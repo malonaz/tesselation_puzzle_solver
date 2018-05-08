@@ -42,15 +42,15 @@ int main(int argc, char** argv) {
   //////////// PART 1: PROCESS ARGUMENTS /////////////////////////////
   if (!valid_args(argc, EXPECTED_ARG_NUM, ARG_FORMAT))
     return -1;
-      
+
   // extract command line argument
   const string puzzle_directory(argv[1]);
   const string state(argv[2]);
-  
+
   // process debug argument. default is true
   bool debug = argc - 1 == MAX_ARGS? *argv[3] == '1': true ;
 
-  
+
   //////////// PART 2: LOAD PUZZLE PIECES /////////////////////////////
   // read and load information of all puzzle pieces
   string pieces_filename = puzzle_directory + string("/pieces");
@@ -58,15 +58,15 @@ int main(int argc, char** argv) {
   if (debug) {
     cout << " Reading file:" << pieces_filename <<  endl;
   }
-  
+
   vector<ShapeMatrix> pieces;
   shape_matrix_read(pieces_filename.c_str(), pieces, debug);
 
   if (debug) {
     cout << " File read complete!" <<endl;
   }
-  
-  
+
+
   //////////// PART 3: PROCESS BOARD STATE /////////////////////////////
   // extract the state into an integer array
   stringstream stream(state);
@@ -84,9 +84,9 @@ int main(int argc, char** argv) {
   for (uint i = 0; i < state_vector.size(); i++){
     partial_board[i] = state_vector[i];
   }
-  
+
   // check that there no conflict between dimensions of container, and the number of integers within <state>*/
-  
+
   if (partial_board[0] * partial_board[1] != static_cast<int>(state_vector.size()) - 2){
     if (debug) {
       cout << "Error: state input's dimensions don't match container area" << endl;
@@ -97,17 +97,17 @@ int main(int argc, char** argv) {
 
   //////////// PART 4: CALL PARTIAL SOLVER /////////////////////////////
   // Initialize parameters for partial solver call
-  int return_code; 
+  int return_code;
   int** solution;
   uint board_height;
   uint board_width;
 
-  // calls partial solver based on prepared inputs 
+  // calls partial solver based on prepared inputs
   solution = partial_solver(puzzle_directory, partial_board, pieces, return_code, board_height, board_width, debug);
 
   //////////// PART 5: PROCESS RETURN CODE /////////////////////////////
   switch (return_code) {
-    
+
     case SOLVED:
       if (debug) {
         cout << "Puzzle is solved !!" << endl;
@@ -123,28 +123,28 @@ int main(int argc, char** argv) {
       }
       delete_2d_array(solution, board_height);
       break;
-      
+
     case UNDERSIZED:
       if (debug) {
         cout << "Puzzle pieces cannot fit the container: potentially more pieces than required!!" << endl;
       }
       cout << UNDERSIZED;
       return -1;
-      
+
     case OVERSIZED:
       if (debug) {
         cout << "Container not fully filled: potentially less pieces than required!!" << endl;
       }
       cout << OVERSIZED;
       return -1;
-      
+
     case UNSOLVED:
       if (debug) {
         cout << "Puzzle cannot be solved !!" << endl;
       }
       cout << UNSOLVABLE;
       return -1;
-      
+
     default:
       if (debug) {
         cout << "INTERNAL ERROR: SOLVER ERROR" << endl;
