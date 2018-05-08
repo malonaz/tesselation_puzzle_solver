@@ -23,15 +23,15 @@ using namespace std;
 // take in parameters of max piece height, max piece width, no. of pieces, max area of each piece
 
 class Coord {
-  uint x;
-  uint y;
+  uint r;
+  uint c;
 public:
   Coord(uint a=0, uint b=0){
-    x = a;
-    y = b;
+    r = a;
+    c = b;
   }
-  uint getX() {return this->x;}
-  uint getY() {return this->y;}
+  uint getR() {return this->r;}
+  uint getC() {return this->c;}
 };
 
 int main(int argc, char** argv) {
@@ -147,10 +147,10 @@ int main(int argc, char** argv) {
         int pick = 0;
         if (size >= 1) {
           pick = (1 + (rand() % static_cast<int>(size - 1 + 1)))-1;
-          temp->set(store[pick]->getX(), store[pick]->getY(), true);
+          temp->set(store[pick]->getR(), store[pick]->getC(), true);
         }
-        r = store[pick]->getY();
-        c = store[pick]->getX();
+        r = store[pick]->getR();
+        c = store[pick]->getC();
         --piece_area;
         store.clear();
       }
