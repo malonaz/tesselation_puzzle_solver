@@ -182,7 +182,7 @@ PuzzleBoard* create_partial_board(int* board_state, const vector<ShapeMatrix> &p
       unused_pieces.push_back(pieces[j]);
 
       if (debug) {
-	cout << "pushing in piece number " << pieces[j].getIdentifier() << endl;
+	       cout << "pushing in piece number " << pieces[j].getIdentifier() << endl;
       }
 
     }
