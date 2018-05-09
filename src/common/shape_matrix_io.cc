@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 #include "shape_matrix.h"
 #include "types.h"
@@ -71,6 +72,9 @@ void shape_matrix_write(const char* filename, const vector<ShapeMatrix> &list, b
 
 
 
+bool greaterArea(const ShapeMatrix &a, const ShapeMatrix &b) { return a.getShapeArea() > b.getShapeArea(); }
+
+
 void shape_matrix_read(const char* filename, vector<ShapeMatrix> &list, bool debug) {
   ifstream input_file;
   input_file.open(filename);
@@ -83,6 +87,7 @@ void shape_matrix_read(const char* filename, vector<ShapeMatrix> &list, bool deb
   while (!input_file.eof()) {
     uint identifier, width, height, area;
     input_file >> identifier;
+    if (input_file.eof()){break;}
     if (identifier == currentIdentifier) {
       break;
     }
@@ -97,8 +102,19 @@ void shape_matrix_read(const char* filename, vector<ShapeMatrix> &list, bool deb
     }
     list.push_back(shape);
     if (debug) {
-      cout<<identifier<<endl;
+      cout << identifier << endl;
     }
     currentIdentifier++;
+  }
+
+  sort(list.begin(), list.end(), greaterArea); //optimization
+
+  if (debug){
+    cout<<"sorted the list"<<endl;
+    for (uint i = 0; i < list.size(); i++) {
+      cout << "after sorting:" << list[i].getIdentifier() << endl;
+      cout << "after sorting:" << list[i].getShapeArea() <<" height" <<list[i].getHeight()<<". Width " <<list[i].getWidth()<< endl;
+      shape_matrix_print(list[i]);
+    }
   }
 } // shape_matrix_read(const char*, vector<ShapeMatrix> &)

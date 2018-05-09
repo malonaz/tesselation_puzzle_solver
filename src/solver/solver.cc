@@ -163,7 +163,7 @@ PuzzleBoard* create_partial_board(int* board_state, const vector<ShapeMatrix> &p
 
   if (debug){
     cout << "container identifier is " << container_identifier << endl;
-    cout << "size of partial board is " << board_state_size << endl;
+    cout << "size of the int array provided is " << board_state_size << endl;
   }
 
 
@@ -718,7 +718,6 @@ void update_solutions_cache(PuzzleBoard* board, int board_height, int board_widt
   //free board_solution_copy from heap;
   delete_2d_array(board_solution_copy, copy_height);
   board_solution_copy = NULL;
-
 }
 
 

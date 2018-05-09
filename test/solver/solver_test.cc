@@ -90,7 +90,7 @@ namespace {
         EXPECT_EQ(9, board1->getRemainingArea());
         //////////// PART 2: LOAD PUZZLE PIECES /////////////////////////////
         // read and load information of all puzzle pieces
-        string puzzle_directory = "test/solver/test_files/";
+        string puzzle_directory = "test/solver/test_files";
         string pieces_filename = puzzle_directory + string("/pieces");
 
         vector<ShapeMatrix> pieces;

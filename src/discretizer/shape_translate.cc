@@ -26,7 +26,7 @@ using std::sort;
 
 
 /**
- * Computes the width and height of the shape inplied by the given shape's list of points. 
+ * Computes the width and height of the shape inplied by the given shape's list of points.
  *   @param shape: The list of coordinates that define the shape.
  *   @param width: The width of the shape returned by reference.
  *   @param height: The height of the same returned by reference.
@@ -37,7 +37,7 @@ void shape_get_size(const ListOfPoints &shape, uint& width, uint& height) {
   int max_x = 0, max_y = 0, min_x = 0, min_y = 0;
 
   for (uint i = 0; i < shape.size(); i++){
-    
+
     // get current point
     Point point = shape[i];
 
@@ -46,12 +46,12 @@ void shape_get_size(const ListOfPoints &shape, uint& width, uint& height) {
     max_x = max(max_x, point.x);
     min_y = min(min_y, point.y);
     max_y = max(max_y, point.y);
-    
+
   }
 
   // compute the width and height of this shape
   width = (uint)(max_x - min_x);
-  height = (uint)(max_y - min_y);  
+  height = (uint)(max_y - min_y);
 }
 
 /**
@@ -75,18 +75,18 @@ void shape_process_edge(Point edge_start, Point edge_end, map<uint, vector<Edge>
   if (horizontal_edges.find(y_coord) == horizontal_edges.end()) {
     horizontal_edges[y_coord] = vector<Edge>();
   }
-  
+
   // create edge
   Edge edge = Edge(edge_start.x, edge_end.x);
 
   // push the edge onto the map
   horizontal_edges[y_coord].push_back(edge);
-} 
+}
 
 
 /**
  * This function looks up the edges present at the given row and if any, updates the row filter
- * by flipping the boolean values of the blocks implied by these edges. 
+ * by flipping the boolean values of the blocks implied by these edges.
  *  @params:
  *   horizontal_edges: a dictionary mapping a row number to its horizontal edges
  *   row: current row being processed
@@ -94,7 +94,7 @@ void shape_process_edge(Point edge_start, Point edge_end, map<uint, vector<Edge>
  */
 void process_row_filter(map<uint, vector<Edge>> &horizontal_edges, uint row, bool* row_filter) {
 
-  // if there is no edge at this row, no processing to do 
+  // if there is no edge at this row, no processing to do
   if (horizontal_edges.find(row) == horizontal_edges.end()) {
     return;
   }
@@ -122,11 +122,11 @@ void process_row_filter(map<uint, vector<Edge>> &horizontal_edges, uint row, boo
 /**
  * Helper function which uses a threshold to find the average of the shortest lengths
  * using this file's threshold constant
- *  @params: 
+ *  @params:
  *   lengths: a vector of lengths
  */
 float get_average_shortest_length(vector<float> &lengths){
-  
+
   if (lengths.size() == 0) {
     // avoid division by zero
     return 0;
@@ -138,7 +138,7 @@ float get_average_shortest_length(vector<float> &lengths){
   // now we wish to keep track of all the lengths that are within a threshold of each other
   // and average them. Total will be used to keep a total count
   float total = lengths[0];
-  
+
   for (uint i = 1; i < lengths.size(); i++) {
 
     // gather information about previous and current lengths
@@ -152,7 +152,7 @@ float get_average_shortest_length(vector<float> &lengths){
     if (change > THRESHOLD) {
       return total / i;
     }
-    
+
     // add current length to total
     total += lengths[i];
   }
@@ -177,7 +177,7 @@ float find_shortest_edge_in_shape(const ListOfPoints &shape) {
 
   // used to keep track of the last point processed. initially equal to the last point
   Point last_processed_point = last_point;
- 
+
   for (uint i = 0; i < shape.size(); ++i) {
 
     // get current point
@@ -188,14 +188,14 @@ float find_shortest_edge_in_shape(const ListOfPoints &shape) {
 
     // push it onto the edges length vector
     edges_length.push_back(length);
-    
+
     // update last processed point
     last_processed_point = current_point;
-    
+
   }
 
   return get_average_shortest_length(edges_length);
-} 
+}
 
 
 /**
@@ -204,20 +204,20 @@ float find_shortest_edge_in_shape(const ListOfPoints &shape) {
  *   shapes: a list of shapes (each define as a list of points)
  */
 float find_unit_length(const vector<ListOfPoints> &shapes) {
-  
+
   if (shapes.size() == 0) {
     // avoid division by zero
     return 0;
   }
-  
+
   // used to store all shortest edges's lengths
   vector<float> shortest_edges_length;
-  
+
   for (uint i = 0; i < shapes.size(); ++i) {
-    
+
     // compute this shape's shortest edge's length
     float shortest_edge_length = find_shortest_edge_in_shape(shapes[i]);
-    
+
     if (shortest_edge_length == 0) {
       continue;
     }
@@ -225,7 +225,7 @@ float find_unit_length(const vector<ListOfPoints> &shapes) {
     // add this shape's shortest edge's length to the vector that holds them for all shapes
     shortest_edges_length.push_back(shortest_edge_length);
   }
-  
+
   return get_average_shortest_length(shortest_edges_length);
 }
 
@@ -233,19 +233,19 @@ float find_unit_length(const vector<ListOfPoints> &shapes) {
 
 /**
  * Helper function which changing the coordinates of the given shape to normalize it.
- *  @params: 
+ *  @params:
  *   shape: a shape as a list of points
  *   unit_length: the normalizing constant
  */
 void normalize_shape(vector<Point> &shape, float unit_length) {
-  
+
   for (uint i = 0; i < shape.size(); ++i) {
     // divide each coordinate by the unit length of each shape
     shape[i].x = round(static_cast<float>(shape[i].x) / unit_length);
     shape[i].y = round(static_cast<float>(shape[i].y) / unit_length);
   }
-  
-} 
+
+}
 
 
 /**
@@ -254,7 +254,7 @@ void normalize_shape(vector<Point> &shape, float unit_length) {
  *   shape: a shape as a list of points
  */
 void move_shape_to_first_quadrant(vector<Point> &shape) {
-  
+
   // set min_x and min_y to the first point of the shape
   int min_x = shape[0].x;
   int min_y = shape[0].y;
@@ -284,16 +284,16 @@ void move_shape_to_first_quadrant(vector<Point> &shape) {
  */
 void shape_translate(const vector<Point> &shape, ShapeMatrix &matrix) {
 
-  // create the row filter, initializing all values to false.  
+  // create the row filter, initializing all values to false.
   bool* row_filter = new bool[matrix.getWidth()];
   for (uint i = 0; i < matrix.getWidth(); ++i) {
     row_filter[i] = false;
   }
-  
+
   // used to store the map of edges organized by their row-value
   map<uint, vector<Edge>> horizontal_edges;
 
-  // get last point of shape 
+  // get last point of shape
   Point last_point = shape[shape.size() - 1];
 
   // used to keep track of the last point processed. initially equal to the last point
@@ -318,30 +318,30 @@ void shape_translate(const vector<Point> &shape, ShapeMatrix &matrix) {
     // process this row, column by column
     for (uint col = 0; col < matrix.getWidth(); ++col) {
       matrix.set(row, col, row_filter[col]);
-    }  
+    }
   }
 
   // free row_filter
   delete row_filter;
-} 
+}
 
 
 bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes,
 				vector<ShapeMatrix>& matrices, float unit_length) {
-  
+
   if (unit_length == 0 || shapes.size() == 0) {
     // avoid division by zero
     return false;
   }
-  
+
   for (uint i = 0; i < shapes.size(); ++i) {
 
     // get the current shape
     ListOfPoints shape = shapes[i];
-    
+
     // normalize the shape using the unit length
     normalize_shape(shape, unit_length);
-    
+
     // move the shape to the 1st quadrant
     move_shape_to_first_quadrant(shape);
 
@@ -356,7 +356,7 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes,
 
     // define identifier of current matrix
     int identifier = i + 1;
-    
+
     // used to hold the matrix
     ShapeMatrix matrix(identifier, width, height);
 
@@ -368,40 +368,40 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes,
   }
 
   return true;
-} 
+}
 
 bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes, vector<ShapeMatrix>& matrices){
 
   // get raw unit length implied by the shapes
   float raw_unit_length = find_unit_length(shapes);
-  
+
   // setup scaling factors
-  vector<float> scaling_factors = {1.10};
+  vector<float> scaling_factors = {1.40};
 
   for (int i = 1; i < 15; i++){
     scaling_factors.push_back(scaling_factors[0] + i * 0.01);
     scaling_factors.push_back(scaling_factors[0] - i * 0.01);
   }
-  
-  
-  for (uint i = 0; i < scaling_factors.size(); i++){      
+
+
+  for (uint i = 0; i < scaling_factors.size(); i++){
 
     // clear matrices
     matrices.clear();
-    
+
     // compute unit_length
     float unit_length = raw_unit_length * scaling_factors[i];
 
     // attempt to translate shapes
     if (!shape_translate_all_shapes(shapes, matrices, unit_length))
       continue;
-    
+
     // sort shapes in descending area shape
     sort(matrices.rbegin(), matrices.rend());
 
     // get area container
     int container_area = matrices[0].getShapeArea();
-    
+
     // get area of rest of pieces
     int pieces_area = 0;
     for (uint i = 1; i < matrices.size(); i++)
@@ -415,5 +415,5 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes, vector<Shape
 
   matrices.clear();
   return false;
-  
+
 }

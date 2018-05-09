@@ -66,16 +66,21 @@ int main(int argc, char** argv) {
     cout << " File read complete!" <<endl;
   }
 
+  // PART 2a: Sort the matrices
+
+
+
+
 
   //////////// PART 3: PROCESS BOARD STATE /////////////////////////////
-  // extract the state into an integer array
+  // extract the state (which was passed in by ARGV[2]) into an integer array
   stringstream stream(state);
   vector<int> state_vector;
 
-  int current_integer;
-  while (stream >> current_integer){
-    state_vector.push_back(current_integer);
-  }
+  int temp_integer;
+  while (stream >> temp_integer){
+    state_vector.push_back(temp_integer);
+  } // counts the size of the state (int array)
 
   /* allocation of space for int array based on number of integers within <state> */
   int partial_board[state_vector.size()];

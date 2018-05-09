@@ -112,6 +112,7 @@ ShapeMatrix& ShapeMatrix::operator=(const ShapeMatrix& rhs) {
   }
   delete[] this->shape;
 
+  this->identifier = rhs.identifier;
   this->width = rhs.width;
   this->height = rhs.height;
   this->shapeArea = rhs.shapeArea;

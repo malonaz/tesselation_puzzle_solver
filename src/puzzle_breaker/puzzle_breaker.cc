@@ -1,5 +1,7 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <cstdlib>
 #include "common/shape_matrix_io.h"
 
 using namespace std;
@@ -15,7 +17,6 @@ void print(int** intarray, int rows, int cols){
       cout<<endl;
     }
 }
-
 
 int** makeIntArray(int rows, int cols){
   int** board = new int*[rows];
@@ -37,8 +38,7 @@ double r2()
 
 
 int get_adjacent_empty_area(uint row, uint col, int** board, uint height, uint width, int currentIndex, double bias){
-
-  // return 0 if board[row][col] is NOT (i) a valid square within boundaries of the board AND (ii) is empty
+  // return 0 if board[row][col] is  (i) a NOT valid square within boundaries of the board AND (ii) is NOT empty
   if (row >= height || col >= width || board[row][col] != 0)
     return 0;
 
@@ -79,7 +79,7 @@ void test_dimensions(int** intArray, int index, int height, int width,int& shape
 
 }
 
-void write_shapes_to_file(int** intArray, int height, int width, const string filename, int currIndex){
+void write_shapes_to_file(int** intArray, int height, int width, const string filename, int maxIndex){
  ofstream output_file;
  output_file.open(filename);
  if(output_file.fail()){
@@ -87,16 +87,16 @@ void write_shapes_to_file(int** intArray, int height, int width, const string fi
    return;
  }
 
-  int containerArea  = height * width;
-  output_file << currIndex << ' ';
-  output_file << width << ' ';
-  output_file << height << ' ';
-  for (int i = 0; i < containerArea; i++){
-    output_file << 1 << ' ';
-  }
-  output_file<<endl;
+   int containerArea  = height * width;
+   output_file << 1 << ' ';
+   output_file << width << ' ';
+   output_file << height << ' ';
+   for (int i = 0; i < containerArea; i++){
+     output_file << 1 << ' ';
+   }
+   output_file<<endl;
 
-  for (int index = 1; index< currIndex; index++){
+  for (int index = 2; index< maxIndex; index++){
     int shapeH, shapeW, begR, begC;
     test_dimensions(intArray, index, height, width, shapeH, shapeW, begR, begC);
     output_file << index << ' ';
@@ -112,19 +112,33 @@ void write_shapes_to_file(int** intArray, int height, int width, const string fi
         }
       }
     }
-
     output_file<< endl;
-
   }
+
+
 
   output_file.close();
 
 }
 
+void write_solution_to_file(int** board_solution, string filename, uint height, uint width){
+
+  // open stream
+  ofstream out(filename.c_str());
+
+  // send board data to stream
+  for (uint row = 0; row < height; row++)
+    for (uint col = 0; col < width; col++)
+      out << board_solution[row][col] << " ";
+
+  // add line break and close stream
+  out << endl;
+  out.close();
+}
 
 bool assign_random_numbers(int** intArray, int height, int width){
   int begArea = height*width;
-  int currIndex = 1;
+  int currIndex = 2;
 
   while(begArea>0){
     for (int i = 0; i < height; i++){
@@ -136,28 +150,25 @@ bool assign_random_numbers(int** intArray, int height, int width){
       }
     }
   }
-
   write_shapes_to_file(intArray, height, width, "src/puzzle_breaker/pieces", currIndex);
-
+  write_solution_to_file(intArray, "src/puzzle_breaker/solutions/first", height, width);
   return true;
 }
 
+int main(int argc, char** argv){
+  stringstream h1(argv[1]);
+  stringstream w2(argv[2]);
+  int h,w;
+  h1>> h;
+  w2>>w;
 
-
-int main(){
-
-  int h = 10, w = 10;
   int** board = makeIntArray(h,w);
 
   print(board,h,w);
   assign_random_numbers(board, h, w);
   cout << r2() << endl;
-
   cout << r2() << endl;
-
 
   delete[]board;
   return 0;
-
-
 }
