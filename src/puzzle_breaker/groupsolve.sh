@@ -8,11 +8,11 @@ echo $ARG1
 
 cmd="../../../../../bin/sp ."
 cmd="$cmd \"$ARG1 $ARG1"
-echo $cmd
+#echo $cmd
 
-for ((i=0; i<Num1; ++i))
+for ((i=0; i<$1; ++i))
 do
-    for ((j=0; j<Num1; ++j))
+    for ((j=0; j<$1; ++j))
     do
 	cmd="$cmd 0 "
     done
