@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
+#include <ctime>
 #include "common/shape_matrix_io.h"
 
 using namespace std;
@@ -33,20 +34,21 @@ int** makeIntArray(int rows, int cols){
 
 double r2()
 {
+
     return (double)rand() / (double)RAND_MAX ;
 }
 
 
-int get_adjacent_empty_area(uint row, uint col, int** board, uint height, uint width, int currentIndex, double bias){
+int get_adjacent_empty_area(uint row, uint col, int** board, uint height, uint width, int currentIndex, double* bias){
   // return 0 if board[row][col] is  (i) a NOT valid square within boundaries of the board AND (ii) is NOT empty
   if (row >= height || col >= width || board[row][col] != 0)
     return 0;
 
-  if (r2()+bias<0.7) return 0;
+  if (r2()+*bias<0.7) return 0;
 
   // mark this empty square equal to -1
   board[row][col] = currentIndex;
-  bias -= 0.1;
+  *bias -= 0.1;
 
   // make recursive call to check the remaining adjacent area
   return 1 + get_adjacent_empty_area(row, col + 1, board, height, width, currentIndex, bias)
@@ -61,22 +63,28 @@ void test_dimensions(int** intArray, int index, int height, int width,int& shape
   shapeH = 0;
   shapeW = 0;
   begR = -1;
-  begC = width;
+  begC = -1;
+
 
   for (int i =0; i < height; i++){
     bool rowHasIndex = false;
-    int tempW = 0;
     for (int j =0; j < width; j++){
       if (intArray[i][j]==index) {
         if (!rowHasIndex) {shapeH++; rowHasIndex = true;}
         if (begR < 0 ) {begR = i;}
-        if (j < begC ) {begC = j;}
-        tempW++;
       }
     }
-    if (tempW>shapeW){shapeW = tempW;}
   }
 
+  for (int i =0; i < width; i++){
+    bool colHasIndex = false;
+    for (int j =0; j < height; j++){
+      if (intArray[j][i]==index) {
+        if (!colHasIndex) {shapeW++; colHasIndex = true;}
+        if (begC < 0 ) {begC = i;}
+      }
+    }
+  }
 }
 
 void write_shapes_to_file(int** intArray, int height, int width, const string filename, int maxIndex){
@@ -143,24 +151,25 @@ bool assign_random_numbers(int** intArray, int height, int width){
   while(begArea>0){
     for (int i = 0; i < height; i++){
       for (int j = 0; j < width; j++){
-        int temp = get_adjacent_empty_area (i, j, intArray, height, width, currIndex, 0.7);
+        int temp = get_adjacent_empty_area (i, j, intArray, height, width, currIndex, new double(0.7));
         if (temp) currIndex++;
         begArea -= temp;
-        print(intArray,height,width);
       }
     }
   }
-  write_shapes_to_file(intArray, height, width, "src/puzzle_breaker/pieces", currIndex);
-  write_solution_to_file(intArray, "src/puzzle_breaker/solutions/first", height, width);
+  print(intArray,height,width);
+  write_shapes_to_file(intArray, height, width, "pieces", currIndex); //"src/puzzle_breaker/pieces"
+  write_solution_to_file(intArray, "first", height, width); //src/puzzle_breaker/solutions/first
   return true;
 }
 
 int main(int argc, char** argv){
+      srand( time( NULL ) );
   stringstream h1(argv[1]);
-  stringstream w2(argv[2]);
+  //stringstream w2(argv[2]);
   int h,w;
   h1>> h;
-  w2>>w;
+  w = h;
 
   int** board = makeIntArray(h,w);
 
