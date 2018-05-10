@@ -40,8 +40,14 @@ using namespace std;
 int main(int argc, char** argv) {
 
   //////////// PART 1: PROCESS ARGUMENTS /////////////////////////////
-  if (!valid_args(argc, EXPECTED_ARG_NUM, ARG_FORMAT))
+
+  if (!valid_args(argc, EXPECTED_ARG_NUM, ARG_FORMAT)){
+    cout<<"argv 0 is: "<<argv[0]<<endl;
+    cout<<"argv 1 is: "<<argv[1]<<endl;
+    cout<<"argv 2 is: "<<argv[2]<<endl;
     return -1;
+  }
+
 
   // extract command line argument
   const string puzzle_directory(argv[1]);
@@ -95,6 +101,12 @@ int main(int argc, char** argv) {
   if (partial_board[0] * partial_board[1] != static_cast<int>(state_vector.size()) - 2){
     if (debug) {
       cout << "Error: state input's dimensions don't match container area" << endl;
+      cout << "You have passed in - partial_board[0]: " << partial_board[0]
+      << ", partial_board[1]: " << partial_board[1] << ". While the state_vector size is"
+      << static_cast<int>(state_vector.size()) - 2<<endl;
+      cout<<"argv 0 is: "<<argv[0]<<endl;
+      cout<<"argv 1 is: "<<argv[1]<<endl;
+      cout<<"argv 2 is: "<<argv[2]<<endl;
     }
     cout << INCORRECT_STATE << endl;
     return -1;

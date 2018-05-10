@@ -3,6 +3,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <ctime>
+#include <cstdio>
 #include "common/shape_matrix_io.h"
 
 using namespace std;
@@ -164,7 +165,10 @@ bool assign_random_numbers(int** intArray, int height, int width){
 }
 
 int main(int argc, char** argv){
-      srand( time( NULL ) );
+  struct timespec ts;
+  clock_gettime(CLOCK_MONOTONIC, &ts); //nanosecond precision needed
+  srand((time_t)ts.tv_nsec);
+  //srand( time( NULL ) );
   stringstream h1(argv[1]);
   //stringstream w2(argv[2]);
   int h,w;
