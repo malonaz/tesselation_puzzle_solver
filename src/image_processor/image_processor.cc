@@ -172,8 +172,8 @@ int main(int argc, char** argv) {
     // compute command
     string command = solver_program_filename + ' ' + upload_directory + ' ';
     command += quote + to_string(container_width) + ' ' + to_string(container_height);
-    for (uint i = 0; i < container_area; i++) {
-      command += " 0";
+    for (uint i = 0; i < pieces[0].getMatrixArea(); i++) {
+      command += pieces[0].get(i)? " 0": " -9" ;
     }
     command += quote + ' ' + to_string(0);
 
@@ -192,11 +192,11 @@ int main(int argc, char** argv) {
     cout << "first integer is: " << first_integer << endl;
 
     // if first integer is not positive, there is no solution
-    if (first_integer <= 0){
-      ofstream output_stream(pieces_filename.c_str());
-      output_stream << -3 << endl;
-      output_stream.close();
-    }
+    // if (first_integer <= 0){
+    //   ofstream output_stream(pieces_filename.c_str());
+    //   output_stream << -3 << endl;
+    //   output_stream.close();
+    // }
   }
 
   return delete_processing_flag(processing_flag_filename);

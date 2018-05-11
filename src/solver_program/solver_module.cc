@@ -54,8 +54,9 @@ int main(int argc, char** argv) {
   const string state(argv[2]);
 
   // process debug argument. default is true
+  cout<<"here";
   bool debug = argc - 1 == MAX_ARGS? *argv[3] == '1': true ;
-
+cout<<"here2";
 
   //////////// PART 2: LOAD PUZZLE PIECES /////////////////////////////
   // read and load information of all puzzle pieces
@@ -120,6 +121,13 @@ int main(int argc, char** argv) {
   uint board_width;
 
   // calls partial solver based on prepared inputs
+  if (debug) {
+    cout << "Printing partial_board array " << endl;
+    for (uint i = 0; i < state_vector.size(); i++){
+      cout << partial_board[i] << " ";
+    }
+    cout << endl;
+  }
   solution = partial_solver(puzzle_directory, partial_board, pieces, return_code, board_height, board_width, debug);
 
   //////////// PART 5: PROCESS RETURN CODE /////////////////////////////

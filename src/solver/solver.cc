@@ -63,7 +63,7 @@ string sha256(string str){
  *   height: the height of the board_solution param
  *   width: the width of the board_solution param
  */
-void rotate_board_solution(int** board_solution, int& height, int& width) {
+void rotate_board_solution(int** &board_solution, int& height, int& width, bool debug) {
 
   // compute the height and width of the rotated board
   int rotated_board_height = width;
@@ -91,9 +91,21 @@ void rotate_board_solution(int** board_solution, int& height, int& width) {
       board_solution[i][j] = rotated_board[i][j];
   }
 
+
   // update the width and height
   width = rotated_board_width;
   height = rotated_board_height;
+
+  if (debug){
+    cout << "Inside rotate_board_solution function" << endl;
+    for (int i = 0; i < height; i++){
+      for (int j = 0; j < width; j++){
+        cout<< board_solution[i][j]<<" ";
+      }
+      cout<<endl;
+    }
+  }
+
 
 }
 
@@ -166,12 +178,21 @@ PuzzleBoard* create_partial_board(int* board_state, const vector<ShapeMatrix> &p
     cout << "size of the int array provided is " << board_state_size << endl;
   }
 
-
+  // NOTE: the pointer arithmetic described by below three lines are temporarily removed
   // difference is usually 2, representing width and height
-  int board_state_extra_params = board_state_size - container_area;
-
+  // int board_state_extra_params = board_state_size - container_area;
   // constructs the board. notice we have incremented board_state to skip the first parameters
-  PuzzleBoard* board = new PuzzleBoard(board_state + board_state_extra_params, container);
+
+  if (debug) {
+    int width = board_state[0], height = board_state[1];
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        cout << "$$$$" << i * width + j + 2 << ": " <<board_state[(i * width + j + 2)] << endl;
+      }
+    }
+  }
+
+  PuzzleBoard* board = new PuzzleBoard(board_state, container);
 
   for (uint j = 1; j < pieces_copy.size(); j++) {
     // get identifer of current piece
@@ -658,7 +679,6 @@ bool search_existing_solutions(PuzzleBoard* board, string puzzle_directory, bool
 
   // read through each existing solution file within folder
   for (uint file_num = 0; file_num < solutions_filenames.size(); file_num++){
-
     if (debug)
       cout << "solution consistency check for file: " << solutions_filenames[file_num] << endl;
 
@@ -694,26 +714,59 @@ bool search_existing_solutions(PuzzleBoard* board, string puzzle_directory, bool
  *   board_height: height of the board
  *   board_width: width of the board
  */
-void update_solutions_cache(PuzzleBoard* board, int board_height, int board_width, string puzzle_directory) {
+void update_solutions_cache(PuzzleBoard* board, int board_height, int board_width, string puzzle_directory, bool debug) {
   //we are making a copy of board_solution here because we try not to rotate the original board_solution.
   int** board_solution_copy  = copy_board(board);
   int copy_height = board_height;
   int copy_width = board_width;
 
-  for (int i = 0; i < 4; i++){
+  for (int i = 0; i < 4; i++) {
+    if(debug)
+      cout<<"Beginning rotation at orientation: "<< i << endl;
 
     // hash the solution
     string solution_hash = sha256(matrix_to_string(board_solution_copy, copy_height, copy_width));
+    if (debug){
+      for (int i = 0; i < copy_height; i++){
+        for (int j = 0; j < copy_width; j++){
+          cout<< board_solution_copy[i][j]<<" ";
+        }
+        cout<<endl;
+      }
+    }
+    if(debug)
+      cout<<"part 2 "<< i << endl;
 
     // compute the filename
     string filename = puzzle_directory + string("/solutions/") + solution_hash;
+    if(debug)
+      cout<<"part 3 "<< i << endl;
 
     // write the solution to the filename
     write_board_to_file(board_solution_copy, filename, copy_height, copy_width);
 
+    if(debug)
+      cout<<"part 4 "<< i << endl;
+
+
+
     // rotate the board
     if (i != 3)
-      rotate_board_solution(board_solution_copy, copy_height, copy_width);
+      rotate_board_solution(board_solution_copy, copy_height, copy_width, debug);
+
+    if (debug){
+
+      cout<<"Rotated orientation number: "<< i << endl;
+      cout << copy_height<<endl;
+      cout << copy_width<<endl;
+      cout << "first: " << board_solution_copy[0][0]<<endl;
+      for (int i = 0; i < copy_height; i++){
+        for (int j = 0; j < copy_width; j++){
+          cout<< board_solution_copy[i][j]<<" ";
+        }
+        cout<<endl;
+      }
+    }
   }
   //free board_solution_copy from heap;
   delete_2d_array(board_solution_copy, copy_height);
@@ -770,9 +823,11 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
 
     int iterations = 0;
     success = recursive_solver(board, unused_pieces, 0, iterations);
-    if (success && debug)
+    if (success && debug){
       cout << "Found solution using recursive solver" << endl;
-    write_new_solution_flag = true;
+      write_new_solution_flag = true;
+      print_solution_board(board->getCurrentBoard(), board->getHeight(), board->getWidth());
+    }
   }
 
   // set return code
@@ -784,10 +839,19 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
 
   // set return value
   int** board_solution = success? copy_board(board): NULL;
+  if (success && debug){
+    for (int i = 0; i < board_height; i++){
+      for (int j = 0; j < board_width; j++){
+        cout<< board_solution[i][j]<<" ";
+      }
+      cout<<endl;
+    }
+  }
 
   // hash and write solutions to  <directory>/solutions/hash
   if (success && write_new_solution_flag) {
-    update_solutions_cache(board, board_height, board_width, puzzle_directory);
+    update_solutions_cache(board, board_height, board_width, puzzle_directory, debug);
+
   }
 
   // free board from the heap
