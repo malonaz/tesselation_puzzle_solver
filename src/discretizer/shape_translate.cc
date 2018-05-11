@@ -378,11 +378,10 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes, vector<Shape
   // setup scaling factors
   vector<float> scaling_factors = {1.40};
 
-  for (int i = 1; i < 15; i++){
+  for (int i = 1; i < 20; i++){
     scaling_factors.push_back(scaling_factors[0] + i * 0.01);
     scaling_factors.push_back(scaling_factors[0] - i * 0.01);
   }
-
 
   for (uint i = 0; i < scaling_factors.size(); i++){
 
