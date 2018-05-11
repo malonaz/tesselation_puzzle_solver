@@ -88,9 +88,7 @@ void shape_matrix_read(const char* filename, vector<ShapeMatrix> &list, bool deb
     uint identifier, width, height, area;
     input_file >> identifier;
     if (input_file.eof()){break;}
-    if (identifier == currentIdentifier) {
-      break;
-    }
+
     input_file >> width;
     input_file >> height;
     area = width * height;

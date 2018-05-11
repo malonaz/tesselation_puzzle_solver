@@ -55,7 +55,7 @@ bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant) {
   // assert quadrants are not equal
   //assert (previous_quadrant != current_quadrant);
 
-  
+
   // 1st corner case
   if (previous_quadrant == IV && current_quadrant == I) {
     return true;
@@ -79,7 +79,7 @@ bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant) {
  *   list of points of completely rotated shape
  */
 ListOfPoints fix_nearly_rotated_shape(ListOfPoints const &shape_points) {
-  
+
   // gather information about the first side
   Point start = shape_points[0];
   Point end = shape_points[1];
@@ -87,7 +87,7 @@ ListOfPoints fix_nearly_rotated_shape(ListOfPoints const &shape_points) {
   // find the shift of the first point. We will remove it from all points to center shape at origin
   int x_shift = start.x;
   int y_shift = start.y;
-  
+
   // is the first segment horizontal
   bool current_segment_horizontal = abs(end.x - start.x) > abs(end.y - start.y);
 
@@ -96,20 +96,20 @@ ListOfPoints fix_nearly_rotated_shape(ListOfPoints const &shape_points) {
 
   // push the (0, 0) point as usual
   rotated_shape_points.push_back(Point(0, 0));
-  
+
   for (uint i = 1; i < shape_points.size(); i++){
     // get the previous and current points
     Point previous_point = shape_points[i - 1];
     Point current_point = shape_points[i];
-    
+
     if (current_segment_horizontal)
       // set y equal to previous point's y
       current_point.y = previous_point.y;
-    
+
     else // current segment is vertical
       // set x equal to previous point's x
       current_point.x = previous_point.x;
-    
+
     // apply the shift of the first point
     current_point.x -= x_shift;
     current_point.y -= y_shift;
@@ -120,14 +120,14 @@ ListOfPoints fix_nearly_rotated_shape(ListOfPoints const &shape_points) {
     // if this segment is horizontal, the next one will be vertical & vice-versa
     current_segment_horizontal = !current_segment_horizontal;
   }
-  
+
   return rotated_shape_points;
 }
 
 
 /**
  * Helper function which returns the average side length of the given shape.
- *  @params: 
+ *  @params:
  *   shape_points: shape as a list of points
  */
 float average_side_length(ListOfPoints const &shape_points){
@@ -136,7 +136,7 @@ float average_side_length(ListOfPoints const &shape_points){
   float total_side_length = 0;
 
   for (uint i = 0; i < shape_points.size(); i++){
-    
+
     // get start and end of current side
     Point start = shape_points[i];
     Point end = i == shape_points.size() - 1? shape_points[0]: shape_points[i + 1];
@@ -159,7 +159,7 @@ float average_side_length(ListOfPoints const &shape_points){
 /**
  * Helper function which sets x equal to the the first integer in array that
  * is within epsilon of x. Otherwise, adds x to array.
- *  @params: 
+ *  @params:
  *   array: contain integers that we have already processed
  *   epsilon: error threshold to compare two integers.
  *   x: integer which we wish to compare to processed integers in array
@@ -167,13 +167,13 @@ float average_side_length(ListOfPoints const &shape_points){
 void align_integer(std::vector<int> &array, int epsilon, int &x){
 
   for (uint i = 0; i < array.size(); i++){
-    
+
     if (abs(array[i] - x) <= epsilon){
       // set x equal to the integer
       x = array[i];
       return;
     }
-    
+
   }
 
   // no match. add x to array
@@ -183,7 +183,7 @@ void align_integer(std::vector<int> &array, int epsilon, int &x){
 
 
 /**
- * Helper function which corrects points that should be on the same line but 
+ * Helper function which corrects points that should be on the same line but
  * are off within the given epsilon
  *  @params:
  *   shape_points: shape as a list of points
@@ -194,7 +194,7 @@ void align_points(ListOfPoints &shape_points, int epsilon){
   // used to save processed x and y coordinates;
   std::vector<int> processed_xs;
   std::vector<int> processed_ys;
-  
+
   for (uint i = 0; i < shape_points.size(); i++){
 
     // align point x
@@ -202,22 +202,22 @@ void align_points(ListOfPoints &shape_points, int epsilon){
 
     // align point y
     align_integer(processed_ys, epsilon, shape_points[i].y);
-    
+
   }
-  
+
 }
 
 
 /**
  * Helper function which rotates the given shape's coordinates so that all sides
  * of the given shape are vertical or horizontal.
- *  @params: 
+ *  @params:
  *   shape_points: shape as a list of points
  *   rotated_shape_points: output parameter that will contain the rotated shape as a list of points
- *   
+ *
  */
 void rotate_shape(const ListOfPoints &shape_points, ListOfPoints &rotated_shape_points) {
-  
+
   // size must be minimum 4 for a polygon with 90 degrees corners only & size must be even
   assert(shape_points.size() >= 4);
   assert(shape_points.size() % 2 == 0);
@@ -257,7 +257,7 @@ void rotate_shape(const ListOfPoints &shape_points, ListOfPoints &rotated_shape_
       rotated_shape_points = fix_nearly_rotated_shape(shape_points);
 
       // now align points if needed
-      align_points(rotated_shape_points, epsilon); 
+      align_points(rotated_shape_points, epsilon);
       return;
     }
 
@@ -269,19 +269,19 @@ void rotate_shape(const ListOfPoints &shape_points, ListOfPoints &rotated_shape_
 
     // get length of current side
     length = round(start.distanceTo(end));
-    
+
     if (previous_direction == EAST) {
       new_point.y += turning_right? -length: length;
       previous_direction = turning_right? SOUTH: NORTH;
-      
+
     } else if (previous_direction == SOUTH) {
       new_point.x += turning_right? -length: length;
       previous_direction = turning_right? WEST: EAST;
-      
+
     } else if (previous_direction == NORTH) {
       new_point.x += turning_right? length: -length;
       previous_direction = turning_right? EAST: WEST;
-      
+
     } else { // previous direction is WEST)
       new_point.y += turning_right? length: -length;
       previous_direction = turning_right? NORTH: SOUTH;
@@ -298,13 +298,13 @@ void rotate_shape(const ListOfPoints &shape_points, ListOfPoints &rotated_shape_
   }
 
   // align points if needed
-  align_points(rotated_shape_points, epsilon); 
+  align_points(rotated_shape_points, epsilon);
 }
 
 void rotate_shapes(const vector<ListOfPoints> &shapes,
 		   vector<ListOfPoints> &rotated_shapes) {
   for (uint i = 0; i < shapes.size(); i++) {
-    
+
     // if shape has less than 4, disregard it
     if (shapes[i].size() < 4 || shapes[i].size() % 2 != 0)
       continue;
