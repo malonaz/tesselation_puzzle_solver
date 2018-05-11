@@ -376,9 +376,9 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes, vector<Shape
   float raw_unit_length = find_unit_length(shapes);
 
   // setup scaling factors
-  vector<float> scaling_factors = {1.40};
+  vector<float> scaling_factors = {1.20};
 
-  for (int i = 1; i < 20; i++){
+  for (int i = 1; i < 50; i++){
     scaling_factors.push_back(scaling_factors[0] + i * 0.01);
     scaling_factors.push_back(scaling_factors[0] - i * 0.01);
   }

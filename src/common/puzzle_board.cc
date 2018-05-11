@@ -20,7 +20,12 @@ PuzzleBoard::PuzzleBoard(const ShapeMatrix &shape):
   for (int i = 0; i < height; i++) {
     current_board[i] = new int[width];
     for (int j = 0; j < width; j++) {
-      current_board[i][j] = 0;
+
+      if (shape.get(i,j)) {
+        current_board[i][j] = 0;
+      } else {
+        current_board[i][j] = -2;
+      }
     }
   }
 }

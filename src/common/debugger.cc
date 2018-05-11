@@ -61,7 +61,7 @@ void print_solution_board(int** const board, uint height, uint width) {
     cout << "│ ";
     for (uint c = 0; c < width; ++c) {
       int current_num = board[r][c];
-      if (current_num<10) {
+      if (current_num<10 && current_num>0) {
         cout<<" ";
       }
       cout << current_num << " ";
