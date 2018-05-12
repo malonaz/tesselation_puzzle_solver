@@ -340,14 +340,14 @@ int get_adjacent_empty_area(bool** visited, int row, int col, int** board, uint 
  *   current_index: any pieces at a lower index has already been placed and should no be considered
  *   sum: used for recursion. Do not use it.
  */
-void get_areas_permutations(unordered_set<int>& possible_areas, const vector<vector<ShapeMatrix>>& pieces, uint current_index, int sum = 0){
+void get_areas_permutations(unordered_set<int>& possible_areas, const vector<ShapeMatrix>& pieces, uint current_index, int sum = 0){
 
   // check current_index is positive
   if (current_index >= pieces.size())
     return;
 
   // get area of shape at current index
-  const ShapeMatrix* shape = &pieces[current_index][0];
+  const ShapeMatrix* shape = &pieces[current_index];
   int area = shape->getShapeArea();
 
   // add sum + area to possible areas
@@ -415,7 +415,7 @@ void delete_2d_array(int** array, uint height) {
  *   current_index: Index of the next piece to be placed. Any piece with a lower index should be
  *                 disregarded
  */
-bool solvable_config(PuzzleBoard* board, const vector<vector<ShapeMatrix>> &pieces, uint current_index) {
+bool solvable_config(PuzzleBoard* board, const vector<vector<ShapeMatrix>> &pieces, const vector<unordered_set<int>>& permutations, uint current_index) {
 
   // get board dimensions
   uint height = board->getHeight();
@@ -461,12 +461,11 @@ bool solvable_config(PuzzleBoard* board, const vector<vector<ShapeMatrix>> &piec
   // }
 
   // get all possible area variations.
-  unordered_set<int> possible_areas = unordered_set<int>();
-  get_areas_permutations(possible_areas, pieces, current_index);
+  const unordered_set<int>* possible_areas = &permutations[current_index];
 
   for (uint i = 0; i < areas.size(); ++i) {
     // if area is not in the possible permutations of area, then config is unsolvable
-    if (std::find(possible_areas.begin(), possible_areas.end(), areas[i]) == possible_areas.end()) {
+    if (std::find(possible_areas->begin(), possible_areas->end(), areas[i]) == possible_areas->end()) {
       return false;
     }
   }
@@ -506,7 +505,7 @@ void write_board_to_file(int** board_solution, string filename, uint height, uin
  *   pieces: the pieces of the puzzle as a list of logical matrices
  *   current_index: index of the piece that we will place next
  */
-bool recursive_solver (PuzzleBoard* board, const vector<vector<ShapeMatrix>> &pieces, uint current_index, int& iterations) {
+bool recursive_solver (PuzzleBoard* board, const vector<vector<ShapeMatrix>> &pieces, const vector<unordered_set<int>>& permutations, uint current_index, int& iterations) {
   // increment the iterations number
   iterations++;
 
@@ -516,13 +515,15 @@ bool recursive_solver (PuzzleBoard* board, const vector<vector<ShapeMatrix>> &pi
   }
 
   // check if board is solvable
-  if (!solvable_config(board, pieces, current_index)) {
+  if (!solvable_config(board, pieces, permutations, current_index)) {
     return false;
   }
 
   // get board dimensions
   uint height = board->getHeight();
   uint width = board->getWidth();
+  cout << iterations << "  --  " <<  current_index << endl;
+
   int** currentBoard = board->getCurrentBoard();
 
   // get the current piece's variations (flips and rotations)
@@ -542,7 +543,7 @@ bool recursive_solver (PuzzleBoard* board, const vector<vector<ShapeMatrix>> &pi
         }
 
       	// check that puzzle can be solved after placing the piece
-      	if (recursive_solver(board, pieces, current_index + 1, iterations)) {
+      	if (recursive_solver(board, pieces, permutations, current_index + 1, iterations)) {
       	  return true;
         }
 
@@ -593,11 +594,16 @@ int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& return_code, uint&
 
   // attempt to solve the puzzle recusively
   int iterations = 0;
+  vector<unordered_set<int>> permutations;
   vector<vector<ShapeMatrix>> all_pieces;
   for (uint i = 0; i < shapes.size(); ++i) {
     all_pieces.push_back(get_variations(shapes[i]));
+
+    unordered_set<int> areas;
+    get_areas_permutations(areas, shapes, i);
+    permutations.push_back(areas);
   }
-  bool success = recursive_solver(board, all_pieces, 0, iterations);
+  bool success = recursive_solver(board, all_pieces, permutations, 0, iterations);
 
   // set output parameters
   return_code = success? SOLVED: UNSOLVED;
@@ -868,11 +874,19 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
       cout << "No existing solution available in cache, doing new solve. Unused pieces: " << unused_pieces.size() << endl;
 
     int iterations = 0;
+
+    vector<unordered_set<int>> permutations;
     vector<vector<ShapeMatrix>> all_pieces;
     for (uint i = 0; i < unused_pieces.size(); ++i) {
       all_pieces.push_back(get_variations(unused_pieces[i]));
+
+      unordered_set<int> areas;
+      get_areas_permutations(areas, unused_pieces, i);
+      permutations.push_back(areas);
     }
-    success = recursive_solver(board, all_pieces, 0, iterations);
+
+
+    success = recursive_solver(board, all_pieces, permutations, 0, iterations);
     if (success){
       write_new_solution_flag = true;
         if (debug){
