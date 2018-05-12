@@ -339,6 +339,10 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes,
     // get the current shape
     ListOfPoints shape = shapes[i];
 
+    // remove weird shape
+    if (shape.size() == 2 || shape.size() % 2 == 1)
+      continue;
+    
     // normalize the shape using the unit length
     normalize_shape(shape, unit_length);
 
@@ -376,9 +380,9 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes, vector<Shape
   float raw_unit_length = find_unit_length(shapes);
 
   // setup scaling factors
-  vector<float> scaling_factors = {1.20};
+  vector<float> scaling_factors = {1.00};
 
-  for (int i = 1; i < 50; i++){
+  for (int i = 1; i < 15; i++){
     scaling_factors.push_back(scaling_factors[0] + i * 0.01);
     scaling_factors.push_back(scaling_factors[0] - i * 0.01);
   }
