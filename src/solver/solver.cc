@@ -167,7 +167,6 @@ PuzzleBoard* create_partial_board(int* board_state, const vector<ShapeMatrix> &p
 
   // find container and extract its area and identifier
   ShapeMatrix container = pieces_copy[0];
-  uint container_area = container.getShapeArea();
   int container_identifier = container.getIdentifier();
 
   // compute size of board state
