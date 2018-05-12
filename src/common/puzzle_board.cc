@@ -100,7 +100,7 @@ bool PuzzleBoard::placePiece(int x, int y, int idx, const ShapeMatrix &piece) {
         continue;
       }
       if (!this->container.get(board_y, board_x)
-          || this->current_board[board_y][board_x] > 0) {
+          || this->current_board[board_y][board_x] != 0) {
         return false;
       }
     }
