@@ -311,20 +311,24 @@ vector<ShapeMatrix> get_variations(const ShapeMatrix &shape) {
  *   height: height of the board
  *   width: width of the board
  */
-int get_adjacent_empty_area(uint row, uint col, int** board, uint height, uint width){
+int get_adjacent_empty_area(bool** visited, int row, int col, int** board, uint height, uint width){
 
   // return 0 if board[row][col] is NOT (i) a valid square within boundaries of the board AND (ii) is empty
-  if (row >= height || col >= width || board[row][col] != 0)
+  if (row < 0 || col < 0) {
     return 0;
+  }
+  if (row >= height || col >= width || visited[row][col]) {
+    return 0;
+  }
 
   // mark this empty square equal to -1
-  board[row][col] = -1;
+  visited[row][col] = true;
 
   // make recursive call to check the remaining adjacent area
-  return 1 + get_adjacent_empty_area(row, col + 1, board, height, width)
-    + get_adjacent_empty_area(row, col - 1, board, height, width)
-    + get_adjacent_empty_area(row + 1, col, board, height, width)
-    + get_adjacent_empty_area(row - 1, col, board, height, width);
+  return 1 + get_adjacent_empty_area(visited, row, col + 1, board, height, width)
+    + get_adjacent_empty_area(visited, row, col - 1, board, height, width)
+    + get_adjacent_empty_area(visited, row + 1, col, board, height, width)
+    + get_adjacent_empty_area(visited, row - 1, col, board, height, width);
 }
 
 
@@ -421,28 +425,42 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
   unordered_set<int> possible_areas = unordered_set<int>();
   get_areas_permutations(possible_areas, pieces, current_index);
 
-  // get a copy of the board's 2D array
-  int** board_copy = copy_board(board);
+  bool** visited = new bool*[height];
+  for (uint i = 0; i < height; ++i) {
+    visited[i] = new bool[width];
+  }
 
-  for (uint row = 0; row < height; row++)
+  bool result = true;
+
+  for (uint row = 0; row < height; row++) {
     for (uint col = 0; col < width; col++) {
 
+      if (visited[row][col]) {
+        continue;
+      }
+
       // get area near current square
-      int area = get_adjacent_empty_area(row, col, board_copy, height, width);
+      int area = get_adjacent_empty_area(visited, row, col, board->getCurrentBoard(), height, width);
 
       // if area is zero, continue
       if (area == 0)
 	continue;
 
       // if area is not in the possible permutations of area, then config is unsolvable
-      if (std::find(possible_areas.begin(), possible_areas.end(), area) == possible_areas.end()){
-	delete_2d_array(board_copy, height);
-	return false;
+      if (std::find(possible_areas.begin(), possible_areas.end(), area) == possible_areas.end()) {
+        result = false;
+        break;
       }
     }
+    if (!result) {
+      break;
+    }
+  }
 
-  // free board copy from the heap
-  delete_2d_array(board_copy, height);
+  for (uint i = 0; i < height; ++i) {
+    delete visited[i];
+  }
+  delete visited;
 
   return true;
 }
