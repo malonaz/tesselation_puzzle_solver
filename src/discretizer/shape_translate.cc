@@ -339,10 +339,6 @@ bool shape_translate_all_shapes(const vector<ListOfPoints>& shapes,
     // get the current shape
     ListOfPoints shape = shapes[i];
 
-    // remove weird shape
-    if (shape.size() == 2 || shape.size() % 2 == 1)
-      continue;
-    
     // normalize the shape using the unit length
     normalize_shape(shape, unit_length);
 
