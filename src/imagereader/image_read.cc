@@ -73,7 +73,7 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
   }
 
   // create a window
-  namedWindow("Debug window", WINDOW_AUTOSIZE);
+  // namedWindow("Debug window", WINDOW_AUTOSIZE);
     
   // scale down the image
   scale_down_image(src, src);
