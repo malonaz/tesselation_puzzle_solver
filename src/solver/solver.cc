@@ -435,7 +435,7 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
     }
   }
 
-  int min_board_space_area = board->getWidth() * board->getHeight(); // start with a maximum first
+  // int min_board_space_area = board->getWidth() * board->getHeight(); // start with a maximum first
   for (uint row = 0; row < height; row++) {
     for (uint col = 0; col < width; col++) {
       // get area near current square
@@ -446,7 +446,7 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
 	       continue;
       }
       areas.push_back(area);
-      min_board_space_area = min(min_board_space_area, area);
+      // min_board_space_area = min(min_board_space_area, area);
     }
   }
 
@@ -455,9 +455,9 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
   }
   delete visited;
 
-  if (min_piece_area > min_board_space_area) {
-    return false;
-  }
+  // if (min_piece_area > min_board_space_area) {
+  //   return false;
+  // }
 
   // get all possible area variations.
   unordered_set<int> possible_areas = unordered_set<int>();
@@ -506,7 +506,6 @@ void write_board_to_file(int** board_solution, string filename, uint height, uin
  *   current_index: index of the piece that we will place next
  */
 bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint current_index, int& iterations) {
-
   // increment the iterations number
   iterations++;
 
@@ -527,7 +526,6 @@ bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> &pieces, ui
   // get the current piece's variations (flips and rotations)
   ShapeMatrix current_piece = pieces[current_index];
   vector<ShapeMatrix> current_piece_variations = get_variations(current_piece);
-
   for (uint row = 0; row < height; row++) {
     for (uint col = 0; col < width; col++) {
       for (uint i = 0; i < current_piece_variations.size(); i++) {
