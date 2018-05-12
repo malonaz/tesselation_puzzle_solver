@@ -79,20 +79,20 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
   scale_down_image(src, src);
 
   // show the window
-  imshow( "Debug window", src);
-  waitKey(0);
+  // imshow( "Debug window", src);
+  // waitKey(0);
     
   // convert to grey scale
   cvtColor(src, src, COLOR_BGR2GRAY);
-  imshow( "Debug window", src);
-  waitKey(0);
+  // imshow( "Debug window", src);
+  // waitKey(0);
   
   // adaptive threshold
   adaptiveThreshold(src, src, MAX_VALUE,
   		    ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 19, 2);
 
-  imshow( "Debug window", src);
-  waitKey(0);
+  // imshow( "Debug window", src);
+  // waitKey(0);
 
 
   // find the polygon's contours
