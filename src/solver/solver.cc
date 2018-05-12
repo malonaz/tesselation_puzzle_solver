@@ -370,8 +370,9 @@ int** copy_board(PuzzleBoard* const board) {
 
   // create a 2d array on the heap, with the board's dimensions
   int** board_copy = new int*[height];
-  for (uint i = 0; i < height; i++)
+  for (uint i = 0; i < height; i++) {
       board_copy[i] = new int[width];
+  }
 
   // copy each square's value into the 2d array
   for (uint row = 0; row < height; row++)
@@ -391,8 +392,9 @@ int** copy_board(PuzzleBoard* const board) {
 void delete_2d_array(int** array, uint height) {
 
   // free each row
-  for (uint i = 0; i < height; i++)
+  for (uint i = 0; i < height; i++) {
     delete[] array[i];
+  }
 
   // free array
   delete[] array;
