@@ -378,9 +378,10 @@ int** copy_board(PuzzleBoard* const board) {
   }
 
   // copy each square's value into the 2d array
+  int** existing_board = board->getCurrentBoard();
   for (uint row = 0; row < height; row++)
     for (uint col = 0; col < width; col++ )
-      board_copy[row][col]= (board->getCurrentBoard())[row][col];
+      board_copy[row][col]= existing_board[row][col];
 
   return board_copy;
 }
@@ -402,7 +403,6 @@ void delete_2d_array(int** array, uint height) {
   // free array
   delete[] array;
 }
-
 
 
 /**
@@ -533,7 +533,7 @@ bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> &pieces, ui
         ShapeMatrix current_piece_variation = current_piece_variations[i];
 
 	       // if this variation cannot be placed, try the next
-        if (!board->placePiece(col, row, current_index + 1, current_piece_variation)) {
+        if (!board->placePiece(col, row, current_piece_variation)) {
 	        continue;
         }
 
@@ -543,7 +543,7 @@ bool recursive_solver (PuzzleBoard* board, const vector<ShapeMatrix> &pieces, ui
         }
 
     	  // backtrack
-    	  board->removePiece(col, row, current_index + 1, current_piece_variation);
+    	  board->removePiece(col, row, current_piece_variation);
       }
     }
   }
