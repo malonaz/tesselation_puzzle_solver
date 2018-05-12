@@ -11,7 +11,7 @@ $(TEST_OBJECTS): $(OBJDIR)/%.o : $(TESTDIR)/%.cc
 		$(CXXFLAGS) -c $< -o $@
 	@echo "[Done]\tCompiling \"$@\""
 
-$(BINDIR)/$(TEST_TARGET): $(COMMON_OBJECTS) $(DISCRETIZER_OBJECTS) $(SOLVER_OBJECTS) $(TEST_OBJECTS) gtest_main.a
+$(BINDIR)/$(TEST_TARGET): $(COMMON_OBJECTS) $(DLX_OBJECTS) $(DISCRETIZER_OBJECTS) $(SOLVER_OBJECTS) $(TEST_OBJECTS) gtest_main.a
 	@echo "\tLinking \"$@\""
 	@mkdir -p bin
 	@$(CXX) $(CPPFLAGS)\

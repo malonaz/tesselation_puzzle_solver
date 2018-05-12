@@ -27,6 +27,7 @@ $(MOCK_SOLVER_TARGET) $(IMAGE_PROCESSOR_TARGET) $(SOLVER_PROGRAM_TARGET) $(PIECE
 -include $(OBJECTS:.o=.d)
 
 include $(MAKEDIR)/common.mk
+include $(MAKEDIR)/dlx.mk
 include $(MAKEDIR)/discretizer.mk
 include $(MAKEDIR)/imagereader.mk
 include $(MAKEDIR)/solver.mk

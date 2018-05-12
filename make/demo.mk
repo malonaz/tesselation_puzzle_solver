@@ -8,10 +8,9 @@ $(DEMO_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 	@$(CXX) $(CXXFLAGS) -Weffc++ --coverage -c $< -o $@
 	@echo "[Done]\tCompiling \"$@\""
 
-$(BINDIR)/$(DEMO_TARGET): $(COMMON_OBJECTS) $(SOLVER_OBJECTS) $(DISCRETIZER_OBJECTS) $(IMAGE_READER_OBJECTS) $(DEMO_OBJECTS)
+$(BINDIR)/$(DEMO_TARGET): $(COMMON_OBJECTS) $(DLX_OBJECTS) $(SOLVER_OBJECTS) $(DISCRETIZER_OBJECTS) $(IMAGE_READER_OBJECTS) $(DEMO_OBJECTS)
 	@echo "\tLinking \"$@\""
 	@mkdir -p bin
 	@$(CXX) $(CPPFLAGS)\
-		$(TESTINCLUDES)\
 		$(CXXFLAGS) -fprofile-arcs $^ -o $@ $(OPENCV_LIBFLAGS) -lcrypto
 	@echo "[Done]\tLinking \"$@\""
