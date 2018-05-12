@@ -41,7 +41,7 @@ PuzzleBoard::PuzzleBoard(int* partialBoard, const ShapeMatrix &shape):
   for (int i = 0; i < height; i++) {
     current_board[i] = new int[width];
     for (int j = 0; j < width; j++) {
-      current_board[i][j] = partialBoard[i * width + j + 2];
+      current_board[i][j] = partialBoard[i * width + j];
     }
   }
 }

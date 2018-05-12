@@ -54,9 +54,7 @@ int main(int argc, char** argv) {
   const string state(argv[2]);
 
   // process debug argument. default is true
-  cout<<"here";
   bool debug = argc - 1 == MAX_ARGS? *argv[3] == '1': true ;
-cout<<"here2";
 
   //////////// PART 2: LOAD PUZZLE PIECES /////////////////////////////
   // read and load information of all puzzle pieces
