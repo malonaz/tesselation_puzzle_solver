@@ -20,7 +20,7 @@ enum Direction {NORTH, EAST, SOUTH, WEST};
 enum Quadrant {I = 1, II = 2, III = 3, IV = 4, INVALID_QUADRANT};
 
 // used as threshold to decide if two points are equal
-#define THRESHOLD 0.15
+#define THRESHOLD 0.05
 
 
 /**
