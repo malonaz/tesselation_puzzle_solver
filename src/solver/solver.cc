@@ -522,7 +522,6 @@ bool recursive_solver (PuzzleBoard* board, const vector<vector<ShapeMatrix>> &pi
   // get board dimensions
   uint height = board->getHeight();
   uint width = board->getWidth();
-  cout << iterations << "  --  " <<  current_index << endl;
 
   int** currentBoard = board->getCurrentBoard();
 
