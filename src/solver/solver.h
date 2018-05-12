@@ -31,10 +31,6 @@ void delete_2d_array(int** array, uint height);
 int** puzzle_solver(const vector<ShapeMatrix> &matrices, int& returnCode,
       uint& board_height, uint& board_width);
 
-bool solvable_config(PuzzleBoard* board,const vector<ShapeMatrix> &pieces,
-    uint currentIndex);
-
-
 int** partial_solver(string puzzle_directory, int* partial_board, const vector<ShapeMatrix> &pieces, int& returnCode,
 		     uint& board_height, uint& board_width, bool mute_debugging_messages);
 #endif
