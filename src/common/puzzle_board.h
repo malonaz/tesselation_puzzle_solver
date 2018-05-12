@@ -23,9 +23,9 @@ public:
 
   uint getWidth() const;
 
-  bool placePiece(int x, int y, int idx, const ShapeMatrix &piece);
+  bool placePiece(int x, int y, const ShapeMatrix &piece);
 
-  bool removePiece(int x, int y, int indexToRemove, const ShapeMatrix &piece);
+  bool removePiece(int x, int y, const ShapeMatrix &piece);
 
   int** getCurrentBoard() const;
 

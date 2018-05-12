@@ -69,16 +69,13 @@ uint PuzzleBoard::getWidth() const {
   return this->container.getWidth();
 }
 
-bool PuzzleBoard::placePiece(int x, int y, int idx, const ShapeMatrix &piece) {
+bool PuzzleBoard::placePiece(int x, int y, const ShapeMatrix &piece) {
   int piece_height = piece.getHeight();
   int piece_width = piece.getWidth();
   int container_height = this->container.getHeight();
   int container_width = this->container.getWidth();
   int shapeIdentifier = piece.getIdentifier();
 
-  if (idx <= 0) {
-    return false;
-  }
   if (y < 0 || y >= container_height) {
     return false;
   }
@@ -119,13 +116,13 @@ bool PuzzleBoard::placePiece(int x, int y, int idx, const ShapeMatrix &piece) {
   return true;
 }
 
-bool PuzzleBoard::removePiece(int x, int y, int indexToRemove, const ShapeMatrix &piece) {
+bool PuzzleBoard::removePiece(int x, int y, const ShapeMatrix &piece) {
   int piece_height = piece.getHeight();
   int piece_width = piece.getWidth();
   int container_height = this->container.getHeight();
   int container_width = this->container.getWidth();
 
-int shapeIdentifier = piece.getIdentifier();
+  int shapeIdentifier = piece.getIdentifier();
 
   if (y < 0 || y >= container_height) {
     return false;

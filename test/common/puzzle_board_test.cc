@@ -68,15 +68,15 @@ TEST(PuzzleBoardTest, AddPieceOOB) {
   shape3->set(0, 2, true);
 
   /* test the addition of piece*/
-  EXPECT_FALSE(board->placePiece(0,0,0, *shape1));
-  EXPECT_FALSE(board->placePiece(-1,0,1, *shape1));
-  EXPECT_FALSE(board->placePiece(0,-1,1, *shape1));
-  EXPECT_FALSE(board->placePiece(2,0,1, *shape1));
-  EXPECT_FALSE(board->placePiece(0,2,1, *shape1));
+  EXPECT_FALSE(board->placePiece(0, 0, *shape1));
+  EXPECT_FALSE(board->placePiece(-1, 0, *shape1));
+  EXPECT_FALSE(board->placePiece(0,- 1, *shape1));
+  EXPECT_FALSE(board->placePiece(2, 0, *shape1));
+  EXPECT_FALSE(board->placePiece(0, 2, *shape1));
 
   /*test addition of oversized piece */
-  EXPECT_FALSE(board->placePiece(0,0,1, *shape2));
-  EXPECT_FALSE(board->placePiece(0,0,1, *shape3));
+  EXPECT_FALSE(board->placePiece(0, 0, *shape2));
+  EXPECT_FALSE(board->placePiece(0, 0, *shape3));
 
   delete shape1;
   delete shape2;
@@ -97,23 +97,23 @@ TEST(PuzzleBoardTest, AddRemovePiece) {
   shape1->set(0, 0, true);
 
   /* test the addition of piece*/
-  EXPECT_TRUE(board->placePiece(0,0,1, *shape1));
+  EXPECT_TRUE(board->placePiece(0, 0, *shape1));
   EXPECT_EQ(3, board->getRemainingArea());
-  EXPECT_TRUE(board->placePiece(0,1,2, *shape1));
+  EXPECT_TRUE(board->placePiece(0, 1, *shape1));
   EXPECT_EQ(2, board->getRemainingArea());
-  EXPECT_TRUE(board->placePiece(1,0,3, *shape1));
+  EXPECT_TRUE(board->placePiece(1, 0, *shape1));
   EXPECT_EQ(1, board->getRemainingArea());
-  EXPECT_TRUE(board->placePiece(1,1,4, *shape1));
+  EXPECT_TRUE(board->placePiece(1, 1, *shape1));
   EXPECT_EQ(0, board->getRemainingArea());
 
   /*test removePiece */
-  EXPECT_TRUE(board->removePiece(0,0,1, *shape1));
+  EXPECT_TRUE(board->removePiece(0, 0, *shape1));
   EXPECT_EQ(1, board->getRemainingArea());
-  EXPECT_TRUE(board->removePiece(0,1,2, *shape1));
+  EXPECT_TRUE(board->removePiece(0, 1, *shape1));
   EXPECT_EQ(2, board->getRemainingArea());
-  EXPECT_TRUE(board->removePiece(1,0,3, *shape1));
+  EXPECT_TRUE(board->removePiece(1, 0, *shape1));
   EXPECT_EQ(3, board->getRemainingArea());
-  EXPECT_TRUE(board->removePiece(1,1,4, *shape1));
+  EXPECT_TRUE(board->removePiece(1, 1, *shape1));
   EXPECT_EQ(4, board->getRemainingArea());
 
   delete shape1;
@@ -142,22 +142,22 @@ TEST(PuzzleBoardTest, RemovePieceOOB) {
   shape3->set(0, 2, true);
 
   /* test the addition of piece*/
-  EXPECT_TRUE(board->placePiece(0,0,1, *shape1));
-  EXPECT_TRUE(board->placePiece(0,1,2, *shape1));
-  EXPECT_TRUE(board->placePiece(1,0,3, *shape1));
-  EXPECT_TRUE(board->placePiece(1,1,4, *shape1));
+  EXPECT_TRUE(board->placePiece(0, 0, *shape1));
+  EXPECT_TRUE(board->placePiece(0, 1, *shape1));
+  EXPECT_TRUE(board->placePiece(1, 0, *shape1));
+  EXPECT_TRUE(board->placePiece(1, 1, *shape1));
   EXPECT_EQ(0, board->getRemainingArea());
 
   /*test removePieceOOB */
-  EXPECT_FALSE(board->removePiece(-1,0,1, *shape1));
-  EXPECT_FALSE(board->removePiece(0,-1,1, *shape1));
-  EXPECT_FALSE(board->removePiece(2,-0,1, *shape1));
-  EXPECT_FALSE(board->removePiece(0,2,1, *shape1));
+  EXPECT_FALSE(board->removePiece(-1, 0, *shape1));
+  EXPECT_FALSE(board->removePiece(0,- 1, *shape1));
+  EXPECT_FALSE(board->removePiece(2,- 0, *shape1));
+  EXPECT_FALSE(board->removePiece(0, 2, *shape1));
 
   /*test addition of oversized piece */
   EXPECT_EQ(0, board->getRemainingArea());
-  EXPECT_FALSE(board->placePiece(0,0,1, *shape2));
-  EXPECT_FALSE(board->placePiece(0,0,1, *shape3));
+  EXPECT_FALSE(board->placePiece(0, 0, *shape2));
+  EXPECT_FALSE(board->placePiece(0, 0, *shape3));
 
   delete shape1;
   delete shape2;
