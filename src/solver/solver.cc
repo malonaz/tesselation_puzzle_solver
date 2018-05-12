@@ -316,7 +316,7 @@ int get_adjacent_empty_area(bool** visited, int row, int col, int** board, uint 
   if (row < 0 || col < 0) {
     return 0;
   }
-  if (row >= (int)height || col >= (int)width || visited[row][col]) {
+  if (row >= (int)height || col >= (int)width || board[row][col] != 0 || visited[row][col]) {
     return 0;
   }
 
@@ -435,10 +435,6 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
   int min_board_space_area = board->getWidth() * board->getHeight(); // start with a maximum first
   for (uint row = 0; row < height; row++) {
     for (uint col = 0; col < width; col++) {
-      if (visited[row][col]) {
-        continue;
-      }
-
       // get area near current square
       int area = get_adjacent_empty_area(visited, row, col, board_space, height, width);
 
