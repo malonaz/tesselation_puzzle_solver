@@ -430,6 +430,9 @@ bool solvable_config(PuzzleBoard* board, const vector<ShapeMatrix> &pieces, uint
   bool** visited = new bool*[height];
   for (uint i = 0; i < height; ++i) {
     visited[i] = new bool[width];
+    for (uint j = 0; j < width; ++j) {
+      visited[i][j] = false;
+    }
   }
 
   int min_board_space_area = board->getWidth() * board->getHeight(); // start with a maximum first
