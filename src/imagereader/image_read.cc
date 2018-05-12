@@ -34,7 +34,7 @@ using cv::Scalar;
 using cv::circle;
 using cv::Size;
 
-#define ADAPTIVE_THRESHOLD_VALUE 100
+#define MAX_VALUE 128
 #define SCALE_DOWN_IMAGE_HEIGHT 800
 #define SCALE_DOWN_IMAGE_WIDTH 1280
 #define MIN_CONTOUR_AREA 1200
@@ -72,19 +72,28 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
     return;
   }
 
+  // create a window
+  namedWindow("Debug window", WINDOW_AUTOSIZE);
+    
   // scale down the image
   scale_down_image(src, src);
 
-  // invert pixels 
-  cv::bitwise_not(src, src);
-
+  // show the window
+  imshow( "Debug window", src);
+  waitKey(0);
+    
   // convert to grey scale
   cvtColor(src, src, COLOR_BGR2GRAY);
-
-  // adaptive threshold?????
-  adaptiveThreshold(src, src, ADAPTIVE_THRESHOLD_VALUE,
-		    ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 13, 5);
+  imshow( "Debug window", src);
+  waitKey(0);
   
+  // adaptive threshold
+  adaptiveThreshold(src, src, MAX_VALUE,
+  		    ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 19, 2);
+
+  imshow( "Debug window", src);
+  waitKey(0);
+
 
   // find the polygon's contours
   vector<vector<cv::Point>> contours;
