@@ -1,11 +1,27 @@
 #include "matrix.h"
+#include "problem.h"
 #include <cassert>
 #include <vector>
 
 using std::vector;
 
-Matrix::Matrix() {
-
+Matrix::Matrix(const Problem* problem):
+    _col_ids(problem->width()), _sizes(problem->width()), _nodes() {
+  uint root = this->create_node(0, 0);
+  for (uint x = 0; x < _col_ids.size(); ++x) {
+    uint node_id = this->create_node(x, 0);
+    _col_ids[x] = node_id;
+    if (x >= problem->num_secondary_columns()) {
+      _nodes[node_id].right = root;
+      _nodes[node_id].left = L(root);
+      _nodes[L(root)].right = node_id;
+      _nodes[root].left = node_id;
+    }
+  }
+  vector<vector<uint>> rows = problem->rows();
+  for (uint y = 0; y < rows.size(); ++y) {
+    this->add_row(y, rows[y]);
+  }
 }
 
 uint Matrix::width() const {

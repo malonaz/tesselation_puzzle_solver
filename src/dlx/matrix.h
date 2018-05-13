@@ -2,6 +2,7 @@
 #define APS_DLX_MATRIX_H_
 
 #include "common/types.h"
+#include "problem.h"
 #include <vector>
 
 using std::vector;
@@ -23,7 +24,7 @@ private:
   void reattach_up_down(uint id);
 
 public:
-  Matrix();
+  Matrix(const Problem* problem);
 
   void cover_column(uint id);
   void uncover_column(uint id);

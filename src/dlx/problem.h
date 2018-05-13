@@ -1,3 +1,6 @@
+#ifndef APS_DLX_PROBLEM_H_
+#define APS_DLX_PROBLEM_H_
+
 #include "common/types.h"
 
 #include <vector>
@@ -21,3 +24,5 @@ public:
 };
 
 ostream& operator<<(ostream& os, const Problem& problem);
+
+#endif
