@@ -5,6 +5,7 @@
 #include "common/shape_matrix_io.h"
 #include "common/types.h"
 #include "common/debugger.h"
+#include "dlx/problem.h"
 
 #include <openssl/sha.h>
 #include <iostream>
@@ -763,17 +764,17 @@ void update_solutions_cache(PuzzleBoard* board, int board_height, int board_widt
 }
 
 bool can_place_on(const PuzzleBoard* board, const ShapeMatrix& piece, uint r, uint c) {
-  if (piece.getWidth() + c > board.getWidth()) {
+  if (piece.getWidth() + c > board->getWidth()) {
     return false;
   }
 
-  if (piece.getHeight() + r > board.getHeight()) {
+  if (piece.getHeight() + r > board->getHeight()) {
     return false;
   }
 
   int** current_board = board->getCurrentBoard();
-  for (int i = 0; i < piece.getHeight(); ++i) {
-    for (int j = 0; j < piece.getWidth(); ++j) {
+  for (uint i = 0; i < piece.getHeight(); ++i) {
+    for (uint j = 0; j < piece.getWidth(); ++j) {
       if (!piece.get(i, j)) {
         continue;
       }
@@ -786,9 +787,9 @@ bool can_place_on(const PuzzleBoard* board, const ShapeMatrix& piece, uint r, ui
   return true;
 }
 
-Problem* buildProblem(const PuzzleBoard* board, const vector<ShapeMatrix> &unused_pieces) {
+Problem* build_problem(const PuzzleBoard* board, const vector<ShapeMatrix> &unused_pieces) {
   // choice of unused pieces + (area of already placed or non-placable)
-  Problem* problem = new Problem(unused_pieces.size() + board->getContainer().getMatrixArea());
+  Problem* problem = new Problem((uint)unused_pieces.size() + board->getContainer().getMatrixArea());
 
   uint board_height = board->getHeight();
   uint board_width = board->getWidth();
@@ -814,7 +815,7 @@ Problem* buildProblem(const PuzzleBoard* board, const vector<ShapeMatrix> &unuse
       uint shape_width = shape.getWidth();
       for (uint r = 0; r < board_height; ++r) {
         for (uint c = 0; c < board_width; ++c) {
-          if (!can_place_at(board, shape, r, c)) {
+          if (!can_place_on(board, shape, r, c)) {
             continue;
           }
           vector<uint> row;
@@ -858,7 +859,7 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
 
   // create partial board, which will initialize unused pieces
   PuzzleBoard* board = create_partial_board(board_state, pieces, unused_pieces, debug);
-  Problem* problem = buildProblem(board, unused_pieces);
+  Problem* problem = build_problem(board, unused_pieces);
   cout << problem << endl;
   delete problem;
 
