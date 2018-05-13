@@ -870,9 +870,12 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
 
   // create partial board, which will initialize unused pieces
   PuzzleBoard* board = create_partial_board(board_state, pieces, unused_pieces, debug);
+  board_height = board->getHeight();
+  board_width = board->getWidth();
 
   bool hasExistingSolutionFound = search_existing_solutions(board, puzzle_directory, debug);
   if (hasExistingSolutionFound) {
+    return_code = SOLVED;
     int** current_board  = copy_board(board);
     delete board;
     return current_board;
@@ -896,8 +899,6 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
 
   update_solutions_cache(board, puzzle_directory, debug);
   int** board_solution_copy  = copy_board(board);
-  board_height = board->getHeight();
-  board_width = board->getWidth();
 
   // free board from the heap
   delete board;
