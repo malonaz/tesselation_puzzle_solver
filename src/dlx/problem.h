@@ -11,11 +11,11 @@ private:
   uint _num_secondary_columns;
 
 public:
-  Problem(uint width, uint num_secondary_columns = 0);
+  Problem(uint width, uint num_secondary_columns);
 
   uint width() const;
   uint num_secondary_columns() const;
   vector<vector<uint>> rows() const;
 
   void add_row(vector<uint>& row);
-}
+};

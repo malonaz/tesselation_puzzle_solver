@@ -36,5 +36,15 @@ void Problem::add_row(vector<uint>& row) {
     }
   }
 
-  rows_.emplace_back(move(row));
+  _rows.emplace_back(move(row));
+}
+
+std::ostream& operator<<(std::ostream& os, const Problem& problem) {
+  os << problem.width() << ' ' << problem.num_secondary_columns() << '\n';
+  for (const auto& row : problem.rows()) {
+    for (auto i = 0u; i < row.size(); ++i) {
+      os << row[i] << " \n"[i + 1 == row.size()];
+    }
+  }
+  return os;
 }
