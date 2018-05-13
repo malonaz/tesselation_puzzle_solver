@@ -38,8 +38,8 @@ uint Search::search(vector<uint> stack) {
 
   for (uint r = _matrix.D(c); r != c; r = _matrix.D(r)) {
     // searching down the column
-    cout << " pushing " << r <<endl;
-    stack.push_back(r);
+    cout << " pushing " << _matrix.Y(r) <<endl;
+    stack.push_back(_matrix.Y(r));
 
     for (uint j = _matrix.R(r); j != r; j = _matrix.R(j)) {
       _matrix.cover_column(j);

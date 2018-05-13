@@ -876,7 +876,7 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
   vector<uint> stack;
 
   uint result = _search.search(stack);
-
+  cout << "metadata rows: " << metadata.size() << endl;
   cout << "result is: " << result <<endl;
 
   for (uint i: stack) {
