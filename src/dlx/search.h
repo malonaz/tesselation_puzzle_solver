@@ -10,7 +10,7 @@ private:
 
 public:
   Search(const Problem* problem);
-  uint search(vector<uint> stack);
+  uint search(vector<uint>& stack);
 
 };
 

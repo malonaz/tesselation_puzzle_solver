@@ -8,7 +8,7 @@ using namespace std;
 Search::Search(const Problem* problem): _matrix(problem) {
 }
 
-uint Search::search(vector<uint> stack) {
+uint Search::search(vector<uint>& stack) {
   uint h = _matrix.root();
 
   if (_matrix.R(h) == h) {
