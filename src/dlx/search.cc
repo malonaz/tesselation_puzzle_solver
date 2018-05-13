@@ -28,8 +28,7 @@ uint Search::search(vector<uint>& stack) {
   }
 
   if (_matrix.S(cs[0]) < 1) {
-    cout << " size " << _matrix.S(cs[0]) << " of " << cs[0] <<endl;
-    return 2; //failure error code
+    return 0; //failure error code
   }
 
   uint c = cs[0];
@@ -38,7 +37,6 @@ uint Search::search(vector<uint>& stack) {
 
   for (uint r = _matrix.D(c); r != c; r = _matrix.D(r)) {
     // searching down the column
-    cout << " pushing " << _matrix.Y(r) <<endl;
     stack.push_back(_matrix.Y(r));
 
     for (uint j = _matrix.R(r); j != r; j = _matrix.R(j)) {
