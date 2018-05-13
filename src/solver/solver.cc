@@ -701,11 +701,11 @@ bool search_existing_solutions(PuzzleBoard* board, string puzzle_directory, bool
  *   board_height: height of the board
  *   board_width: width of the board
  */
-void update_solutions_cache(PuzzleBoard* board, int board_height, int board_width, string puzzle_directory, bool debug) {
+void update_solutions_cache(PuzzleBoard* board, string puzzle_directory, bool debug) {
   //we are making a copy of board_solution here because we try not to rotate the original board_solution.
   int** board_solution_copy  = copy_board(board);
-  int copy_height = board_height;
-  int copy_width = board_width;
+  int copy_height = board->getHeight();
+  int copy_width = board->getWidth();
 
   for (int i = 0; i < 4; i++) {
     if (debug) {
