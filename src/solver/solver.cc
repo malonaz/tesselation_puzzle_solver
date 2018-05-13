@@ -279,14 +279,15 @@ vector<ShapeMatrix> get_variations(const ShapeMatrix &shape) {
   vector<int> duplicates = vector<int>();
 
   for (uint i = 0; i < 8; i++) {
-
-    if (i == 4)
+    if (i == 4) {
       // create a flipped version of the shape
       current_variation = current_variation.flip();
+    }
 
     // add current variation if is is not already in the variations list
-    if (!is_shape_matrix_in_list(current_variation, variations))
+    if (!is_shape_matrix_in_list(current_variation, variations)) {
        variations.push_back(current_variation);
+    }
 
     // now rotate the shape
     current_variation = current_variation.rotate();
@@ -819,6 +820,10 @@ Problem* build_problem(const PuzzleBoard* board, const vector<ShapeMatrix> &unus
             continue;
           }
           vector<uint> row;
+          /* each 'row' contains information corresponding to a possible placement
+          by a specific piece, in a specific orientation(variation), onto a
+          specific location on the puzzleboard, and all the corresponding board cells (x,y)
+          which would be covered as a result of the placement */
           for (uint k = 0; k < shape.getMatrixArea(); ++k) {
             if (!shape.get(k)) {
               continue;
@@ -828,6 +833,7 @@ Problem* build_problem(const PuzzleBoard* board, const vector<ShapeMatrix> &unus
             row.push_back(board_index[r + dr][c + dc]);
           }
           problem->add_row(row);
+          // shape identifier information will also be part of the row
         }
       }
     }

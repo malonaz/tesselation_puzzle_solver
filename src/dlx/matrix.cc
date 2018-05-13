@@ -7,18 +7,18 @@ using std::vector;
 
 Matrix::Matrix(const Problem* problem):
     _col_ids(problem->width()), _sizes(problem->width()), _nodes() {
-  uint root = this->create_node(0, 0);
+  uint root = this->create_node(0, 0); //creating head node 'h'
   for (uint x = 0; x < _col_ids.size(); ++x) {
-    uint node_id = this->create_node(x, 0);
+    uint node_id = this->create_node(x, 0); // creating column header nodes
     _col_ids[x] = node_id;
-    if (x >= problem->num_secondary_columns()) {
+    if (x >= problem->num_secondary_columns()) { // secondary columns currently not in use
       _nodes[node_id].right = root;
       _nodes[node_id].left = L(root);
       _nodes[L(root)].right = node_id;
       _nodes[root].left = node_id;
     }
   }
-  vector<vector<uint>> rows = problem->rows();
+  vector<vector<uint>> rows = problem->rows();//
   for (uint y = 0; y < rows.size(); ++y) {
     this->add_row(y, rows[y]);
   }
@@ -107,7 +107,7 @@ void Matrix::add_row(uint y, const vector<uint>& xs) {
 uint Matrix::create_node(uint x, uint y) {
   assert(x <= width());
   uint new_id = _nodes.size();
-  _nodes.emplace_back(new_id, x, y);
+  _nodes.emplace_back(new_id, x, y); // "new" constructor + push_back
   return new_id;
 }
 

@@ -10,14 +10,15 @@ using namespace std;
 
 void print(int** intarray, int rows, int cols){
   cout<<endl;
-  for (int i = 0; i <rows; i++)
-    {for (int j = 0; j <cols; j++)
-    {
-      cout<<*(*(intarray+i)+j)<<" ";
-      if (*(*(intarray+i)+j)<10) cout<<" ";
+  for (int i = 0; i <rows; i++) {
+    for (int j = 0; j <cols; j++) {
+      cout << *(*(intarray+i)+j) << " ";
+      if (*(*(intarray+i)+j)<10) {
+        cout<<" ";
+      }
     }
-      cout<<endl;
-    }
+    cout << endl;
+  }
 }
 
 int** makeIntArray(int rows, int cols){

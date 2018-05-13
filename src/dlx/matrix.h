@@ -10,9 +10,9 @@ using std::vector;
 class Matrix {
 private:
   struct Node;
-  vector<uint> _col_ids;
+  vector<uint> _col_ids; // Each column will have a column id
   vector<uint> _sizes;
-  vector<Node> _nodes;
+  vector<Node> _nodes; // Consists of: head node, column header nodes
 
   void add_row(uint y, const vector<uint>& xs);
   uint create_node(uint x, uint y);
