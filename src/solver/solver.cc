@@ -762,6 +762,78 @@ void update_solutions_cache(PuzzleBoard* board, int board_height, int board_widt
   board_solution_copy = NULL;
 }
 
+bool can_place_on(const PuzzleBoard* board, const ShapeMatrix& piece, uint r, uint c) {
+  if (piece.getWidth() + c > board.getWidth()) {
+    return false;
+  }
+
+  if (piece.getHeight() + r > board.getHeight()) {
+    return false;
+  }
+
+  int** current_board = board->getCurrentBoard();
+  for (int i = 0; i < piece.getHeight(); ++i) {
+    for (int j = 0; j < piece.getWidth(); ++j) {
+      if (!piece.get(i, j)) {
+        continue;
+      }
+
+      if (current_board[r + i][c + j] != 0) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+Problem* buildProblem(const PuzzleBoard* board, const vector<ShapeMatrix> &unused_pieces) {
+  // choice of unused pieces + (area of already placed or non-placable)
+  Problem* problem = new Problem(unused_pieces.size() + board->getContainer().getMatrixArea());
+
+  uint board_height = board->getHeight();
+  uint board_width = board->getWidth();
+
+  int** current_board = board->getCurrentBoard();
+  int** board_index = new int*[board_height];
+  uint board_cell_index = 0;
+
+  for (uint i = 0; i < board_height; ++i) {
+    board_index[i] = new int[board_width];
+    for (uint j = 0; j < board_width; ++j) {
+      if (current_board[i][j] == 0) {
+        board_index[i][j] = board_cell_index;
+        ++board_cell_index;
+      }
+    }
+  }
+
+  for (uint i = 0; i < unused_pieces.size(); ++i) {
+    vector<ShapeMatrix> variations = get_variations(unused_pieces[i]);
+
+    for (ShapeMatrix shape: variations) {
+      uint shape_width = shape.getWidth();
+      for (uint r = 0; r < board_height; ++r) {
+        for (uint c = 0; c < board_width; ++c) {
+          if (!can_place_at(board, shape, r, c)) {
+            continue;
+          }
+          vector<uint> row;
+          for (uint k = 0; k < shape.getMatrixArea(); ++k) {
+            if (!shape.get(k)) {
+              continue;
+            }
+            uint dr = k / shape_width;
+            uint dc = k % shape_width;
+            row.push_back(board_index[r + dr][c + dc]);
+          }
+          problem->add_row(row);
+        }
+      }
+    }
+  }
+
+  return problem;
+}
 
 /**
  * Partial solver is called by bin/sp module. Finds a solution given a partially solved state.
@@ -786,6 +858,9 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
 
   // create partial board, which will initialize unused pieces
   PuzzleBoard* board = create_partial_board(board_state, pieces, unused_pieces, debug);
+  Problem* problem = buildProblem(board, unused_pieces);
+  cout << problem << endl;
+  delete problem;
 
   // prints debugging messages
   if (debug) {
