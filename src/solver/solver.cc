@@ -7,6 +7,7 @@
 #include "common/debugger.h"
 #include "dlx/problem.h"
 #include "problem_row_metadata.h"
+#include "dlx/search.h"
 
 #include <openssl/sha.h>
 #include <iostream>
@@ -840,7 +841,6 @@ Problem* build_problem(const PuzzleBoard* board, const vector<ShapeMatrix> &unus
       }
     }
   }
-
   return problem;
 }
 
@@ -869,80 +869,24 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
   // create partial board, which will initialize unused pieces
   PuzzleBoard* board = create_partial_board(board_state, pieces, unused_pieces, debug);
   Problem* problem = build_problem(board, unused_pieces, metadata);
-  cout << *problem << endl;
-  delete problem;
 
-  // prints debugging messages
-  if (debug) {
-    for (uint i = 0; i < unused_pieces.size(); i++) {
-      cout << "unused piece with identifier:" << unused_pieces[i].getIdentifier() << endl;
-      shape_matrix_print(unused_pieces[i]);
-    }
-
-    cout<< "The current board is: " << endl;
-    print_solution_board(board->getCurrentBoard(), board->getHeight(), board->getWidth());
-  }
-
-  // Strategy 1: look in the existing directory which stores solution cache
   bool success = false;
-  success = search_existing_solutions(board, puzzle_directory, debug);
 
-  // Strategy 2: if there is no existing solution available, try to solve and produce a new solution!
-  bool write_new_solution_flag = false;
+  Search _search(problem);
+  vector<uint> stack;
 
-  if (!success) {
+  uint result = _search.search(stack);
 
-    if (debug) {
-      cout << "No existing solution available in cache, doing new solve. Unused pieces: " << unused_pieces.size() << endl;
-    }
+  cout << "result is: " << result <<endl;
 
-    int iterations = 0;
-
-    vector<unordered_set<int>> permutations;
-    vector<vector<ShapeMatrix>> all_pieces;
-    for (uint i = 0; i < unused_pieces.size(); ++i) {
-      all_pieces.push_back(get_variations(unused_pieces[i]));
-
-      unordered_set<int> areas;
-      get_areas_permutations(areas, unused_pieces, i);
-      permutations.push_back(areas);
-    }
-
-    success = recursive_solver(board, all_pieces, permutations, 0, iterations);
-    if (success) {
-      write_new_solution_flag = true;
-        if (debug) {
-        cout << "Found solution using recursive solver" << endl;
-        print_solution_board(board->getCurrentBoard(), board->getHeight(), board->getWidth());
-      }
-    }
+  for (uint i: stack) {
+    cout << "stack " << i << endl;
   }
 
-  // set return code
-  return_code = success? SOLVED: UNSOLVED;
-
-  // set output parameters
-  board_height = board->getHeight();
-  board_width = board->getWidth();
-
-  // set return value
-  int** board_solution = success? copy_board(board): NULL;
-  if (success && debug) {
-    for (uint i = 0; i < board_height; i++) {
-      for (uint j = 0; j < board_width; j++) {
-        cout<< board_solution[i][j]<<" ";
-      }
-      cout<<endl;
-    }
-  }
-
-  // hash and write solutions to  <directory>/solutions/hash
-  if (success && write_new_solution_flag) {
-    update_solutions_cache(board, board_height, board_width, puzzle_directory, debug);
-  }
 
   // free board from the heap
   delete board;
+  delete problem;
 
-  return success? board_solution: NULL;
+  return NULL; //success? board_solution:
 }
