@@ -19,3 +19,5 @@ public:
 
   void add_row(vector<uint>& row);
 };
+
+ostream& operator<<(ostream& os, const Problem& problem);

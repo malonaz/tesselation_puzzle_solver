@@ -860,7 +860,7 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
   // create partial board, which will initialize unused pieces
   PuzzleBoard* board = create_partial_board(board_state, pieces, unused_pieces, debug);
   Problem* problem = build_problem(board, unused_pieces);
-  cout << problem << endl;
+  cout << *problem << endl;
   delete problem;
 
   // prints debugging messages
@@ -930,7 +930,6 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
   // hash and write solutions to  <directory>/solutions/hash
   if (success && write_new_solution_flag) {
     update_solutions_cache(board, board_height, board_width, puzzle_directory, debug);
-
   }
 
   // free board from the heap

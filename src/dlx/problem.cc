@@ -2,10 +2,12 @@
 #include "common/types.h"
 
 #include <algorithm>
+#include <iostream>
 #include <stdexcept>
 
 using std::sort;
 using std::move;
+using std::ostream;
 
 Problem::Problem(uint width, uint num_secondary_columns):
   _width(width), _num_secondary_columns(num_secondary_columns), _rows() {}
@@ -39,7 +41,7 @@ void Problem::add_row(vector<uint>& row) {
   _rows.emplace_back(move(row));
 }
 
-std::ostream& operator<<(std::ostream& os, const Problem& problem) {
+ostream& operator<<(ostream& os, const Problem& problem) {
   os << problem.width() << ' ' << problem.num_secondary_columns() << '\n';
   for (const auto& row : problem.rows()) {
     for (auto i = 0u; i < row.size(); ++i) {
