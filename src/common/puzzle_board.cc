@@ -20,7 +20,6 @@ PuzzleBoard::PuzzleBoard(const ShapeMatrix &shape):
   for (int i = 0; i < height; i++) {
     current_board[i] = new int[width];
     for (int j = 0; j < width; j++) {
-
       if (shape.get(i,j)) {
         current_board[i][j] = 0;
       } else {
@@ -34,7 +33,7 @@ PuzzleBoard::PuzzleBoard(const ShapeMatrix &shape):
 PuzzleBoard::PuzzleBoard(int* partialBoard, const ShapeMatrix &shape):
     container(shape),
     current_board(NULL),
-    remainingArea(shape.getShapeArea()) {
+    remainingArea(0) {
   int width = shape.getWidth();
   int height = shape.getHeight();
   this->current_board = new int*[height];
@@ -42,6 +41,10 @@ PuzzleBoard::PuzzleBoard(int* partialBoard, const ShapeMatrix &shape):
     current_board[i] = new int[width];
     for (int j = 0; j < width; j++) {
       current_board[i][j] = partialBoard[i * width + j];
+      // need to check shape remaining from scratch
+      if (current_board[i][j] == 0) {
+        ++remainingArea;
+      }
     }
   }
 }
