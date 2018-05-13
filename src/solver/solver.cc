@@ -449,9 +449,9 @@ bool solvable_config(PuzzleBoard* board, const vector<vector<ShapeMatrix>> &piec
   }
 
   for (uint i = 0; i < height; ++i) {
-    delete visited[i];
+    delete[] visited[i];
   }
-  delete visited;
+  delete[] visited;
 
   // if (min_piece_area > min_board_space_area) {
   //   return false;
