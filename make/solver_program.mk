@@ -11,6 +11,6 @@ $(SOLVER_PROGRAM_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 $(BINDIR)/$(SOLVER_PROGRAM_TARGET): $(COMMON_OBJECTS) $(DLX_OBJECTS) $(SOLVER_OBJECTS) $(SOLVER_PROGRAM_OBJECTS)
 	@echo "\tLinking \"$@\""
 	@mkdir -p bin
-	$(CXX) $(CPPFLAGS)\
+	@$(CXX) $(CPPFLAGS)\
 		$(CXXFLAGS) -fprofile-arcs $^ -o $@  -lcrypto
 	@echo "[Done]\tLinking \"$@\""
