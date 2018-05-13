@@ -792,7 +792,7 @@ bool can_place_on(const PuzzleBoard* board, const ShapeMatrix& piece, uint r, ui
 
 Problem* build_problem(const PuzzleBoard* board, const vector<ShapeMatrix> &unused_pieces, vector<ProblemRowMetaData> &metadata) {
   // choice of unused pieces + (area of already placed or non-placable)
-  Problem* problem = new Problem((uint)unused_pieces.size() + board->getContainer().getMatrixArea());
+  Problem* problem = new Problem(board->getContainer().getMatrixArea());
 
   uint board_height = board->getHeight();
   uint board_width = board->getWidth();
