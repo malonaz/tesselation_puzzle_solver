@@ -1,18 +1,12 @@
-#include "common/memory.h"
-#include "common/puzzle_board.h"
-#include "common/shape_matrix.h"
-#include "common/shape_matrix_io.h"
-#include "common/types.h"
 #include "solver.h"
 #include "common/memory.h"
 #include "common/puzzle_board.h"
 #include "common/shape_matrix.h"
 #include "common/shape_matrix_io.h"
 #include "common/types.h"
-#include "solver.h"
 #include "common/debugger.h"
-#include <openssl/sha.h>
 
+#include <openssl/sha.h>
 #include <iostream>
 #include <unordered_set>
 #include <vector>
