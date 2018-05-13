@@ -34,8 +34,7 @@ using std::unordered_set;
  *  @returns:
  *   the hash of the given string
  */
-string sha256(string str){
-
+string sha256(string str) {
   unsigned char hash[SHA256_DIGEST_LENGTH];
   SHA256_CTX sha256;
   SHA256_Init(&sha256);
@@ -43,8 +42,9 @@ string sha256(string str){
   SHA256_Final(hash, &sha256);
   stringstream strstream;
 
-  for(int i = 0; i < SHA256_DIGEST_LENGTH; i++)
+  for(int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
     strstream << hex << setw(2) << setfill('0') << (int)hash[i];
+  }
 
   return strstream.str();
 }
