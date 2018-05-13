@@ -153,7 +153,7 @@ bool shape_already_used(int current_identifier, int* partial_board, int partial_
  *   a pointer to a PuzzleBoard on the heap. Caller is responsible for deletion from the heap
  */
 PuzzleBoard* create_partial_board(int* board_state, const vector<ShapeMatrix> &pieces,
-				  vector<ShapeMatrix> &unused_pieces, bool debug) {
+          vector<ShapeMatrix> &unused_pieces, bool debug) {
 
   // create copy of all_pieces and sort it in descending order
   vector<ShapeMatrix> pieces_copy = pieces;
@@ -196,7 +196,7 @@ PuzzleBoard* create_partial_board(int* board_state, const vector<ShapeMatrix> &p
       unused_pieces.push_back(pieces[j]);
 
       if (debug) {
-	       cout << "pushing in piece number " << pieces[j].getIdentifier() << endl;
+         cout << "pushing in piece number " << pieces[j].getIdentifier() << endl;
       }
 
     }
@@ -217,7 +217,7 @@ PuzzleBoard* create_partial_board(int* board_state, const vector<ShapeMatrix> &p
  *    on the heap. Caller is responsible for deletion of object off the heap.
  */
 PuzzleBoard* create_board(const vector<ShapeMatrix> &matrices, vector<ShapeMatrix> &pieces,
-			  int& container_area, int& pieces_area) {
+        int& container_area, int& pieces_area) {
 
   // set output parameter to 0. used to keep track of the cumulative areas of all the pieces
   pieces_area = 0;
@@ -438,7 +438,7 @@ bool solvable_config(PuzzleBoard* board, const vector<vector<ShapeMatrix>> &piec
 
       // if area is zero, continue
       if (area == 0) {
-	       continue;
+         continue;
       }
       areas.push_back(area);
       // min_board_space_area = min(min_board_space_area, area);
@@ -527,21 +527,21 @@ bool recursive_solver (PuzzleBoard* board, const vector<vector<ShapeMatrix>> &pi
         continue;
       }
       for (uint i = 0; i < current_piece_variations.size(); i++) {
-	       // get the ith variation of the current piece
+         // get the ith variation of the current piece
         ShapeMatrix current_piece_variation = current_piece_variations[i];
 
-	       // if this variation cannot be placed, try the next
+         // if this variation cannot be placed, try the next
         if (!board->placePiece(col, row, current_piece_variation)) {
-	        continue;
+          continue;
         }
 
-      	// check that puzzle can be solved after placing the piece
-      	if (recursive_solver(board, pieces, permutations, current_index + 1, iterations)) {
-      	  return true;
+        // check that puzzle can be solved after placing the piece
+        if (recursive_solver(board, pieces, permutations, current_index + 1, iterations)) {
+          return true;
         }
 
-    	  // backtrack
-    	  board->removePiece(col, row, current_piece_variation);
+        // backtrack
+        board->removePiece(col, row, current_piece_variation);
       }
     }
   }
@@ -654,7 +654,7 @@ vector<string> get_filenames(const string& path){
  *   true if the solution at the given filename is consistent with the board
  */
 bool solution_is_consistent_with_board(PuzzleBoard* puzzle, string solution_filename,
-				       int* board_solution){
+               int* board_solution){
 
   // get current board as a 2D int array
   int** board = puzzle->getCurrentBoard();
@@ -725,7 +725,7 @@ bool search_existing_solutions(PuzzleBoard* board, string puzzle_directory, bool
     if (solution_is_consistent_with_board(board, solutions_filenames[file_num], existing_solution)){
 
       if (debug){
-	       cout << "solution found in " << puzzle_directory << endl;
+         cout << "solution found in " << puzzle_directory << endl;
       }
 
       // get container of board
@@ -835,7 +835,7 @@ void update_solutions_cache(PuzzleBoard* board, int board_height, int board_widt
  *   a 2-d array represenging a solution of size board_height x board_width or NULL if no solution exists.
  */
 int** partial_solver(string puzzle_directory, int* board_state, const vector<ShapeMatrix> &pieces, int& return_code,
-		     uint& board_height, uint& board_width, bool debug) {
+         uint& board_height, uint& board_width, bool debug) {
 
   // used by create_partial_board() call. will hold the unused pieces
   vector<ShapeMatrix> unused_pieces;
