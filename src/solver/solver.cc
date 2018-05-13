@@ -872,7 +872,11 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
   PuzzleBoard* board = create_partial_board(board_state, pieces, unused_pieces, debug);
   Problem* problem = build_problem(board, unused_pieces, metadata);
 
-  bool success = false;
+  bool hasExistingSolutionFound = search_existing_solutions(board, puzzle_directory, debug);
+  if (hasExistingSolutionFound) {
+    return board->getCurrentBoard();
+  }
+
 
   Search _search(problem);
   vector<uint> stack;
@@ -880,6 +884,7 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
   uint result = _search.search(stack);
 
   if (result != 1) {
+    return_code = UNSOLVED;
     return NULL;
   }
 
@@ -890,9 +895,12 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
 
   int** current_board = board->getCurrentBoard();
 
+  update_solutions_cache(board, puzzle_directory, debug);
+
   // free board from the heap
   delete board;
   delete problem;
 
+  return_code = SOLVED;
   return current_board; //success? board_solution:
 }
