@@ -7,8 +7,8 @@
 using std::sort;
 using std::move;
 
-Problem::Problem(uint width, uint num_secondary_columns = 0):
-  _width(width), _num_secondary_columns(num_secondary_columns) {}
+Problem::Problem(uint width, uint num_secondary_columns):
+  _width(width), _num_secondary_columns(num_secondary_columns), _rows() {}
 
 uint Problem::width() const {
   return this->_width;

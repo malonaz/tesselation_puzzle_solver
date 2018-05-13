@@ -6,12 +6,12 @@ using std::vector;
 
 class Problem {
 private:
-  vector<vector<uint>> _rows;
   uint _width;
   uint _num_secondary_columns;
+  vector<vector<uint>> _rows;
 
 public:
-  Problem(uint width, uint num_secondary_columns);
+  Problem(uint width, uint num_secondary_columns = 0);
 
   uint width() const;
   uint num_secondary_columns() const;
