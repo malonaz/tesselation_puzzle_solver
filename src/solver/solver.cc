@@ -873,7 +873,7 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
 
   bool hasExistingSolutionFound = search_existing_solutions(board, puzzle_directory, debug);
   if (hasExistingSolutionFound) {
-    int** current_board = board->getCurrentBoard();
+    int** current_board  = copy_board(board);
     delete board;
     return current_board;
   }
