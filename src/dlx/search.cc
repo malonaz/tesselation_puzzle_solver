@@ -3,6 +3,7 @@
 #include "matrix.h"
 #include "problem.h"
 
+#include <random>
 using namespace std;
 
 Search::Search(const Problem* problem): _matrix(problem) {
@@ -28,13 +29,15 @@ uint Search::search(vector<uint>& stack) {
   }
 
   if (_matrix.S(cs[0]) < 1) {
-    return 0; //failure error code
+    return 0; // backtracking needed
   }
 
-  uint c = cs[0];
+  std::random_device random_device;
+  std::mt19937 engine{random_device()};
+  std::uniform_int_distribution<int> dist(0, cs.size() - 1);
+  uint c = cs[dist(engine)];
 
   _matrix.cover_column(c);
-
   for (uint r = _matrix.D(c); r != c; r = _matrix.D(r)) {
     // searching down the column
     stack.push_back(_matrix.Y(r));
@@ -44,7 +47,6 @@ uint Search::search(vector<uint>& stack) {
     }
 
     uint result = search(stack); //recursion
-
     if (result == 1) {
       return result; // do not backtrack if a result is found
     }
