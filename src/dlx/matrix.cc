@@ -2,8 +2,10 @@
 #include "problem.h"
 #include <cassert>
 #include <vector>
+#include <iostream>
 
 using std::vector;
+using namespace std;
 
 Matrix::Matrix(const Problem* problem):
     _col_ids(problem->width()), _sizes(problem->width()), _nodes() {

@@ -8,7 +8,6 @@ using namespace std;
 Search::Search(const Problem* problem): _matrix(problem) {
 }
 
-
 uint Search::search(vector<uint> stack) {
   uint h = _matrix.root();
 
@@ -29,6 +28,7 @@ uint Search::search(vector<uint> stack) {
   }
 
   if (_matrix.S(cs[0]) < 1) {
+    cout << " size " << _matrix.S(cs[0]) << " of " << cs[0] <<endl;
     return 2; //failure error code
   }
 
@@ -37,7 +37,7 @@ uint Search::search(vector<uint> stack) {
   _matrix.cover_column(c);
 
   for (uint r = _matrix.D(c); r != c; r = _matrix.D(r)) {
-    //searching down the column
+    // searching down the column
     cout << " pushing " << r <<endl;
     stack.push_back(r);
 
@@ -47,7 +47,7 @@ uint Search::search(vector<uint> stack) {
 
     uint result = search(stack); //recursion
 
-    if (result != 0) {
+    if (result == 1) {
       return result; // do not backtrack if a result is found
     }
 
