@@ -792,7 +792,8 @@ bool can_place_on(const PuzzleBoard* board, const ShapeMatrix& piece, uint r, ui
 
 Problem* build_problem(const PuzzleBoard* board, const vector<ShapeMatrix> &unused_pieces, vector<ProblemRowMetaData> &metadata) {
   // choice of unused pieces + (area of already placed or non-placable)
-  Problem* problem = new Problem(board->getContainer().getMatrixArea());
+  uint size = board->getContainer().getMatrixArea();
+  Problem* problem = new Problem((uint)unused_pieces.size() + size);
 
   uint board_height = board->getHeight();
   uint board_width = board->getWidth();
@@ -834,6 +835,7 @@ Problem* build_problem(const PuzzleBoard* board, const vector<ShapeMatrix> &unus
             uint dc = k % shape_width;
             row.push_back(board_index[r + dr][c + dc]);
           }
+          row.push_back(size + i);
           metadata.push_back({shape, r, c});
           problem->add_row(row);
           // shape identifier information will also be part of the row
