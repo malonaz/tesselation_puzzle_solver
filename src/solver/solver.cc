@@ -6,6 +6,7 @@
 #include "common/types.h"
 #include "common/debugger.h"
 #include "dlx/problem.h"
+#include "problem_row_metadata.h"
 
 #include <openssl/sha.h>
 #include <iostream>
@@ -788,7 +789,7 @@ bool can_place_on(const PuzzleBoard* board, const ShapeMatrix& piece, uint r, ui
   return true;
 }
 
-Problem* build_problem(const PuzzleBoard* board, const vector<ShapeMatrix> &unused_pieces) {
+Problem* build_problem(const PuzzleBoard* board, const vector<ShapeMatrix> &unused_pieces, vector<ProblemRowMetaData> &metadata) {
   // choice of unused pieces + (area of already placed or non-placable)
   Problem* problem = new Problem((uint)unused_pieces.size() + board->getContainer().getMatrixArea());
 
@@ -832,6 +833,7 @@ Problem* build_problem(const PuzzleBoard* board, const vector<ShapeMatrix> &unus
             uint dc = k % shape_width;
             row.push_back(board_index[r + dr][c + dc]);
           }
+          metadata.push_back({shape, r, c});
           problem->add_row(row);
           // shape identifier information will also be part of the row
         }
@@ -862,10 +864,11 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
 
   // used by create_partial_board() call. will hold the unused pieces
   vector<ShapeMatrix> unused_pieces;
+  vector<ProblemRowMetaData> metadata;
 
   // create partial board, which will initialize unused pieces
   PuzzleBoard* board = create_partial_board(board_state, pieces, unused_pieces, debug);
-  Problem* problem = build_problem(board, unused_pieces);
+  Problem* problem = build_problem(board, unused_pieces, metadata);
   cout << *problem << endl;
   delete problem;
 
