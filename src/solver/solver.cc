@@ -878,17 +878,21 @@ int** partial_solver(string puzzle_directory, int* board_state, const vector<Sha
   vector<uint> stack;
 
   uint result = _search.search(stack);
-  cout << "metadata rows: " << metadata.size() << endl;
-  cout << "result is: " << result <<endl;
 
-  for (uint i: stack) {
-    cout << "stack " << i << endl;
+  if (result != 1) {
+    return NULL;
   }
 
+  for (uint i: stack) {
+    ProblemRowMetaData data = metadata[i];
+    board->placePiece(data.col, data.row, data.shape);
+  }
+
+  int** current_board = board->getCurrentBoard();
 
   // free board from the heap
   delete board;
   delete problem;
 
-  return NULL; //success? board_solution:
+  return current_board; //success? board_solution:
 }
