@@ -6,7 +6,13 @@
 using std::ostream;
 using std::sqrt;
 
-double Point::distanceTo(Point that) const {
+float Point::distanceTo(Point that) const {
+  float y_diff = that.y - y;
+  float x_diff = that.x - x;
+  return sqrt(y_diff * y_diff + x_diff * x_diff);
+}
+
+double Point::distanceToHighPrecision(Point that) const{
   double y_diff = that.y - y;
   double x_diff = that.x - x;
   return sqrt(y_diff * y_diff + x_diff * x_diff);

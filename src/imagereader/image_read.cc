@@ -63,31 +63,6 @@ void scale_down_image(const Mat& source, Mat& target){
 }
 
 
-/**
- * Helper function which applies filters to an image of 3D shapes.
- * Optimized to remove shadows and double points.
- *  @params:
- *   image_matrix: the matrix representation of the image
- */
-void shape_filter_3D(Mat image_matrix){
-
-  // adaptive threshold
-  adaptiveThreshold(image_matrix, image_matrix, MAX_VALUE,
-		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 27, 16);
-}
-
-
-/**
- * Helper function which applies filters to an image of 2D shapes
- *  @params:
- *   image_matrix: the matrix representation of the image
- */
-void shape_filter_2D(Mat image_matrix){
-
-  // adaptive threshold
-  adaptiveThreshold(image_matrix, image_matrix, MAX_VALUE,
-		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 31, 2);
-}
 
 
 /**
@@ -132,7 +107,7 @@ void identify_polygons(Mat &image_matrix, vector<ListOfPoints> &polygons_corners
       for (uint k = 0; k < polygon_corners.size(); k++){
 
 	// compute euclidean distance to each point
-	float distance = point.distanceTo(polygon_corners[k]);
+	double distance = point.distanceToHighPrecision(polygon_corners[k]);
 	
 	// don't add the point if it is within PIXEL_EPSILON of another
 	if (distance < PIXEL_EPSILON){
@@ -168,39 +143,88 @@ void standardize_image(Mat& image_matrix){
 }
 
 
-void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons_corners){
+/**
+ * Helper function which returns true if a list within list_of_lists
+ * contains an odd number of items.
+ *  @params:
+ *   list_of_lists: contains lists that we want to check the size of
+ */
+bool contains_lists_with_odd_sizes(vector<ListOfPoints>& list_of_lists){
+
+  for (uint i = 0; i < list_of_lists.size(); i++){
+
+    if (list_of_lists[i].size() % 2 == 1)
+      return true;
+    
+  }
+
+  return false;;
+}
+
+/**
+ * Helper function which attempts to extract polygons' corners
+ * by treating the image as a picture of 3D shapes.
+ * Optimized to remove shadows and double points.
+ *  @params:
+ *   image_matrix: the matrix representation of the image
+ *   polygons_corners: output parameter which will contain the corners of 
+ *                     the identifed polygons
+ */
+void find_coordinates_3D(Mat image_matrix, vector<ListOfPoints> &polygons_corners){
+  // adaptive threshold
+  adaptiveThreshold(image_matrix, image_matrix, MAX_VALUE,
+		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 27, 16);
   
-  bool debug = true;
+  // get polygon corners
+  identify_polygons(image_matrix, polygons_corners);
+
+}
+
+
+/**
+ * Helper function which attempts to extract polygons' corners
+ * by treating the image as a picture of 2D shapes.
+ *  @params:
+ *   image_matrix: the matrix representation of the image
+ *   polygons_corners: output parameter which will contain the corners of 
+ *                     the identifed polygons
+ */
+void find_coordinates_2D(Mat image_matrix, vector<ListOfPoints> &polygons_corners){
+  // adaptive threshold
+  adaptiveThreshold(image_matrix, image_matrix, MAX_VALUE,
+		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 31, 2);
+
+  // get polygon corners
+  identify_polygons(image_matrix, polygons_corners);
+
+}
+
+
+
+void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons_corners){
   
   // attemp to get the matrice respresentation of the image
   Mat image_matrix = imread(image_filename);
   if (image_matrix.empty()) {
-    cout << "Could not open or find the image!\n" << endl;
+    cout << "Could not open the image!\n" << endl;
     return;
   }
   
-  // create a window
-  if (debug)
-    namedWindow("Debug window", WINDOW_AUTOSIZE);
-
   // standardize the image
   standardize_image(image_matrix);
 
-  if (debug){
-    imshow( "Debug window", image_matrix);
-    waitKey(0);
-  }
+  // make a copy of the standardized image for potential later 3D processing
+  Mat image_matrix_3D = image_matrix.clone();
   
-  // adaptive threshold
-  shape_filter_2D(image_matrix);
-  
-  if (debug){
-    imshow( "Debug window", image_matrix);
-    waitKey(0);
-  }
+  // 2d processing
+  find_coordinates_2D(image_matrix, polygons_corners);
 
-  // get polygon corners
-  identify_polygons(image_matrix, polygons_corners);
+  // check if 2d processing did not work
+  if (contains_lists_with_odd_sizes(polygons_corners)){
+    polygons_corners.clear();
+    find_coordinates_3D(image_matrix_3D, polygons_corners);
+  }
+  
 }
 
 
