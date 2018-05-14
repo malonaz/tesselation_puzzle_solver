@@ -109,7 +109,11 @@ void identify_polygons(Mat &image_matrix, vector<ListOfPoints> &polygons_corners
 
     // use cv library to extract polygon shapes from contours
     approxPolyDP(Mat(contours[i]), polydp_output_param, arcLength(Mat(contours[i]), true) * 0.02, true);
-    if (fabs(contourArea(contours[i])) < MIN_CONTOUR_AREA || polydp_output_param.size() % 2 == 1) {
+
+    // series of checks
+    if (fabs(contourArea(contours[i])) < MIN_CONTOUR_AREA ||
+	polydp_output_param.size() % 2 == 1 ||
+	polydp_output_param.size() < 4) {
       continue;
     }
     shape_count++;
@@ -149,6 +153,21 @@ void identify_polygons(Mat &image_matrix, vector<ListOfPoints> &polygons_corners
   }
 }
 
+/**
+ * Helper function which scales down an image matrix and converts it to greyscale
+ */ 
+void standardize_image(Mat& image_matrix){
+
+  // scale down the iamge
+  scale_down_image(image_matrix, image_matrix);
+
+  // convert to grey scale
+  cvtColor(image_matrix, image_matrix, COLOR_BGR2GRAY);
+  
+  
+}
+
+
 void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons_corners){
   
   bool debug = true;
@@ -163,18 +182,10 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
   // create a window
   if (debug)
     namedWindow("Debug window", WINDOW_AUTOSIZE);
-    
-  // scale down the image
-  scale_down_image(image_matrix, image_matrix);
 
-  // show the window
-  if (debug){
-    imshow( "Debug window", image_matrix);
-    waitKey(0);
-  }
-    
-  // convert to grey scale
-  cvtColor(image_matrix, image_matrix, COLOR_BGR2GRAY);
+  // standardize the image
+  standardize_image(image_matrix);
+
   if (debug){
     imshow( "Debug window", image_matrix);
     waitKey(0);
@@ -190,7 +201,6 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
 
   // get polygon corners
   identify_polygons(image_matrix, polygons_corners);
-
 }
 
 
