@@ -90,9 +90,60 @@ void shape_filter_2D(Mat image_matrix){
 }
 
 
+/**
+ * Helper function which processed the contours of shapes, to identify polygons.
+ *  @params:
+ *   contours: list of shapes contours
+ *   polygons_corners:
+ */
+void process_contours(vector<vector<cv::Point>> contours, vector<ListOfPoints> &polygons_corners){
 
+  // used by cv's approxPolyDP function as output parameter
+  vector<cv::Point> polydp_output_param;
+  for (uint i = 0; i < contours.size(); ++i) {
 
-void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons_corner_coordinates){
+    // use cv library to extract polygon shapes from contours
+    approxPolyDP(Mat(contours[i]), polydp_output_param, arcLength(Mat(contours[i]), true) * 0.02, true);
+    if (fabs(contourArea(contours[i])) < MIN_CONTOUR_AREA || polydp_output_param.size() % 2 == 1) {
+      continue;
+    }
+
+    // will be used to store a shape as a list of points
+    ListOfPoints polygon_corners;
+
+    for (uint j = 0; j < polydp_output_param.size(); ++j) {
+
+      // flag to determine whether this point will be added
+      bool add_point = true;
+
+      // create a point. We will now evaluate whether it is a duplicate
+      Point point(polydp_output_param[j].x, polydp_output_param[j].y);
+
+      // iterate through existing points, looking for a duplicate
+      for (uint k = 0; k < polygon_corners.size(); k++){
+
+	// compute euclidean distance to each point
+	float distance = point.distanceTo(polygon_corners[k]);
+
+	// don't add the point if it is within PIXEL_EPSILON of another
+	if (distance < PIXEL_EPSILON){
+	  add_point = false;
+	  break;
+	}
+	
+      }
+
+      // add the point if flag says so
+      if (add_point)
+	polygon_corners.push_back(point);
+    }
+
+    // add the shape
+    polygons_corners.push_back(polygon_corners);
+  }
+}
+
+void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons_corners){
   
   bool debug = true;
   
@@ -132,56 +183,18 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
   }
   
 
-  // find the polygon's contours
+  // find the polygon's contours using cv's findContours
   vector<vector<cv::Point>> contours;
   findContours(image_matrix, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
 
-  vector<cv::Point> approx;
-  for (uint i = 0; i < contours.size(); ++i) {
-
-    // use cv library to extract polygon shapes from contours
-    approxPolyDP(Mat(contours[i]), approx, arcLength(Mat(contours[i]), true) * 0.02, true);
-    if (fabs(contourArea(contours[i])) < MIN_CONTOUR_AREA || approx.size() % 2 == 1) {
-      continue;
-    }
-
-    // will be used to store a shape as a list of points
-    ListOfPoints shapeList;
-
-    for (uint j = 0; j < approx.size(); ++j) {
-
-      // flag to determine whether this point will be added
-      bool add_point = true;
-
-      // create a point. We will now evaluate whether it is a duplicate
-      Point point(approx[j].x, approx[j].y);
-
-      // iterate through existing points, looking for a duplicate
-      for (uint k = 0; k < shapeList.size(); k++){
-
-	// compute euclidean distance to each point
-	float distance = point.distanceTo(shapeList[k]);
-
-	// don't add the point if it is within PIXEL_EPSILON of another
-	if (distance < PIXEL_EPSILON){
-	  add_point = false;
-	  break;
-	}
-	
-      }
-
-      // add the point if flag says so
-      if (add_point)
-	shapeList.push_back(point);
-    }
-
-    // add the shape
-    polygons_corner_coordinates.push_back(shapeList);
-  }
+  // process the contours
+  process_contours(contours, polygons_corners);
 }
 
-void debug_coordinates(const char* image_filename, const vector<ListOfPoints> &polygons_corner_coordinates){
+
+
+void debug_coordinates(const char* image_filename, const vector<ListOfPoints> &polygons_corners){
 
   // attempt to get the matrice representation of the image
   Mat image_matrix = imread(image_filename);
@@ -196,14 +209,14 @@ void debug_coordinates(const char* image_filename, const vector<ListOfPoints> &p
   namedWindow("Debug window", WINDOW_AUTOSIZE);
 
   // print out coordinates of corners to std output stream
-  for (uint i = 0; i < polygons_corner_coordinates.size(); i++) {
+  for (uint i = 0; i < polygons_corners.size(); i++) {
     
     cout << "Shape " << i << ": " << endl;
 
-    for (uint j = 0; j < polygons_corner_coordinates[i].size(); j++) {
+    for (uint j = 0; j < polygons_corners[i].size(); j++) {
 
       // get point and print its coordinates
-      Point p = polygons_corner_coordinates[i][j];      
+      Point p = polygons_corners[i][j];      
       cout << "\t(" << p.x << ", " << p.y << ")" << endl;
 
       // add a small circle around the corner
