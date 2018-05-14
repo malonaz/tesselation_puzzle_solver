@@ -86,7 +86,7 @@ void shape_filter_2D(Mat image_matrix){
 
   // adaptive threshold
   adaptiveThreshold(image_matrix, image_matrix, MAX_VALUE,
-		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 27, 16);
+		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 31, 2);
 }
 
 
