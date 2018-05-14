@@ -38,7 +38,7 @@ using cv::Size;
 #define SCALE_DOWN_IMAGE_HEIGHT 800
 #define SCALE_DOWN_IMAGE_WIDTH 1280
 #define MIN_CONTOUR_AREA 1200
-
+#define PIXEL_EPSILON 15
 
 /**
  * Helper function which scales down a given image.
@@ -139,30 +139,44 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
 
   vector<cv::Point> approx;
   for (uint i = 0; i < contours.size(); ++i) {
+
+    // use cv library to extract polygon shapes from contours
     approxPolyDP(Mat(contours[i]), approx, arcLength(Mat(contours[i]), true) * 0.02, true);
     if (fabs(contourArea(contours[i])) < MIN_CONTOUR_AREA || approx.size() % 2 == 1) {
       continue;
     }
 
+    // will be used to store a shape as a list of points
     ListOfPoints shapeList;
 
     for (uint j = 0; j < approx.size(); ++j) {
+
+      // flag to determine whether this point will be added
       bool add_point = true;
+
+      // create a point. We will now evaluate whether it is a duplicate
       Point point(approx[j].x, approx[j].y);
-      
+
+      // iterate through existing points, looking for a duplicate
       for (uint k = 0; k < shapeList.size(); k++){
+
+	// compute euclidean distance to each point
 	float distance = point.distanceTo(shapeList[k]);
 
-	if (distance < 15){
+	// don't add the point if it is within PIXEL_EPSILON of another
+	if (distance < PIXEL_EPSILON){
 	  add_point = false;
 	  break;
 	}
 	
       }
+
+      // add the point if flag says so
       if (add_point)
 	shapeList.push_back(point);
     }
 
+    // add the shape
     polygons_corner_coordinates.push_back(shapeList);
   }
 }
