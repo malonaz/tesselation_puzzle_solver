@@ -25,7 +25,8 @@ struct Point {
   /**
    * Returns the euclidean distance to that point.
    */
-  float distanceTo(Point that) const;
+  double distanceTo(Point that) const;
+
 
   /**
    * Returns the slope to that point.

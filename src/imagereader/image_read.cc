@@ -98,7 +98,7 @@ void shape_filter_2D(Mat image_matrix){
  *   polygons_corners: output parameter which will hold a list of corners for each identified polygon.
  */
 void identify_polygons(Mat &image_matrix, vector<ListOfPoints> &polygons_corners){
-
+  int shape_count = 0;
   // find the polygon's contours using cv's findContours
   vector<vector<cv::Point>> contours;
   findContours(image_matrix, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
@@ -112,7 +112,7 @@ void identify_polygons(Mat &image_matrix, vector<ListOfPoints> &polygons_corners
     if (fabs(contourArea(contours[i])) < MIN_CONTOUR_AREA || polydp_output_param.size() % 2 == 1) {
       continue;
     }
-
+    shape_count++;
     // will be used to store a shape as a list of points
     ListOfPoints polygon_corners;
 
@@ -129,9 +129,10 @@ void identify_polygons(Mat &image_matrix, vector<ListOfPoints> &polygons_corners
 
 	// compute euclidean distance to each point
 	float distance = point.distanceTo(polygon_corners[k]);
-
+	
 	// don't add the point if it is within PIXEL_EPSILON of another
 	if (distance < PIXEL_EPSILON){
+	  cout << shape_count << ": " << distance << endl;
 	  add_point = false;
 	  break;
 	}
@@ -187,7 +188,7 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
     waitKey(0);
   }
 
-  // get polygon corners.
+  // get polygon corners
   identify_polygons(image_matrix, polygons_corners);
 
 }
