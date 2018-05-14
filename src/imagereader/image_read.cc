@@ -67,12 +67,12 @@ void scale_down_image(const Mat& source, Mat& target){
  * Helper function which applies filters to an image of 3D shapes.
  * Optimized to remove shadows and double points.
  *  @params:
- *   image: the matrix representation of the image
+ *   image_matrix: the matrix representation of the image
  */
-void shape_filter_3D(Mat image){
+void shape_filter_3D(Mat image_matrix){
 
   // adaptive threshold
-  adaptiveThreshold(image, image, MAX_VALUE,
+  adaptiveThreshold(image_matrix, image_matrix, MAX_VALUE,
 		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 27, 16);
 }
 
@@ -80,12 +80,12 @@ void shape_filter_3D(Mat image){
 /**
  * Helper function which applies filters to an image of 2D shapes
  *  @params:
- *   image: the matrix representation of the image
+ *   image_matrix: the matrix representation of the image
  */
-void shape_filter_2D(Mat image){
+void shape_filter_2D(Mat image_matrix){
 
   // adaptive threshold
-  adaptiveThreshold(image, image, MAX_VALUE,
+  adaptiveThreshold(image_matrix, image_matrix, MAX_VALUE,
 		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 27, 16);
 }
 
@@ -97,8 +97,8 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
   bool debug = true;
   
   // attemp to get the matrice respresentation of the image
-  Mat src = imread(image_filename);
-  if (src.empty()) {
+  Mat image_matrix = imread(image_filename);
+  if (image_matrix.empty()) {
     cout << "Could not open or find the image!\n" << endl;
     return;
   }
@@ -108,34 +108,33 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
     namedWindow("Debug window", WINDOW_AUTOSIZE);
     
   // scale down the image
-  scale_down_image(src, src);
+  scale_down_image(image_matrix, image_matrix);
 
   // show the window
   if (debug){
-    imshow( "Debug window", src);
+    imshow( "Debug window", image_matrix);
     waitKey(0);
   }
     
   // convert to grey scale
-  cvtColor(src, src, COLOR_BGR2GRAY);
+  cvtColor(image_matrix, image_matrix, COLOR_BGR2GRAY);
   if (debug){
-    imshow( "Debug window", src);
+    imshow( "Debug window", image_matrix);
     waitKey(0);
   }
   
   // adaptive threshold
-  adaptiveThreshold(src, src, MAX_VALUE,
-		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 27, 16);
-
+  shape_filter_2D(image_matrix);
+  
   if (debug){
-    imshow( "Debug window", src);
+    imshow( "Debug window", image_matrix);
     waitKey(0);
   }
   
 
   // find the polygon's contours
   vector<vector<cv::Point>> contours;
-  findContours(src, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+  findContours(image_matrix, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
 
   vector<cv::Point> approx;
@@ -171,13 +170,13 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
 void debug_coordinates(const char* image_filename, const vector<ListOfPoints> &polygons_corner_coordinates){
 
   // attempt to get the matrice representation of the image
-  Mat src = imread(image_filename);
-  if (src.empty()) {
+  Mat image_matrix = imread(image_filename);
+  if (image_matrix.empty()) {
     cout << "Could not open or find image!\n" << endl;
   }
 
   // scale down the image
-  scale_down_image(src, src);
+  scale_down_image(image_matrix, image_matrix);
 
   // name a window
   namedWindow("Debug window", WINDOW_AUTOSIZE);
@@ -194,14 +193,14 @@ void debug_coordinates(const char* image_filename, const vector<ListOfPoints> &p
       cout << "\t(" << p.x << ", " << p.y << ")" << endl;
 
       // add a small circle around the corner
-      circle(src, cv::Point(p.x, p.y), 5, Scalar(255), 2, 8, 0);
+      circle(image_matrix, cv::Point(p.x, p.y), 5, Scalar(255), 2, 8, 0);
     }
 
     // insert line break
     cout << endl;
 
     // show the window
-    imshow( "Debug window", src);
+    imshow( "Debug window", image_matrix);
 
     // wait for user to press a key to continue
     waitKey(0);
