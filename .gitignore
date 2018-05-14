@@ -101,10 +101,17 @@ $RECYCLE.BIN/
 bin/*
 obj/*
 output_data/*
+fastpuzzle/*
 src/puzzle_breaker/generated_puzzles/*
 src/puzzle_breaker/ignore/*
 src/puzzle_breaker/solutions/*
 src/puzzle_breaker/pieces
+src/puzzle_breaker/results2.csv
+src/puzzle_breaker/results2.txt
+solutions/*
+results.txt
+results2.csv
+results2.txt
 
 *.gcno
 *.gcov

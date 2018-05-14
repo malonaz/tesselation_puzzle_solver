@@ -201,17 +201,8 @@ namespace {
 
         int returnCode = 0;
         uint board_height=0, board_width=0;
-        int** solution = NULL;
-        solution = puzzle_solver(matrices, returnCode,
-              board_height, board_width);
-        int filledArea = 0;
+        
 
-        for (int i = 0; i <3; i++){
-          for (int j = 0; j <3; j++){
-            if (solution[i][j])
-            { filledArea++;}
-          }
-        }
         // EXPECT_EQ(filledArea,9);
         // delete shape1;
         // delete shape2;

@@ -186,17 +186,17 @@ int main(int argc, char** argv) {
 
     // create a stringstream using the output
     stringstream ansstream(output);
-    int first_integer = 0;
+    int first_integer;
 
     ansstream >> first_integer;
     cout << "first integer is: " << first_integer << endl;
 
     // if first integer is not positive, there is no solution
-    // if (first_integer <= 0){
-    //   ofstream output_stream(pieces_filename.c_str());
-    //   output_stream << -3 << endl;
-    //   output_stream.close();
-    // }
+    if (first_integer <= 0){
+      ofstream output_stream(pieces_filename.c_str());
+      output_stream << -3 << endl;
+      output_stream.close();
+    }
   }
 
   return delete_processing_flag(processing_flag_filename);
