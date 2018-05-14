@@ -91,12 +91,17 @@ void shape_filter_2D(Mat image_matrix){
 
 
 /**
- * Helper function which processed the contours of shapes, to identify polygons.
+ * Helper function which uses opencv's library to try and identify polygon corners 
+ * and copies them into output parameter polygons_corners
  *  @params:
- *   contours: list of shapes contours
- *   polygons_corners:
+ *   image_matrix: matrix representation of image from which we will attempt to extract polygons.
+ *   polygons_corners: output parameter which will hold a list of corners for each identified polygon.
  */
-void process_contours(vector<vector<cv::Point>> contours, vector<ListOfPoints> &polygons_corners){
+void identify_polygons(Mat &image_matrix, vector<ListOfPoints> &polygons_corners){
+
+  // find the polygon's contours using cv's findContours
+  vector<vector<cv::Point>> contours;
+  findContours(image_matrix, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
   // used by cv's approxPolyDP function as output parameter
   vector<cv::Point> polydp_output_param;
@@ -181,15 +186,10 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
     imshow( "Debug window", image_matrix);
     waitKey(0);
   }
-  
 
-  // find the polygon's contours using cv's findContours
-  vector<vector<cv::Point>> contours;
-  findContours(image_matrix, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+  // get polygon corners.
+  identify_polygons(image_matrix, polygons_corners);
 
-
-  // process the contours
-  process_contours(contours, polygons_corners);
 }
 
 
