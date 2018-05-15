@@ -198,8 +198,6 @@ void find_coordinates_3D(Mat &image_matrix, vector<ListOfPoints> &polygons_corne
   // adaptive threshold
   adaptiveThreshold(image_matrix, image_matrix, MAX_VALUE,
 		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 27, 15);
-
-  debug_image(image_matrix);
   
   // get polygon corners
   identify_polygons(image_matrix, polygons_corners);
