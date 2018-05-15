@@ -4,22 +4,17 @@
 #include <cstdlib>
 #include <ctime>
 #include <cstdio>
+#include <algorithm>    // std::random_shuffle
+#include <vector>       // std::vector
 
-#include "common/coordinates_io.h"
-#include "common/debugger.h"
-#include "common/memory.h"
-#include "common/point.h"
-#include "common/puzzle_board.h"
 #include "common/shape_matrix_io.h"
-#include "common/shape_matrix.h"
-#include "common/types.h"
-#include "common/utils.h"
-#include "solver/solver.h"
-
 using namespace std;
 
+/**
+  * Helper function to deallocate a 2d array
+  *
+*/
 void delete_2d_array(int** array, uint height) {
-
   // free each row
   for (uint i = 0; i < height; i++) {
     delete[] array[i];
@@ -185,6 +180,26 @@ void test_dimensions(int** intArray, int index, int height, int width,int& shape
   }
 }
 
+vector<int> randomize_vector(int min_index, int max_index){
+  vector<int> temp;
+
+  for (int i = min_index; i <= max_index; i ++) {
+    temp.push_back(i);
+  }
+
+  // for (uint j = 0; j < temp.size(); j ++) {
+  //   cout << temp[j] << endl;
+  // }
+
+  random_shuffle ( temp.begin(), temp.end() );
+  //cout << "randomized" << endl;
+  // for (uint i = 0; i < temp.size(); i ++) {
+  //
+  //   cout << temp[i] << endl;
+  // }
+  return temp;
+}
+
 void write_shapes_to_file(int** intArray, int& height, int& width, const string filename, int maxIndex){
  ofstream output_file;
  output_file.open(filename);
@@ -202,12 +217,13 @@ void write_shapes_to_file(int** intArray, int& height, int& width, const string 
    }
    output_file<<endl;
 
-  for (int index = 2; index< maxIndex; index++){
+   vector<int> randVec = randomize_vector(2, maxIndex - 1);
 
+  for (uint i = 0 ; i < randVec.size(); i++) {
+    int index = randVec[i];
     while(r2() > 0.5) {
       rotate_board(intArray, height, width);
     }
-
 
     int shapeH, shapeW, begR, begC;
     test_dimensions(intArray, index, height, width, shapeH, shapeW, begR, begC);
@@ -279,6 +295,8 @@ bool assign_random_numbers(int** intArray, int& height, int& width) {
   write_solution_to_file(intArray, "first", height, width); //<current_directory>/solutions/first
   return true;
 }
+
+
 
 int main(int argc, char** argv){
   struct timespec ts;

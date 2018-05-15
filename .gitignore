@@ -104,7 +104,7 @@ demo_data/*
 output_data/*
 fastpuzzle/*
 src/puzzle_breaker/*
-!src/puzzle_breaker/pb.cc
+!src/puzzle_breaker/puzzle_breaker.cc
 
 solutions/*
 results.txt
