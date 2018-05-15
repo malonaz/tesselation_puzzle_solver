@@ -18,6 +18,58 @@
 
 using namespace std;
 
+void delete_2d_array(int** array, uint height) {
+
+  // free each row
+  for (uint i = 0; i < height; i++) {
+    delete[] array[i];
+  }
+
+  // free array
+  delete[] array;
+}
+
+/**
+ * Helper function which rotates a 2D-int array 90 degrees clockwise
+ * this is used to rotate a found solution (such that 4 solutions will be available with a single solution)
+ *  @params:
+ *   board: 2D-int array
+ *   height: the height of the board_solution param
+ *   width: the width of the board_solution param
+ */
+void rotate_board(int** &board, int& height, int& width) {
+
+  // compute the height and width of the rotated board
+  int rotated_board_height = width;
+  int rotated_board_width = height;
+
+  // create a temporary 2D int array on the stack, containing the rotated values
+  int rotated_board[rotated_board_width][rotated_board_height];
+
+  for (int i = 0;  i < height; i++)
+    for (int j = 0; j < width; j++)
+      rotated_board[j][height - i - 1] = board[i][j];
+
+  // free board
+  delete_2d_array(board, height);
+
+  // reassign board to a newly-created 2D array on the heap
+  board = new int*[rotated_board_height];
+
+  for (int i = 0; i < rotated_board_height; i++) {
+    // assign a row on the heap
+    board[i] = new int[rotated_board_width];
+
+    // copy rotated board's value into board solution
+    for (int j = 0; j < rotated_board_width; j++)
+      board[i][j] = rotated_board[i][j];
+  }
+
+  // update the width and height
+  width = rotated_board_width;
+  height = rotated_board_height;
+}
+
 void print(int** intarray, int rows, int cols){
   cout<<endl;
   for (int i = 0; i <rows; i++) {
@@ -47,9 +99,9 @@ double r2() {
 }
 
 
-int get_adjacent_empty_area(uint row, uint col, int** board, uint height, uint width, int currentIndex, double* bias) {
+int get_adjacent_empty_area(int row, int col, int** board, int height, int width, int currentIndex, double* bias) {
   // return 0 if board[row][col] is  (i) a NOT valid square within boundaries of the board AND (ii) is NOT empty
-  if (row >= height || col >= width || board[row][col] != 0)
+  if (row >= height || col >= width || row < 0 || col < 0 || board[row][col] != 0)
     return 0;
 
   if (r2()+*bias < 0.5) return 0;
@@ -63,6 +115,44 @@ int get_adjacent_empty_area(uint row, uint col, int** board, uint height, uint w
     + get_adjacent_empty_area(row, col - 1, board, height, width, currentIndex, bias)
     + get_adjacent_empty_area(row + 1, col, board, height, width, currentIndex, bias)
     + get_adjacent_empty_area(row - 1, col, board, height, width, currentIndex, bias);
+}
+
+
+int get_adjacent_value (int row, int col, int** board, int height, int width) {
+  //logical check for out of bounds
+  if (row >= height || col >= width || row < 0 || col < 0) {
+    cout << row << ", " << col << ": out of bounds!" << endl;
+    return -1;
+  }
+  return board[row][col];
+}
+
+
+
+
+//Idea of this function is that if we have a single unit sized empty cell block, assign it one of the neighbouring numbers
+bool assign_adjacent_value (int row, int col, int** board, int height, int width) {
+  cout << " inside assign value function" << endl;
+  int temp[4];
+  temp[0] = get_adjacent_value(row, col + 1, board, height, width);
+  cout << "right side value is " << temp [0] << endl;
+  temp[1] = get_adjacent_value(row, col - 1, board, height, width);
+  cout << "left side value is " << temp [1] << endl;
+  temp[2] = get_adjacent_value(row + 1, col, board, height, width);
+  cout << "top side value is " << temp [2] << endl;
+  temp[3] = get_adjacent_value(row - 1, col, board, height, width);
+  cout << "bottom side value is " << temp [3] << endl;
+
+  int counter = 0;
+  while (counter < 4) {
+      if (temp[counter] > 0) {
+        board[row][col] = temp[counter];
+        cout << "assigned the number " << counter << "th value: "<< board[row][col] << endl;
+        return true;
+      }
+      counter ++;
+  }
+  return false;
 }
 
 
@@ -113,9 +203,12 @@ void write_shapes_to_file(int** intArray, int& height, int& width, const string 
    output_file<<endl;
 
   for (int index = 2; index< maxIndex; index++){
-    // while(r2() > 0.5) {
-    //   rotate_board_solution(intArray, height, width, 1);
-    // }
+
+    while(r2() > 0.5) {
+      rotate_board(intArray, height, width);
+    }
+
+
     int shapeH, shapeW, begR, begC;
     test_dimensions(intArray, index, height, width, shapeH, shapeW, begR, begC);
 
@@ -142,7 +235,6 @@ void write_shapes_to_file(int** intArray, int& height, int& width, const string 
 }
 
 void write_solution_to_file(int** board_solution, string filename, uint height, uint   width){
-
   // open stream
   ofstream out(filename.c_str());
 
@@ -160,18 +252,31 @@ bool assign_random_numbers(int** intArray, int& height, int& width) {
   int begArea = height*width;
   int currIndex = 2;
 
-  while(begArea>0){
-    for (int i = 0; i < height; i++){
-      for (int j = 0; j < width; j++){
+  while(begArea > 0) {
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
         int temp = get_adjacent_empty_area (i, j, intArray, height, width, currIndex, new double(1.0));
-        if (temp) currIndex++;
+        if (temp) {
+          if (temp == 1) {
+            cout << " need to assign value at row" << i << ", col" << j << endl;
+
+            if (!assign_adjacent_value (i, j, intArray, height, width)) {
+              return false;
+            }
+          }
+          else {
+            currIndex++;
+          }
+        }
         begArea -= temp;
+        cout << "Area is now " << begArea << endl;
+        print(intArray,height,width);
       }
     }
   }
   print(intArray,height,width);
-  write_shapes_to_file(intArray, height, width, "pieces", currIndex); //"src/puzzle_breaker/pieces"
-  write_solution_to_file(intArray, "first", height, width); //src/puzzle_breaker/solutions/first
+  write_shapes_to_file(intArray, height, width, "pieces", currIndex); //"<current_directory>/pieces"
+  write_solution_to_file(intArray, "first", height, width); //<current_directory>/solutions/first
   return true;
 }
 
