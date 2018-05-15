@@ -45,6 +45,8 @@ using cv::Size;
 #define EPSILON_2D_PICTURE 0.10
 #define EPSILON_3D_PICTURE 0.15
 
+// global variable representing the level of error present in a picture's corner recognition
+float EPSILON = EPSILON_2D_IMAGE;
 
 /**
  * Helper function which opens a window to display the given image.
@@ -273,9 +275,6 @@ void find_coordinates_2D_picture(Mat &image_matrix, vector<ListOfPoints> &polygo
 
 void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons_corners){
 
-  // will be used to hold the epsilon value. 
-  float epsilon;
-  
   // attemp to get the matrice respresentation of the image
   Mat image_matrix = imread(image_filename);
   
@@ -292,19 +291,18 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
   Mat image_matrix_2D_picture = image_matrix.clone();
   
   // 2d processing
-  epsilon = EPSILON_2D_IMAGE;
   find_coordinates_2D(image_matrix, polygons_corners);
 
   // if 2d processing did not work, try the picture of 2d
   if (contains_lists_with_odd_sizes(polygons_corners)){
-    epsilon = EPSILON_2D_PICTURE;
+    EPSILON = EPSILON_2D_PICTURE;
     polygons_corners.clear();
     find_coordinates_2D_picture(image_matrix_2D_picture, polygons_corners);
   }
 
   // if 2d picture did not work, then try 3D
   if (contains_lists_with_odd_sizes(polygons_corners)){
-    epsilon = EPSILON_3D_PICTURE;
+    EPSILON = EPSILON_3D_PICTURE;
     polygons_corners.clear();
     find_coordinates_3D(image_matrix_3D, polygons_corners);
   }

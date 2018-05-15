@@ -4,6 +4,7 @@
 #include "common/types.h"
 #include "discretizer/shape_rotate.h"
 
+float EPSILON = 0.05;
 namespace {
 
 TEST(ShapeRotateTest, shape_rotate_fig1) {

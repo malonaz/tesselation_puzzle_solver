@@ -4,6 +4,9 @@
 
 #include <vector>
 
+// global variable representing the level of error present in a picture's corner recognition
+extern float EPSILON;
+
 using std::vector;
 
 

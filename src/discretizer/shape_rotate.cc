@@ -3,6 +3,7 @@
 #include "common/types.h"
 #include "shape_rotate.h"
 #include "shape_translate.h"
+#include "imagereader/image_read.h"
 
 
 #include <cassert>
@@ -18,10 +19,6 @@ enum Direction {NORTH, EAST, SOUTH, WEST};
 
 // used to repesent the quadrants of a Cartesian coordinate graph
 enum Quadrant {I = 1, II = 2, III = 3, IV = 4, INVALID_QUADRANT};
-
-// used as threshold to decide if two points are equal
-#define THRESHOLD 0.05
-
 
 /**
  * Helper function which returns the Quadrant where point (x, y) lies relative to the origin
@@ -223,7 +220,7 @@ void rotate_shape(const ListOfPoints &shape_points, ListOfPoints &rotated_shape_
   assert(shape_points.size() % 2 == 0);
   
   // gather your epsilon for this shape
-  int epsilon = THRESHOLD * average_side_length(shape_points);
+  int epsilon = EPSILON * average_side_length(shape_points);
 
   // gather information about first side
   Point start = shape_points[0];
@@ -304,6 +301,7 @@ void rotate_shape(const ListOfPoints &shape_points, ListOfPoints &rotated_shape_
 
 void rotate_shapes(const vector<ListOfPoints> &shapes,
 		   vector<ListOfPoints> &rotated_shapes) {
+  
   for (uint i = 0; i < shapes.size(); i++) {
 
     // if shape has less than 4, disregard it
