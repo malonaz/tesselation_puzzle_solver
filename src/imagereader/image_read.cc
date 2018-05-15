@@ -271,7 +271,7 @@ void find_coordinates_2D_picture(Mat &image_matrix, vector<ListOfPoints> &polygo
 
 
 
-float find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons_corners){
+void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons_corners){
 
   // will be used to hold the epsilon value. 
   float epsilon;
@@ -281,7 +281,7 @@ float find_coordinates(const char* image_filename, vector<ListOfPoints> &polygon
   
   if (image_matrix.empty()) {
     cout << "Could not open the image!\n" << endl;
-    return -1;
+    return;
   }
   
   // standardize the image
@@ -308,8 +308,6 @@ float find_coordinates(const char* image_filename, vector<ListOfPoints> &polygon
     polygons_corners.clear();
     find_coordinates_3D(image_matrix_3D, polygons_corners);
   }
-
-  return epsilon;
 }
 
 

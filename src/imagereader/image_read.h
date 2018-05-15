@@ -14,11 +14,8 @@ using std::vector;
  *   image_filename: the filename of the image we wish to analyze
  *   polygons_corner_coordinates: output parameter which will contain the coordinates of 
  *   each polygon's corners. each polygon's corners are ordered clockwise.
- *  @returns:
- *   epsilon: returns an epsilon to propagate a certain level of error throughout the rest 
- *            of the program
  */
-float find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons_corner_coordinates);
+void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons_corner_coordinates);
 
 
 /**
