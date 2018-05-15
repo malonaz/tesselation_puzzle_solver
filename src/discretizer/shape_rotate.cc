@@ -20,7 +20,7 @@ enum Direction {NORTH, EAST, SOUTH, WEST};
 enum Quadrant {I = 1, II = 2, III = 3, IV = 4, INVALID_QUADRANT};
 
 // used as threshold to decide if two points are equal
-#define THRESHOLD 0.05
+#define THRESHOLD 0.10
 
 
 /**
@@ -37,10 +37,10 @@ Quadrant get_quadrant(int x, int y, int epsilon){
     return INVALID_QUADRANT;
 
   if (x > 0)
-    return y > 0? I: II;
+    return y > 0? I: IV;
 
   // x < 0
-  return y > 0? IV: III;
+  return y > 0? II: III;
 }
 
 
@@ -58,15 +58,15 @@ bool turn_right(Quadrant previous_quadrant, Quadrant current_quadrant) {
 
   // 1st corner case
   if (previous_quadrant == IV && current_quadrant == I) {
-    return true;
+    return false;
   }
 
   // 2nd corner case
   if (previous_quadrant == I && current_quadrant == IV) {
-    return false;
+    return true;
   }
 
-  return current_quadrant > previous_quadrant;
+  return current_quadrant < previous_quadrant;
 }
 
 
@@ -221,7 +221,7 @@ void rotate_shape(const ListOfPoints &shape_points, ListOfPoints &rotated_shape_
   // size must be minimum 4 for a polygon with 90 degrees corners only & size must be even
   assert(shape_points.size() >= 4);
   assert(shape_points.size() % 2 == 0);
-
+  
   // gather your epsilon for this shape
   int epsilon = THRESHOLD * average_side_length(shape_points);
 
@@ -253,6 +253,7 @@ void rotate_shape(const ListOfPoints &shape_points, ListOfPoints &rotated_shape_
     Quadrant current_quadrant = get_quadrant(end.x - start.x, end.y - start.y, epsilon);
 
     if (current_quadrant == INVALID_QUADRANT){
+      
       // shape is already rotated. only needs a bit of fix
       rotated_shape_points = fix_nearly_rotated_shape(shape_points);
 
