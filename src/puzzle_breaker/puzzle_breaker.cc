@@ -286,7 +286,6 @@ bool assign_random_numbers(int** intArray, int& height, int& width) {
         }
         begArea -= temp;
         cout << "Area is now " << begArea << endl;
-        print(intArray,height,width);
       }
     }
   }
