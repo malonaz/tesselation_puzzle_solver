@@ -88,6 +88,7 @@ Example:
     this creates a 10 X 10 random puzzle, with relevant container and pieces information stored in a current directory file named "pieces"  
 
 #Demo - Quick Demonstrative Program  
+
 To run demo:
     $ make demo
     $ bin/demo <image_filename>

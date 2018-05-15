@@ -28,6 +28,8 @@ int** copy_board(PuzzleBoard* board);
 
 void delete_2d_array(int** array, uint height);
 
+void rotate_board_solution(int** &board_solution, int& height, int& width, bool debug);
+
 int** partial_solver(string puzzle_directory, int* partial_board, const vector<ShapeMatrix> &pieces, int& returnCode,
 		     uint& board_height, uint& board_width, bool mute_debugging_messages);
 #endif
