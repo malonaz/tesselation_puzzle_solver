@@ -52,6 +52,7 @@ string sha256(string str) {
   return strstream.str();
 }
 
+
 /**
  * Helper function which rotates a 2D-int array 90 degrees clockwise
  * this is used to rotate a found solution (such that 4 solutions will be available with a single solution)
