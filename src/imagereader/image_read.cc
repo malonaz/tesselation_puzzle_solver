@@ -197,7 +197,7 @@ void find_coordinates_3D(Mat &image_matrix, vector<ListOfPoints> &polygons_corne
   
   // adaptive threshold
   adaptiveThreshold(image_matrix, image_matrix, MAX_VALUE,
-		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 27, 17);
+		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 27, 15);
 
   debug_image(image_matrix);
   
@@ -238,7 +238,7 @@ void find_coordinates_2D(Mat &image_matrix, vector<ListOfPoints> &polygons_corne
  *   polygons_corners: output parameter which will contain the corners of 
  *                     the identifed polygons
  */
-void find_coordinates_random(Mat &image_matrix, vector<ListOfPoints> &polygons_corners){
+void find_coordinates_2D_picture(Mat &image_matrix, vector<ListOfPoints> &polygons_corners){
 
   // print message
   cout << "Treating image as picture of 2D shapes" << endl;
@@ -288,17 +288,16 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
   // 2d processing
   find_coordinates_2D(image_matrix, polygons_corners);
 
+  // if 2d processing did not work, try the picture of 2d
+  if (contains_lists_with_odd_sizes(polygons_corners)){
+    polygons_corners.clear();
+    find_coordinates_2D_picture(image_matrix_2D_picture, polygons_corners);
+  }
 
-  
-  // check if 2d processing did not work
+  // if 2d picture did not work, then try 3D
   if (contains_lists_with_odd_sizes(polygons_corners)){
     polygons_corners.clear();
     find_coordinates_3D(image_matrix_3D, polygons_corners);
-  }
-
-  if (contains_lists_with_odd_sizes(polygons_corners)){
-    polygons_corners.clear();
-    find_coordinates_random(image_matrix_2D_picture, polygons_corners);
   }
   
 }
