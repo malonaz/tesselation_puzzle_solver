@@ -200,7 +200,7 @@ vector<int> randomize_vector(int min_index, int max_index){
   return temp;
 }
 
-void write_shapes_to_file(int** intArray, int& height, int& width, const string filename, int maxIndex){
+void write_shapes_to_file(int**& intArray, int& height, int& width, const string filename, int maxIndex){
  ofstream output_file;
  output_file.open(filename);
  if(output_file.fail()){
@@ -243,21 +243,18 @@ void write_shapes_to_file(int** intArray, int& height, int& width, const string 
     }
     output_file<< endl;
   }
-
-
-
   output_file.close();
-
 }
 
-void write_solution_to_file(int** board_solution, string filename, uint height, uint   width){
+void write_solution_to_file(int**& board_solution, string filename, uint height, uint  width){
   // open stream
   ofstream out(filename.c_str());
-
   // send board data to stream
-  for (uint row = 0; row < height; row++)
-    for (uint col = 0; col < width; col++)
+  for (uint row = 0; row < height; row++) {
+    for (uint col = 0; col < width; col++) {
       out << board_solution[row][col] << " ";
+    }
+  }
 
   // add line break and close stream
   out << endl;
@@ -291,7 +288,9 @@ bool assign_random_numbers(int** intArray, int& height, int& width) {
   }
   print(intArray,height,width);
   write_shapes_to_file(intArray, height, width, "pieces", currIndex); //"<current_directory>/pieces"
+
   write_solution_to_file(intArray, "first", height, width); //<current_directory>/solutions/first
+
   return true;
 }
 
@@ -311,8 +310,8 @@ int main(int argc, char** argv){
 
   cout<<h <<"and "<< w<<endl;
   int** board = makeIntArray(h,w);
+  cout<<h <<"and "<< w<<endl;
 
-  print(board,h,w);
   assign_random_numbers(board, h, w);
   cout << r2() << endl;
   cout << r2() << endl;
