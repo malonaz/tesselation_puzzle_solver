@@ -40,6 +40,27 @@ using cv::Size;
 #define MIN_CONTOUR_AREA 1200
 #define PIXEL_EPSILON 15
 
+
+/**
+ * Helper function which opens a window to display the given image.
+ * Used for debugging purposes
+ *  @params:
+ *   image_matrix: the matrix representation of an image
+ */
+void debug_image(Mat image_matrix){
+
+  // name a window
+  namedWindow("Debug window", WINDOW_AUTOSIZE);
+
+  // show the window
+  imshow( "Debug window", image_matrix);
+
+  // wait for user to press a key to continue
+  waitKey(0);
+}
+
+
+
 /**
  * Helper function which scales down a given image.
  *  @params:
@@ -176,23 +197,13 @@ void find_coordinates_3D(Mat &image_matrix, vector<ListOfPoints> &polygons_corne
   
   // adaptive threshold
   adaptiveThreshold(image_matrix, image_matrix, MAX_VALUE,
-		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 27, 16);
+		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 27, 17);
+
+  debug_image(image_matrix);
   
   // get polygon corners
   identify_polygons(image_matrix, polygons_corners);
 
-}
-
-void debug_image(Mat image_matrix){
-
-  // name a window
-  namedWindow("Debug window", WINDOW_AUTOSIZE);
-
-  // show the window
-  imshow( "Debug window", image_matrix);
-
-  // wait for user to press a key to continue
-  waitKey(0);
 }
 
 
