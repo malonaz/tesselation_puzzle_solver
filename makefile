@@ -6,6 +6,7 @@ TESTDIR = test
 COVDIR = coverage
 MAKEDIR = make
 
+DEMO_MALON_TARGET = demo_malon
 TEST_TARGET = test
 DEMO_TARGET = demo
 MOCK_PROCESSOR_TARGET = mock_processor

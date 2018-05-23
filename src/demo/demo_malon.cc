@@ -11,7 +11,14 @@
 #include "discretizer/shape_translate.h"
 #include "imagereader/image_read.h"
 #include "solver/solver.h"
+#include "common/types.h"
 
+#include "opencv2/core/core.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+
+
+#include <vector>
 #include <stdio.h>
 #include <unistd.h>
 #include <fstream>
@@ -26,12 +33,98 @@
 #include <string>
 #include <array>
 
-#define EXPECTED_ARG_NUM {1}
-#define ARG_FORMAT "bin/demo <image_filename>"
+using std::vector;
+using std::cout;
+using std::endl;
+
+using cv::resize;
+using cv::cvtColor;
+using cv::findContours;
+using cv::approxPolyDP;
+using cv::imread;
+using cv::Mat;
+using cv::adaptiveThreshold;
+using cv::COLOR_BGR2GRAY;
+using cv::RETR_EXTERNAL;
+using cv::CHAIN_APPROX_SIMPLE;
+using cv::ADAPTIVE_THRESH_GAUSSIAN_C;
+using cv::THRESH_BINARY_INV;
+using cv::arcLength;
+using cv::contourArea;
+using cv::WINDOW_AUTOSIZE;
+using cv::waitKey;
+using cv::Scalar;
+using cv::circle;
+using cv::Size;
+
+
+#define MAX_VALUE 128
+#define SCALE_DOWN_IMAGE_HEIGHT 800
+#define SCALE_DOWN_IMAGE_WIDTH 1280
+#define MIN_CONTOUR_AREA 1200
+#define PIXEL_EPSILON 15
+
+
+#define EPSILON_2D_IMAGE 0.05
+#define EPSILON_2D_PICTURE 0.10
+#define EPSILON_3D_PICTURE 0.15
+
+
 #define NO_ERROR 0
 #define ERROR_DELETING_TEMP_FILE -1
 
 using namespace std;
+
+void find_coordinates_3D2(Mat &image_matrix, vector<ListOfPoints> &polygons_corners){
+
+  // print message
+  cout << "Identified picture of 3D shapes" << endl;
+  
+  // adaptive threshold
+  adaptiveThreshold(image_matrix, image_matrix, MAX_VALUE,
+		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 27, 15);
+}
+
+
+void find_coordinates_2D2(Mat &image_matrix, vector<ListOfPoints> &polygons_corners){
+
+  // print message
+  cout << "Identified image of 2D shapes" << endl;
+  
+  // adaptive threshold
+  adaptiveThreshold(image_matrix, image_matrix, MAX_VALUE,
+  		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 31, 2);
+
+}
+
+
+void find_coordinates_2D_picture2(Mat &image_matrix){
+
+  // print message
+  cout << "Identified picture of 2D shapes" << endl;
+  
+  /// Reduce noise with a kernel 1 x 1
+  cv::blur(image_matrix, image_matrix, Size(1, 1));
+  debug_image(image_matrix);
+  
+  /// canny edge detector
+  int lowThreshold = 20, kernel_size = 3, maxThreshold = 255;
+  cv::Canny(image_matrix, image_matrix, lowThreshold, maxThreshold, kernel_size, true);
+  debug_image(image_matrix);
+  
+  // floodfill
+  cv::floodFill(image_matrix, cv::Point(0, 0), Scalar(255, 255, 255));
+  debug_image(image_matrix);
+  
+  // invert because identify_polygons will need shapes to be filled in white
+  cv::bitwise_not(image_matrix, image_matrix);
+  debug_image(image_matrix);
+  
+  /// Reduce noise with a kernel 5 x 5 kernel
+  cv::blur(image_matrix, image_matrix, Size(5, 5));
+  debug_image(image_matrix);
+}
+
 
 /**
  * Helper function which deletes the processing flag
@@ -96,20 +189,59 @@ string execute_command(const char* command) {
  */
 int main(int argc, char** argv){
 
-  //////////// PART 1: PROCESS ARGUMENTS /////////////////////////////
-  if (!valid_args(argc, EXPECTED_ARG_NUM, ARG_FORMAT))
-    return -1;
+  //////////// PART 1: 2D IMAGE FILTER /////////////////////////////
 
-  const string image_filename(argv[1]);
+  string image_filename = "demo_malon_data/1.jpeg";
+  Mat image_matrix = imread(image_filename);
+  scale_down_image(image_matrix, image_matrix);
+  debug_image(image_matrix);
+  
+  standardize_image(image_matrix);
+  
+  debug_image(image_matrix);
 
-
-  //////////// PART 2: EXTRACT PIECES FROM IMAGE /////////////////////////////
   vector<ListOfPoints> puzzle_pieces;
+  find_coordinates_2D_picture2(image_matrix);
+  find_coordinates(image_filename.c_str(), puzzle_pieces);
+  debug_coordinates(image_filename.c_str(), puzzle_pieces);
+  
+
+  //////////// PART 2: 2D IMAGE /////////////////////////////
+  image_filename = "puzzle2.jpg";
+  image_matrix = imread(image_filename);
+  scale_down_image(image_matrix, image_matrix);
+  debug_image(image_matrix);
+  
+  standardize_image(image_matrix);
+  debug_image(image_matrix);
+
+  find_coordinates_2D2(image_matrix, puzzle_pieces);
+  puzzle_pieces.clear();
+  debug_image(image_matrix);
   find_coordinates(image_filename.c_str(), puzzle_pieces);
   debug_coordinates(image_filename.c_str(), puzzle_pieces);
 
 
-  //////////// PART 3: DISCRETIZE PIECES /////////////////////////////
+
+
+  //////////// PART 3: 3D image /////////////////////////////
+  image_filename = "demo_malon_data/4.JPG";
+  image_matrix = imread(image_filename);
+  scale_down_image(image_matrix, image_matrix);
+  debug_image(image_matrix);
+  
+  standardize_image(image_matrix);
+  debug_image(image_matrix);
+
+  find_coordinates_3D2(image_matrix, puzzle_pieces);
+  puzzle_pieces.clear();
+  debug_image(image_matrix);
+  find_coordinates(image_filename.c_str(), puzzle_pieces);
+  debug_coordinates(image_filename.c_str(), puzzle_pieces);
+
+  return -1;
+
+  
   // rotate pieces
   cout<< "Rotating Pieces..." << endl;
   vector<ListOfPoints> rotated_puzzle_pieces;

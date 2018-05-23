@@ -1,8 +1,14 @@
 #ifndef IMAGE_READ_H_
 #define IMAGE_READ_H_
 #include "common/types.h"
+#include "opencv2/core/core.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
 
 #include <vector>
+
+using cv::imread;
+using cv::Mat;
 
 // global variable representing the level of error present in a picture's corner recognition
 extern float EPSILON;
@@ -32,6 +38,11 @@ void find_coordinates(const char* image_filename, vector<ListOfPoints> &polygons
  */
 void debug_coordinates(const char* image_filename, const vector<ListOfPoints> &polygons_corner_coordinates);
 
+
+void debug_image(Mat image_matrix);
+void scale_down_image(const Mat& source, Mat& target);
+
+void standardize_image(Mat& image_matrix);
 
 #endif
 

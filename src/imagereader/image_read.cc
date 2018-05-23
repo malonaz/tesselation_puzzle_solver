@@ -198,9 +198,6 @@ bool contains_lists_with_odd_sizes(vector<ListOfPoints>& list_of_lists){
  *                     the identifed polygons
  */
 void find_coordinates_3D(Mat &image_matrix, vector<ListOfPoints> &polygons_corners){
-
-  // print message
-  cout << "Treating image as picture of 3D shapes" << endl;
   
   // adaptive threshold
   adaptiveThreshold(image_matrix, image_matrix, MAX_VALUE,
@@ -222,9 +219,6 @@ void find_coordinates_3D(Mat &image_matrix, vector<ListOfPoints> &polygons_corne
  */
 void find_coordinates_2D(Mat &image_matrix, vector<ListOfPoints> &polygons_corners){
 
-  // print message
-  cout << "Treating image as image of 2D shapes" << endl;
-  
   // adaptive threshold
   adaptiveThreshold(image_matrix, image_matrix, MAX_VALUE,
   		    ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 31, 2);
@@ -245,9 +239,6 @@ void find_coordinates_2D(Mat &image_matrix, vector<ListOfPoints> &polygons_corne
  */
 void find_coordinates_2D_picture(Mat &image_matrix, vector<ListOfPoints> &polygons_corners){
 
-  // print message
-  cout << "Treating image as picture of 2D shapes" << endl;
-  
   /// Reduce noise with a kernel 1 x 1
   cv::blur(image_matrix, image_matrix, Size(1, 1));
  
